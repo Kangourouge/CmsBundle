@@ -20,7 +20,7 @@ services:
             - { name: twig.extension }
 
     krg_seo.listener.seo:
-        class: 'KRG\SeoBundle\EventListener\SeoListener'
+        class: 'KRG\SeoBundle\Routing\SeoListener'
         calls:
             - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
             - [setRouter, ['@router']]

@@ -61,6 +61,24 @@ class Seo extends BaseSeo
 }
 ```
 
+```
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use KRG\SeoBundle\Entity\SeoPage as BaseSeoPage;
+
+/**
+ * SeoPage
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="seo_page")
+ */
+class SeoPage extends BaseSeoPage
+{
+}
+```
+
 Twig
 ----
 
@@ -68,7 +86,7 @@ Twig
 <html>
 <head>
     ...
-    {{ seoHead() }}
+    {{ seo_head() }}
     ...
 </head>
 ...
@@ -77,6 +95,5 @@ Twig
 Améliorations possibles
 -----------------------
 
-- Vider le cache après la mise à jour d'une URL SEO
 - SeoAdmin : JS - copier d'un clic les variables dans le presse papier
 - SeoAdmin : empêcher l'utilisation de variable dans l'url si le paramètre est déjà renseigné
