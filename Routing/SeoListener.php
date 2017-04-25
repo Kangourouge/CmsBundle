@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\EventListener;
+namespace KRG\SeoBundle\Routing;
 
 use KRG\SeoBundle\Repository\SeoRepository;
 use Doctrine\ORM\EntityManager;
