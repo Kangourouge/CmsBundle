@@ -1,0 +1,45 @@
+parameters:
+    krg_seo.extension.seo.class: KRG\SeoBundle\Twig\SeoExtension
+    router.class: KRG\SeoBundle\Routing\Router
+    router.options.generator_class: KRG\SeoBundle\Routing\UrlGenerator
+    router.options.generator_base_class: KRG\SeoBundle\Routing\UrlGenerator
+    router.options.resource_type: %krg_seo.seo_class%
+
+services:
+    krg_seo.extension.seo:
+        class: '%krg_seo.extension.seo.class%'
+        public: false
+        calls:
+            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
+            - [setRequestStack, ['@request_stack']]
+            - [setTokenStorage, ['@security.token_storage']]
+            - [setAuthorizationChecker, ['@security.authorization_checker']]
+            - [setFormFactory, ['@form.factory']]
+            - [setSeoClass, ['%krg_seo.seo_class%']]
+        tags:
+            - { name: twig.extension }
+
+    krg_seo.listener.seo:
+        class: 'KRG\SeoBundle\EventListener\SeoListener'
+        calls:
+            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
+            - [setRouter, ['@router']]
+            - [setSeoClass, ['%krg_seo.seo_class%']]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    krg_seo.loader.seo:
+        class: 'KRG\SeoBundle\Routing\SeoLoader'
+        calls:
+            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
+            - [setEncoder, ['@serializer.encoder.json']]
+            - [setNormalizer, ['@serializer.normalizer.object']]
+            - [setSeoClass, ['%krg_seo.seo_class%']]
+        tags:
+            - { name: routing.loader }
+
+    krg_seo.form.registry:
+        class: 'KRG\SeoBundle\Form\SeoFormRegistry'
+        arguments: [[]]
+        calls:
+            - [setContainer, ['@service_container']]

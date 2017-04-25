@@ -1,0 +1,50 @@
+{% extends 'SonataAdminBundle:CRUD:base_edit.html.twig' %}
+
+{% block form %}
+    {% if form.parameters is defined %}
+        {% form_theme form.parameters '@KRGSeo/Admin/Form/parameters_widget.html.twig' %}
+    {% endif %}
+
+    {% if form.formData is defined %}
+        {% form_theme form.formData '@KRGSeo/Admin/Form/form_data_widget.html.twig' %}
+    {% endif %}
+
+    {% if form.seo__url is defined %}
+        {% form_theme form.seo__url '@KRGSeo/Admin/Form/form_seo_url_widget.html.twig' %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block formactions %}
+    {% if admin.availableProperties is defined and admin.availableProperties|length > 1 %}
+        <div class="well">
+            <p class="text-center">Variables - use it like {{ '{{ variableName }}' }} in metas, og, etc.</p>
+
+            {% for property in admin.availableProperties %}
+                <span class="hover-highlight">{{ property }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if admin.id(object) %}
+        {{ parent() }}
+    {% else %}
+        {% if admin.hasroute('edit') and admin.isGranted('EDIT') %}
+            <button class="btn btn-success" type="submit" name="btn_create_and_edit">
+                <i class="fa fa-save"></i> {{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}</button>
+        {% endif %}
+    {% endif %}
+
+    <style>
+        .hover-highlight {
+            display: inline-block;
+            padding: 3px 5px;
+        }
+
+        .hover-highlight:hover {
+            background: #272727;
+            color: #fff;
+        }
+    </style>
+{% endblock %}
