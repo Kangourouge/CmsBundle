@@ -67,7 +67,7 @@ class SeoPageAdmin extends Admin
                 'mapped'      => false,
                 'constraints' => new NotBlank(),
             ))
-            ->add('formData', TextareaType::class, array('data' => $this->request->query->get('parameters')))->get('formData')->addModelTransformer(new JsonToStringTransformer());
+            ->add('formData', TextareaType::class, array('data' => $this->request->query->get('parameters') ?: $seoPage->getFormData()))->get('formData')->addModelTransformer(new JsonToStringTransformer());
         ;
 
         // Edition
