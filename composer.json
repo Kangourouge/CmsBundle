@@ -1,6 +1,6 @@
 {
-    "name": "krg/seo-bundle",
-    "description": "KRG SeoBundle",
+    "name": "kangourouge/seo-bundle",
+    "description": "Kangourouge Seo Bundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
