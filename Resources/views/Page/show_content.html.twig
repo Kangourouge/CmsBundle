@@ -1,0 +1,6 @@
+{% if controller is null and title is defined and title %}
+    <h1>{{ title }}</h1>
+{% endif %}
+
+{{ content|raw }}
+

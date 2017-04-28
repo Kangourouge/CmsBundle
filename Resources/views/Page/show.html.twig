@@ -1,0 +1,11 @@
+{% block seo_pre_content %}
+    {% include "@KRGSeo/Page/show_content.html.twig" with {'content': seoPage.preContent} %}
+{% endblock seo_pre_content %}
+
+{% block seo_search %}
+    {{ render(url(seoPage.formRoute)) }}
+{% endblock seo_search %}
+
+{% block seo_post_content %}
+    {% include "@KRGSeo/Page/show_content.html.twig" with {'content': seoPage.postContent} %}
+{% endblock seo_post_content %}

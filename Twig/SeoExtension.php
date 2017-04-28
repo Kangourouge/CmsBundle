@@ -98,8 +98,8 @@ class SeoExtension extends \Twig_Extension
 
         $formName = null;
         /* @var $seoPage SeoPageInterface */
-        if ($seo && $seoPage = $seo->getSeoPage()) {
-            $form = $this->formFactory->create($seoPage->getFormType());
+        if ($seo && $seo->getSeoPage() && $seo->getSeoPage()->getFormType()) {
+            $form = $this->formFactory->create($seo->getSeoPage()->getFormType());
             $formName = $form->getName();
         }
 

@@ -2,6 +2,7 @@
 
 namespace KRG\SeoBundle\Admin;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use KRG\SeoBundle\Entity\RouteParameter;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Entity\SeoPageInterface;
@@ -75,13 +76,28 @@ class SeoPageAdmin extends Admin
             $formMapper
                 ->remove('url')
                 ->add('seo.url')
-                ->add('preContent')
-                ->add('postContent')
+                ->add('preContent', CKEditorType::class, array(
+                    'label'    => 'Content',
+                    'required' => false
+                ))
+                ->add('postContent', CKEditorType::class, array(
+                    'label'    => 'Content (after)',
+                    'required' => false
+                ))
                 ->add('seo.metaTitle')
                 ->add('seo.metaDescription')
                 ->add('seo.ogTitle')
                 ->add('seo.ogDescription')
             ;
+
+            // Act like a CMS page
+            if ($seoPage->getFormType() === null) {
+                $formMapper
+                    ->remove('formType')
+                    ->remove('formData')
+                    ->remove('postContent')
+                ;
+            }
         }
 
         $formMapper->getFormBuilder()->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
