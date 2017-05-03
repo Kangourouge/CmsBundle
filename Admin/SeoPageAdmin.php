@@ -76,6 +76,15 @@ class SeoPageAdmin extends Admin
             $formMapper
                 ->remove('url')
                 ->add('seo.url')
+                ->end()
+                ->with('SEO')
+                ->add('seo.metaTitle')
+                ->add('seo.metaDescription')
+                ->add('seo.ogTitle')
+                ->add('seo.ogDescription')
+                ->end()
+                ->with('CMS')
+                ->add('title')
                 ->add('preContent', CKEditorType::class, array(
                     'label'    => 'Content',
                     'required' => false
@@ -84,10 +93,7 @@ class SeoPageAdmin extends Admin
                     'label'    => 'Content (after)',
                     'required' => false
                 ))
-                ->add('seo.metaTitle')
-                ->add('seo.metaDescription')
-                ->add('seo.ogTitle')
-                ->add('seo.ogDescription')
+                ->end()
             ;
 
             // Act like a CMS page
@@ -102,7 +108,6 @@ class SeoPageAdmin extends Admin
 
         $formMapper->getFormBuilder()->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
     }
-
 
     public function onPostSubmit(FormEvent $event)
     {

@@ -46,6 +46,11 @@ abstract class SeoPage implements SeoPageInterface
     protected $formData;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $preContent;
@@ -210,6 +215,30 @@ abstract class SeoPage implements SeoPageInterface
     public function getFormData()
     {
         return $this->formData;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return SeoPage
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
