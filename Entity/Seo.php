@@ -21,7 +21,7 @@ abstract class Seo implements SeoInterface
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo", cascade={"all"})
      */
     protected $seoPage;
 
@@ -259,6 +259,20 @@ abstract class Seo implements SeoInterface
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * Get parameters
+     *
+     * @return array
+     */
+    public function getRouteParameters()
+    {
+        if ($this->seoPage === null || $this->parameters === null) {
+            return $this->parameters;
+        }
+
+        return array_merge($this->parameters, array('id' => $this->seoPage->getId()));
     }
 
     /**

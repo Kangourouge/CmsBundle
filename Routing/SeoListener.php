@@ -59,7 +59,7 @@ class SeoListener
         $request->attributes->set('_route', $seo->getRoute());
         $request->attributes->set('_seo', $seo); // Store initial SEO to reuse it after
         $request->attributes->set('_route_params', $params);
-        foreach($seo->getParameters() as $key => $value) {
+        foreach($seo->getRouteParameters() as $key => $value) {
             if ($value) {
                 $request->attributes->set($key, $value);
             }

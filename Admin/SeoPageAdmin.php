@@ -121,6 +121,8 @@ class SeoPageAdmin extends Admin
             /* @var $seo SeoInterface */
             $seo = new $this->seoClass;
             $seo->setUrl($form->get('url')->getData());
+            $seo->setRoute('krg_seo_page_show');
+
             $seoPage->setSeo($seo);
 
             // Set form route, parameters
@@ -130,14 +132,7 @@ class SeoPageAdmin extends Admin
                 $seoPage->setFormParameters(array());
             }
 
-            // Flush to get id
             $this->entityManager->persist($seoPage);
-            $this->entityManager->flush();
-
-            // Fill Seo
-            $seo->setRoute('krg_seo_page_show');
-            $seo->setParameters(array('id' => $seoPage->getId()));
-
             $this->entityManager->flush();
         }
 
