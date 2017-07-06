@@ -21,6 +21,11 @@ abstract class Seo implements SeoInterface
     protected $id;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $enabled;
+
+    /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo", cascade={"all"})
      */
     protected $seoPage;
@@ -144,6 +149,30 @@ abstract class Seo implements SeoInterface
     }
 
     /**
+     * Set enabled
+     *
+     * @param $enabled
+     *
+     * @return SeoInterface
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Set seoPage
      *
      * @param SeoPageInterface $seoPage
@@ -172,7 +201,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $uid
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUid($uid)
     {
@@ -194,7 +223,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $route
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setRoute($route)
     {
@@ -218,7 +247,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $url
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUrl($url)
     {
@@ -242,7 +271,7 @@ abstract class Seo implements SeoInterface
      *
      * @param array $parameters
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setParameters($parameters)
     {
@@ -280,7 +309,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $metaTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaTitle($metaTitle)
     {
@@ -304,7 +333,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $metaDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaDescription($metaDescription)
     {
@@ -328,7 +357,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $metaRobots
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaRobots($metaRobots)
     {
@@ -352,7 +381,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $ogTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgTitle($ogTitle)
     {
@@ -376,7 +405,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $ogDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgDescription($ogDescription)
     {
@@ -400,7 +429,7 @@ abstract class Seo implements SeoInterface
      *
      * @param string $ogImage
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgImage($ogImage)
     {

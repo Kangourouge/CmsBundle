@@ -12,6 +12,22 @@ interface SeoInterface
     public function getId();
 
     /**
+     * Set enabled
+     *
+     * @param $enabled
+     *
+     * @return SeoInterface
+     */
+    public function setEnabled($enabled);
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled();
+
+    /**
      * Set seoPage
      *
      * @param SeoPageInterface $seoPage

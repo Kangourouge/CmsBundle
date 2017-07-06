@@ -30,7 +30,7 @@ class SeoAdmin extends Admin
 
     protected function configureFormFields(FormMapper $formMapper)
     {
-        /* @var $seo SeoRoute */
+        /* @var $seo SeoInterface */
         $seo = $this->getSubject();
         $isNew = $seo->getId() === null;
 
@@ -41,6 +41,10 @@ class SeoAdmin extends Admin
                 'read_only' => !$isNew,
                 'data'      => $this->getRequest()->query->get('route') ?: $seo->getRoute()
             ));
+
+        if ($isNew) {
+            $seo->setEnabled(false);
+        }
 
         if (!$isNew) {
             $this->availableProperties = $this->getHelperProperties($seo);
@@ -65,6 +69,7 @@ class SeoAdmin extends Admin
                 ->add('ogTitle')
                 ->add('ogDescription')
                 ->add('ogImage')
+                ->add('enabled')
             ;
         }
 
@@ -91,7 +96,7 @@ class SeoAdmin extends Admin
 
     public function onPostSubmit(FormEvent $event)
     {
-        /* @var $seo SeoRoute */
+        /* @var $seo SeoInterface */
         $seo = $event->getData();
 
         if ($seo->getUrl() === null) {

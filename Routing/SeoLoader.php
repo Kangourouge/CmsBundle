@@ -49,7 +49,9 @@ class SeoLoader extends Loader
 
         /* @var $seoRepository SeoRepository */
         $seoRepository = $this->entityManager->getRepository($this->seoClass);
-        $seoEntries = $seoRepository->findAll();
+        $seoEntries = $seoRepository->findBy(array(
+            'enabled' => true
+        ));
 
         $routes = new RouteCollection();
 
