@@ -24,7 +24,8 @@ class UrlGenerator extends BaseUrlGenerator
             if (($route = $this->resolve($name, $parameters)) !== null) {
                 $compiledRoute = $route->compile();
 
-                return parent::doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
+                // Do not pass the parameters argument to keep rewritted urls intact
+                return parent::doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), array(), $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
             }
         }
 
