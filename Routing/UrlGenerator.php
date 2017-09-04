@@ -3,6 +3,7 @@
 namespace KRG\SeoBundle\Routing;
 
 use KRG\SeoBundle\Entity\SeoInterface;
+use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Serializer\Serializer;
 
@@ -22,23 +23,51 @@ class UrlGenerator extends BaseUrlGenerator
     {
         if (!preg_match("/^krg_seo_.+/", $name)) {
             if (($route = $this->resolve($name, $parameters)) !== null) {
+                /* @var $compiledRoute CompiledRoute */
                 $compiledRoute = $route->compile();
 
+                // If parameters setted from SeoPage, do not set it twice
+                if (count($compiledRoute->getVariables()) === 0) {
+                    $parameters = array();
+                }
+
                 // Do not pass the parameters argument to keep rewritted urls intact
-                return parent::doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), array(), $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
+                return parent::doGenerate(
+                    $compiledRoute->getVariables(),
+                    $route->getDefaults(),
+                    $route->getRequirements(),
+                    $compiledRoute->getTokens(),
+                    $parameters,
+                    $name,
+                    $referenceType,
+                    $compiledRoute->getHostTokens(),
+                    $route->getSchemes()
+                );
             }
         }
 
-        return parent::doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
+        return parent::doGenerate(
+            $variables,
+            $defaults,
+            $requirements,
+            $tokens,
+            $parameters,
+            $name,
+            $referenceType,
+            $hostTokens,
+            $requiredSchemes
+        );
     }
 
     private function resolve($name, array $parameters)
     {
-        $routes = array_filter($this->seoRoutes, function(Route $route) use ($name, $parameters) {
-            /* @var $seo SeoInterface */
-            $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
-            return $seo->getRoute() === $name && $seo->isValid($parameters);
-        });
+        $routes = array_filter($this->seoRoutes,
+            function (Route $route) use ($name, $parameters) {
+                /* @var $seo SeoInterface */
+                $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
+
+                return $seo->getRoute() === $name && $seo->isValid($parameters);
+            });
 
         if (count($routes) === 0) {
             return null;
