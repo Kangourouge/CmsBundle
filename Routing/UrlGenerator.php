@@ -73,13 +73,14 @@ class UrlGenerator extends BaseUrlGenerator
         }
 
         // Check if route can be resolved from cache
-        try {
-            $identifier = $name.implode(array_values($parameters));
+        $identifier = $name;
+        $flatten = implode(array_values($parameters));
+        if (is_string($flatten)) { // "" is a string too
+            $identifier .= $flatten;
             $cacheItem = $this->cache->getItem(md5($identifier));
             if ($cacheItem->isHit()) {
                 return $cacheItem->get();
             }
-        } catch (\Exception $e) {
         }
 
         // Get all compatible routes
