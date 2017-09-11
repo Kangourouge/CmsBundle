@@ -48,6 +48,10 @@ Routing
 krg_seo_route_loader:
     resource: .
     type: seo
+    
+seo:
+    resource: "@KRGSeoBundle/Controller/"
+    type:     annotation
 ```
 
 Entity
