@@ -73,10 +73,13 @@ class UrlGenerator extends BaseUrlGenerator
         }
 
         // Check if route can be resolved from cache
-        $identifier = $name.implode(array_values($parameters));
-        $cacheItem = $this->cache->getItem(md5($identifier));
-        if ($cacheItem->isHit()) {
-            return $cacheItem->get();
+        try {
+            $identifier = $name.implode(array_values($parameters));
+            $cacheItem = $this->cache->getItem(md5($identifier));
+            if ($cacheItem->isHit()) {
+                return $cacheItem->get();
+            }
+        } catch (\Exception $e) {
         }
 
         // Get all compatible routes
@@ -106,8 +109,10 @@ class UrlGenerator extends BaseUrlGenerator
         }
 
         // Store in cache
-        $cacheItem->set($route);
-        $this->cache->save($cacheItem);
+        if (isset($cacheItem)) {
+            $cacheItem->set($route);
+            $this->cache->save($cacheItem);
+        }
 
         return $route;
     }
