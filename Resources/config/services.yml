@@ -15,7 +15,6 @@ services:
             - [setTokenStorage, ['@security.token_storage']]
             - [setAuthorizationChecker, ['@security.authorization_checker']]
             - [setFormFactory, ['@form.factory']]
-            - [setSeoClass, ['%krg_seo.seo_class%']]
         tags:
             - { name: twig.extension }
 
@@ -24,7 +23,6 @@ services:
         calls:
             - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
             - [setRouter, ['@router']]
-            - [setSeoClass, ['%krg_seo.seo_class%']]
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
@@ -34,7 +32,6 @@ services:
             - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
             - [setEncoder, ['@serializer.encoder.json']]
             - [setNormalizer, ['@serializer.normalizer.object']]
-            - [setSeoClass, ['%krg_seo.seo_class%']]
         tags:
             - { name: routing.loader }
 

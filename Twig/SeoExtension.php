@@ -39,11 +39,6 @@ class SeoExtension extends \Twig_Extension
      */
     private $formFactory;
 
-    /**
-     * @var string
-     */
-    private $seoClass;
-
     public function getSeoHead(\Twig_Environment $environment)
     {
         if ($this->request === null) {
@@ -177,13 +172,5 @@ class SeoExtension extends \Twig_Extension
     public function setFormFactory($formFactory)
     {
         $this->formFactory = $formFactory;
-    }
-
-    /**
-     * @param string $seoClass
-     */
-    public function setSeoClass($seoClass)
-    {
-        $this->seoClass = $seoClass;
     }
 }

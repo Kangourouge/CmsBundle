@@ -26,7 +26,7 @@ class SeoAdmin extends Admin
      */
     protected $router;
 
-    protected $clearRoutingCache;
+    protected $clearCache;
 
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -103,7 +103,7 @@ class SeoAdmin extends Admin
             $seo->setUrl($this->getPathFromRoute($seo->getRoute()));
         }
 
-        $this->clearRoutingCache->exec();
+        $this->clearCache->exec();
     }
 
     public function getPathFromRoute($route)
@@ -205,8 +205,8 @@ class SeoAdmin extends Admin
         $this->router = $router;
     }
 
-    public function setClearRoutingCache($clearRoutingCache)
+    public function setClearCache($clearCache)
     {
-        $this->clearRoutingCache = $clearRoutingCache;
+        $this->clearCache = $clearCache;
     }
 }

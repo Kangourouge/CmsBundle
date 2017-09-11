@@ -2,6 +2,7 @@
 
 namespace KRG\SeoBundle\Routing;
 
+use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Repository\SeoRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -18,11 +19,6 @@ class SeoListener
      * @var $entityManager EntityManager
      */
     private $entityManager;
-
-    /**
-     * @var string
-     */
-    private $seoClass;
 
     /**
      * Update current request if URI match with one of SEOBUNDLE urls
@@ -44,7 +40,8 @@ class SeoListener
         }
 
         /* @var $seoRepository SeoRepository */
-        $seoRepository = $this->entityManager->getRepository($this->seoClass);
+        $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
+        $seoRepository = $this->entityManager->getRepository($className);
 
         /* @var $seo SeoInterface */
         $seo = $seoRepository->findOneByUid($route);
@@ -82,13 +79,5 @@ class SeoListener
     public function setRouter(Router $router)
     {
         $this->router = $router;
-    }
-
-    /**
-     * @param string $seoClass
-     */
-    public function setSeoClass($seoClass)
-    {
-        $this->seoClass = $seoClass;
     }
 }

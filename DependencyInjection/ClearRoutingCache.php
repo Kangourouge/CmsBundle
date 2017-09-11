@@ -2,6 +2,7 @@
 
 namespace KRG\SeoBundle\DependencyInjection;
 
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Router;
@@ -32,6 +33,9 @@ class ClearRoutingCache
             $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . $className . '.php';
             $this->filesystem->remove($cacheFile);
         }
+
+        $cache = new FilesystemAdapter('seo');
+        $ret = $cache->clear();
 
         $this->router->warmUp($cacheDir);
     }

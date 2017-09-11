@@ -13,7 +13,7 @@ services:
             - ~
         calls:
             - [setRouter, ['@router']]
-            - [setClearRoutingCache, ['@krg_seo.clear_routing_cache']]
+            - [setClearCache, ['@krg_seo.clear_routing_cache']]
 
     krg_seo.admin.seo_page:
         class: %krg_seo.admin.seo_page.class%
@@ -27,8 +27,7 @@ services:
             - [setSeoFormRegistry, ['@krg_seo.form.registry']]
             - [setRouter, ['@router']]
             - [setEntityManager, ['@sonata.admin.entity_manager']]
-            - [setClearRoutingCache, ['@krg_seo.clear_routing_cache']]
-            - [setSeoClass, ['%krg_seo.seo_class%']]
+            - [setClearCache, ['@krg_seo.clear_routing_cache']]
 
     krg_seo.clear_routing_cache:
         class: KRG\SeoBundle\DependencyInjection\ClearRoutingCache

@@ -7,9 +7,7 @@ use KRG\SeoBundle\Entity\RouteParameter;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Entity\SeoPageInterface;
 use KRG\SeoBundle\Entity\SeoRoute;
-use KRG\SeoBundle\Form\Admin\SeoPageSeoForm;
 use KRG\SeoBundle\Form\DataTransformer\JsonToStringTransformer;
-use KRG\SeoBundle\Form\SeoForm;
 use KRG\SeoBundle\Form\SeoFormRegistry;
 use Doctrine\ORM\EntityManager;
 use Sonata\AdminBundle\Admin\Admin;
@@ -29,11 +27,6 @@ class SeoPageAdmin extends Admin
     protected $baseRoutePattern = 'seo_page';
 
     /**
-     * @var SeoInterface
-     */
-    private $seoClass;
-
-    /**
      * @var $router Router
      */
     protected $router;
@@ -48,7 +41,7 @@ class SeoPageAdmin extends Admin
      */
     private $entityManager;
 
-    protected $clearRoutingCache;
+    protected $clearCache;
 
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -119,7 +112,7 @@ class SeoPageAdmin extends Admin
         // Creation
         if ($isNew) {
             /* @var $seo SeoInterface */
-            $seo = new $this->seoClass;
+            $seo = $this->entityManager->getClassMetadata(SeoInterface::class)->getReflectionClass()->newInstanceArgs();
             $seo->setUrl($form->get('url')->getData());
             $seo->setRoute('krg_seo_page_show');
 
@@ -136,7 +129,7 @@ class SeoPageAdmin extends Admin
             $this->entityManager->flush();
         }
 
-        $this->clearRoutingCache->exec();
+        $this->clearCache->exec();
     }
 
     private function getAliasChoices()
@@ -189,13 +182,8 @@ class SeoPageAdmin extends Admin
         $this->entityManager = $entityManager;
     }
 
-    public function setClearRoutingCache($clearRoutingCache)
+    public function setClearCache($clearCache)
     {
-        $this->clearRoutingCache = $clearRoutingCache;
-    }
-
-    public function setSeoClass($seoClass)
-    {
-        $this->seoClass = $seoClass;
+        $this->clearCache = $clearCache;
     }
 }

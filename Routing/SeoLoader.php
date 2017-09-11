@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle\Routing;
 
-use KRG\SeoBundle\Repository\SeoRepository;
+use KRG\SeoBundle\Entity\SeoInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
@@ -36,19 +36,14 @@ class SeoLoader extends Loader
      */
     private $normalizer;
 
-    /**
-     * @var string
-     */
-    private $seoClass;
-
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
             throw new \RuntimeException('Do not add the "Seo" loader twice');
         }
 
-        /* @var $seoRepository SeoRepository */
-        $seoRepository = $this->entityManager->getRepository($this->seoClass);
+        $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
+        $seoRepository = $this->entityManager->getRepository($className);
         $seoEntries = $seoRepository->findBy(array(
             'enabled' => true
         ));
@@ -64,7 +59,7 @@ class SeoLoader extends Loader
         /* @var $seo SeoInterface */
         foreach ($seoEntries as $seo) {
             $route = new Route($seo->getUrl());
-            $route->setSeoClass($this->seoClass);
+            $route->setSeoClass($className);
             $route->setSeo($serializer->serialize($seo, 'json'));
             $routes->add($seo->getUid(), $route);
         }
@@ -103,13 +98,5 @@ class SeoLoader extends Loader
     public function setNormalizer($normalizer)
     {
         $this->normalizer = $normalizer;
-    }
-
-    /**
-     * @param string $seoClass
-     */
-    public function setSeoClass($seoClass)
-    {
-        $this->seoClass = $seoClass;
     }
 }

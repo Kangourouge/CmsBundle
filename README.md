@@ -3,7 +3,7 @@
 AppKernel
 ---------
 
-```
+```php
 <?php
 
 public function registerBundles()
@@ -19,7 +19,7 @@ public function registerBundles()
 Configuration
 -------------
 
-```
+```yaml
 # app/config/config.yml
 framework:
     # ...
@@ -27,15 +27,24 @@ framework:
 
 ...
 
+doctrine:
+    orm:
+        resolve_target_entities:
+            KRG\SeoBundle\Entity\SeoInterface: AppBundle\Entity\Seo
+            KRG\SeoBundle\Entity\SeoPageInterface: AppBundle\Entity\SeoPage
+            
+...            
+            
 krg_seo:
     seo_class: AppBundle\Entity\Seo
+    seo_page_class: AppBundle\Entity\SeoPage
     
 ```
 
 Routing
 -------
 
-```
+```yaml
 krg_seo_route_loader:
     resource: .
     type: seo
@@ -44,7 +53,7 @@ krg_seo_route_loader:
 Entity
 ------
 
-```
+```php
 <?php
 
 namespace AppBundle\Entity;
@@ -62,7 +71,6 @@ class Seo extends BaseSeo
 ```
 
 ```
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -82,14 +90,13 @@ class SeoPage extends BaseSeoPage
 Twig
 ----
 
-```
+```twig
 <html>
 <head>
     ...
     {{ seo_head() }}
     ...
 </head>
-...
 ```
 
 Améliorations possibles

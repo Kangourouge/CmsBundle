@@ -3,6 +3,7 @@
 namespace KRG\SeoBundle\Routing;
 
 use KRG\SeoBundle\Entity\SeoInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Serializer\Serializer;
@@ -19,10 +20,16 @@ class UrlGenerator extends BaseUrlGenerator
      */
     private $serializer;
 
+    /**
+     * @var FilesystemAdapter
+     */
+    private $cache;
+
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (!preg_match("/^krg_seo_.+/", $name)) {
-            if (($route = $this->resolve($name, $parameters)) !== null) {
+            $route = $this->resolve($name, $parameters);
+            if ($route !== null) {
                 /* @var $compiledRoute CompiledRoute */
                 $compiledRoute = $route->compile();
 
@@ -61,32 +68,48 @@ class UrlGenerator extends BaseUrlGenerator
 
     private function resolve($name, array $parameters)
     {
-        $routes = array_filter($this->seoRoutes,
-            function (Route $route) use ($name, $parameters) {
-                /* @var $seo SeoInterface */
-                $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
-
-                return $seo->getRoute() === $name && $seo->isValid($parameters);
-            });
-
-        if (count($routes) === 0) {
-            return null;
+        if (!$this->cache) {
+            $this->cache = new FilesystemAdapter('seo'); // TODO: APCu ?
         }
 
-        if (count($routes) === 1) {
-            return reset($routes);
+        // Check if route can be resolved from cache
+        $identifier = $name.implode(array_values($parameters));
+        $cacheItem = $this->cache->getItem(md5($identifier));
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
         }
 
-        // Sort entries by number of matching parameters
-        $weights = array();
-        foreach ($routes as $idx => $route) {
+        // Get all compatible routes
+        $routes = array_filter($this->seoRoutes, function (Route $route) use ($name, $parameters) {
             /* @var $seo SeoInterface */
             $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
-            $weights[$idx] = $seo->diff($parameters);
-        }
-        asort($weights);
 
-        return $routes[key($weights)];
+            return $seo->getRoute() === $name && $seo->isValid($parameters);
+        });
+
+        $nbRoute = count($routes);
+
+        // Sort entries by number of matching parameters
+        if ($nbRoute > 1) {
+            $weights = array();
+            foreach ($routes as $idx => $route) {
+                /* @var $seo SeoInterface */
+                $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
+                $weights[$idx] = $seo->diff($parameters);
+            }
+            asort($weights);
+            $route = $routes[key($weights)];
+        } else if ($nbRoute === 1) {
+            $route = reset($routes);
+        } else {
+            $route = null;
+        }
+
+        // Store in cache
+        $cacheItem->set($route);
+        $this->cache->save($cacheItem);
+
+        return $route;
     }
 
     /**
