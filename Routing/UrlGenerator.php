@@ -74,7 +74,7 @@ class UrlGenerator extends BaseUrlGenerator
 
         // Check if route can be resolved from cache
         $identifier = $name;
-        $flatten = implode(array_values($parameters));
+        $flatten = @implode(array_values($parameters));
         if (is_string($flatten)) { // "" is a string too
             $identifier .= $flatten;
             $cacheItem = $this->cache->getItem(md5($identifier));
