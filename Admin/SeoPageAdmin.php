@@ -60,6 +60,7 @@ class SeoPageAdmin extends Admin
             ->add('url', TextType::class, array(
                 'mapped'      => false,
                 'constraints' => new NotBlank(),
+                'sonata_help' => 'Example: /about-us'
             ))
             ->add('formData', TextareaType::class, array('data' => $this->request->query->get('parameters') ?: $seoPage->getFormData()))->get('formData')->addModelTransformer(new JsonToStringTransformer());
         ;
@@ -115,6 +116,7 @@ class SeoPageAdmin extends Admin
             $seo = $this->entityManager->getClassMetadata(SeoInterface::class)->getReflectionClass()->newInstanceArgs();
             $seo->setUrl($form->get('url')->getData());
             $seo->setRoute('krg_seo_page_show');
+            $seo->setEnabled(false);
 
             $seoPage->setSeo($seo);
 
