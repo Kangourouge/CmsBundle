@@ -68,7 +68,8 @@ class SeoExtension extends \Twig_Extension
         );
 
         foreach($data as $key => &$value) {
-            if ($template = call_user_func(array($seo, 'get' . ucfirst($key)))) {
+            $getter = 'get' . ucfirst($key);
+            if (method_exists($seo, $getter) && $template = call_user_func(array($seo, $getter))) {
                 $value = $twig->render($template, $params);
             }
         }
