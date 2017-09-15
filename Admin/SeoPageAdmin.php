@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -68,6 +69,9 @@ class SeoPageAdmin extends Admin
         // Edition
         if (!$isNew) {
             $formMapper
+                ->add('seo.enabled', CheckboxType::class, array(
+                    'label' => 'Enabled'
+                ))
                 ->remove('url')
                 ->add('seo.url')
                 ->end()
