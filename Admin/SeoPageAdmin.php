@@ -154,6 +154,9 @@ class SeoPageAdmin extends Admin
         $listMapper
             ->add('formRoute')
             ->add('seo.url')
+            ->add('seo.enabled', null, array(
+                'label' => 'Enabled'
+            ))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'edit'   => array(),
