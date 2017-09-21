@@ -73,6 +73,7 @@ class SeoPageAdmin extends Admin
                     'label' => 'Enabled'
                 ))
                 ->remove('url')
+                ->add('key')
                 ->add('seo.url')
                 ->end()
                 ->with('SEO')
@@ -105,6 +106,24 @@ class SeoPageAdmin extends Admin
         }
 
         $formMapper->getFormBuilder()->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
+    }
+
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper
+            ->add('title')
+            ->add('seo.url')
+            ->add('key')
+            ->add('formRoute')
+            ->add('seo.enabled', null, array(
+                'label' => 'Enabled'
+            ))
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'edit'   => array(),
+                    'delete' => array(),
+                ),
+            ));
     }
 
     public function onPostSubmit(FormEvent $event)
@@ -148,24 +167,6 @@ class SeoPageAdmin extends Admin
 
         return $choices;
     }
-
-    protected function configureListFields(ListMapper $listMapper)
-    {
-        $listMapper
-            ->add('formRoute')
-            ->add('seo.url')
-            ->add('seo.enabled', null, array(
-                'label' => 'Enabled'
-            ))
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'edit'   => array(),
-                    'delete' => array(),
-                ),
-            ));
-    }
-
-    /* */
 
     public function getTemplate($name)
     {

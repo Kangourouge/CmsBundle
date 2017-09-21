@@ -103,6 +103,11 @@ Twig
 </head>
 ```
 
+Récupérer l'url d'une SeoPage depuis sa key :
+```twig
+{{ seo_url('cgu') }}
+```
+
 Améliorations possibles
 -----------------------
 

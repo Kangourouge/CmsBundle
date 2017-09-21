@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Seo
  *
- * @ORM\MappedSuperclass
+ * @ORM\MappedSuperclass(repositoryClass="KRG\SeoBundle\Repository\SeoRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class Seo implements SeoInterface
+class Seo implements SeoInterface
 {
     /**
      * @ORM\Id
@@ -23,7 +23,7 @@ abstract class Seo implements SeoInterface
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $enabled;
+    protected $enabled;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo", cascade={"all"})

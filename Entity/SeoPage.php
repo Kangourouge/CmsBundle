@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class SeoPage implements SeoPageInterface
+class SeoPage implements SeoPageInterface
 {
     /**
      * @ORM\Id
@@ -24,6 +24,16 @@ abstract class SeoPage implements SeoPageInterface
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id")
      */
     protected $seo;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    protected $key;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -44,11 +54,6 @@ abstract class SeoPage implements SeoPageInterface
      * @ORM\Column(type="json_array", nullable=true)
      */
     protected $formData;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -117,6 +122,54 @@ abstract class SeoPage implements SeoPageInterface
     public function getSeo()
     {
         return $this->seo;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return SeoPage
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set key
+     *
+     * @param string $key
+     *
+     * @return SeoPage
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+     * Get key
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**
@@ -215,30 +268,6 @@ abstract class SeoPage implements SeoPageInterface
     public function getFormData()
     {
         return $this->formData;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return SeoPage
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**

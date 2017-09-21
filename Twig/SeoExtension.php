@@ -105,6 +105,19 @@ class SeoExtension extends \Twig_Extension
         ));
     }
 
+    public function getSeoUrlBySeoPageKey($key)
+    {
+        /* @var $seo SeoInterface */
+        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBySeoPageKey($key);
+
+
+        if ($seo) {
+            return $seo->getUrl();
+        }
+
+        return '#';
+    }
+
     public function getFunctions()
     {
         return array(
@@ -115,6 +128,9 @@ class SeoExtension extends \Twig_Extension
             'seo_admin' => new \Twig_Function_Method($this, 'getSeoAdmin', array(
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
+            )),
+            'seo_url' => new \Twig_Function_Method($this, 'getSeoUrlBySeoPageKey', array(
+                'is_safe' => array('html'),
             )),
         );
     }
