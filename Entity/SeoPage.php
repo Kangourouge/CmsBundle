@@ -31,7 +31,7 @@ class SeoPage implements SeoPageInterface
     protected $title;
 
     /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
+     * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
      */
     protected $key;
 
