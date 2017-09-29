@@ -83,6 +83,10 @@ class UrlGenerator extends BaseUrlGenerator
             }
         }
 
+        if (null === $this->seoRoutes) {
+            return null;
+        }
+
         // Get all compatible routes
         $routes = array_filter($this->seoRoutes, function (Route $route) use ($name, $parameters) {
             /* @var $seo SeoInterface */
@@ -90,7 +94,6 @@ class UrlGenerator extends BaseUrlGenerator
 
             return $seo->getRoute() === $name && $seo->isValid($parameters);
         });
-
         $nbRoute = count($routes);
 
         // Sort entries by number of matching parameters
