@@ -121,15 +121,15 @@ class SeoExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'seo_head' => new \Twig_Function_Method($this, 'getSeoHead', array(
+            'seo_head' => new \Twig_SimpleFunction('seo_head', array($this, 'getSeoHead'), array(
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
             )),
-            'seo_admin' => new \Twig_Function_Method($this, 'getSeoAdmin', array(
+            'seo_admin' => new \Twig_SimpleFunction('seo_admin', array($this, 'getSeoAdmin'), array(
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
             )),
-            'seo_url' => new \Twig_Function_Method($this, 'getSeoUrlBySeoPageKey', array(
+            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrlBySeoPageKey'), array(
                 'is_safe' => array('html'),
             )),
         );
