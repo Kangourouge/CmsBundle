@@ -18,7 +18,7 @@
     "symfony/symfony"                         : "^2.8|^3.0",
     "doctrine/orm"                            : "~2.3",
     "stof/doctrine-extensions-bundle"         : "*",
-    "sonata-project/doctrine-orm-admin-bundle": "2.3.*",
+    "sonata-project/doctrine-orm-admin-bundle": "^2.3|3.0",
     "egeloen/ckeditor-bundle"                 : "^4.0"
   },
   "autoload"   : {
