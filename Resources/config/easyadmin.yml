@@ -4,7 +4,7 @@ easy_admin:
             class: '%easy_admin_seo_class%'
             controller: KRG\SeoBundle\Admin\Controller\SeoController
             list:
-                fields: ['route', 'metaTitle', 'metaDescription', 'parameters', 'url']
+                fields: ['enabled', 'route', 'metaTitle', 'metaDescription', 'parameters', 'url']
             new:
                 fields: ['route']
             edit:
