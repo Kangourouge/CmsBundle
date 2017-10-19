@@ -263,7 +263,7 @@ class SeoPage implements SeoPageInterface
     /**
      * Get formData
      *
-     * @return string
+     * @return array
      */
     public function getFormData()
     {

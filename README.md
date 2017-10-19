@@ -21,6 +21,7 @@ Configuration
 
 ```yaml
 # app/config/config.yml
+
 framework:
     # ...
     serializer: { enable_annotations: true }
@@ -33,18 +34,14 @@ doctrine:
             KRG\SeoBundle\Entity\SeoInterface: AppBundle\Entity\Seo
             KRG\SeoBundle\Entity\SeoPageInterface: AppBundle\Entity\SeoPage
             
-...            
-            
-krg_seo:
-    seo_class: AppBundle\Entity\Seo
-    seo_page_class: AppBundle\Entity\SeoPage
-    
 ```
 
 Routing
 -------
 
 ```yaml
+# app/config/routing.yml
+
 krg_seo_route_loader:
     resource: .
     type: seo
@@ -74,7 +71,9 @@ class Seo extends BaseSeo
 }
 ```
 
-```
+```php
+<?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -110,6 +109,3 @@ Récupérer l'url d'une SeoPage depuis sa key :
 
 Améliorations possibles
 -----------------------
-
-- SeoAdmin : JS - copier d'un clic les variables dans le presse papier
-- SeoAdmin : empêcher l'utilisation de variable dans l'url si le paramètre est déjà renseigné

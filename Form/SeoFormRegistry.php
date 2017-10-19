@@ -5,11 +5,6 @@ namespace KRG\SeoBundle\Form;
 class SeoFormRegistry
 {
     /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
      * @var array
      */
     private $services;
@@ -17,14 +12,6 @@ class SeoFormRegistry
     function __construct()
     {
         $this->services = array();
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function setContainer($container)
-    {
-        $this->container = $container;
     }
 
     public function add($service, $alias, $route)

@@ -1,42 +1,22 @@
-parameters:
-    krg_seo.extension.seo.class: KRG\SeoBundle\Twig\SeoExtension
-    router.class: KRG\SeoBundle\Routing\Router
-    router.options.generator_class: KRG\SeoBundle\Routing\UrlGenerator
-    router.options.generator_base_class: KRG\SeoBundle\Routing\UrlGenerator
-    router.options.resource_type: %krg_seo.seo_class%
-
 services:
-    krg_seo.extension.seo:
-        class: '%krg_seo.extension.seo.class%'
+    _defaults:
+        autowire: true
+        autoconfigure: true
         public: false
-        calls:
-            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
-            - [setRequestStack, ['@request_stack']]
-            - [setTokenStorage, ['@security.token_storage']]
-            - [setAuthorizationChecker, ['@security.authorization_checker']]
-            - [setFormFactory, ['@form.factory']]
-        tags:
-            - { name: twig.extension }
 
-    krg_seo.listener.seo:
-        class: 'KRG\SeoBundle\Routing\SeoListener'
-        calls:
-            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
-            - [setRouter, ['@router']]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
+    KRG\SeoBundle\Twig\SeoExtension:
+        tags: [twig.extension]
 
-    krg_seo.loader.seo:
-        class: 'KRG\SeoBundle\Routing\SeoLoader'
-        calls:
-            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
-            - [setEncoder, ['@serializer.encoder.json']]
-            - [setNormalizer, ['@serializer.normalizer.object']]
-        tags:
-            - { name: routing.loader }
+    KRG\SeoBundle\Routing\SeoListener:
+        tags: [{ name: kernel.event_listener, event: kernel.request }]
 
-    krg_seo.form.registry:
-        class: 'KRG\SeoBundle\Form\SeoFormRegistry'
-        arguments: [[]]
-        calls:
-            - [setContainer, ['@service_container']]
+    KRG\SeoBundle\Routing\SeoLoader:
+        tags: [routing.loader]
+
+    KRG\SeoBundle\Form\SeoFormRegistry:
+
+    KRG\SeoBundle\DependencyInjection\ClearRoutingCache:
+
+    KRG\SeoBundle\Admin\EventListener\:
+        resource: '../../Admin/EventListener'
+        tags: [kernel.event_subscriber]

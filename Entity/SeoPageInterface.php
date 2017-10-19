@@ -87,7 +87,7 @@ interface SeoPageInterface
     /**
      * Get formData
      *
-     * @return string
+     * @return array
      */
     public function getFormData();
 }

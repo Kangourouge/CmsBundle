@@ -11,20 +11,22 @@ class KRGSeoExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('admin.yml');
-
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $this->injectParameter('seo_class', $container, $config);
-        $this->injectParameter('seo_page_class', $container, $config);
         $this->injectParameter('title_prefix', $container, $config);
         $this->injectParameter('title_suffix', $container, $config);
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
     }
 
-    public function injectParameter($name, ContainerBuilder $container, $config)
+    /**
+     * @param $name
+     * @param ContainerBuilder $container
+     * @param $config
+     */
+    private function injectParameter($name, ContainerBuilder $container, $config)
     {
         $container->setParameter(sprintf('krg_seo.%s', $name), isset($config[$name]) ? $config[$name] : null);
     }

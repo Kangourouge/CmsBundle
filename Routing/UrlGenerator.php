@@ -7,6 +7,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UrlGenerator extends BaseUrlGenerator
 {
@@ -121,19 +122,18 @@ class UrlGenerator extends BaseUrlGenerator
         return $route;
     }
 
+    public function __construct(RouteCollection $routes, RequestContext $context, $logger = null, SerializerInterface $serializer)
+    {
+        parent::__construct($routes, $context, $logger);
+
+        $this->serializer = $serializer;
+    }
+
     /**
-     * @param array $seoRoutes
+     * @param array $routes
      */
     public function setSeoRoutes(array $routes)
     {
         $this->seoRoutes = $routes;
-    }
-
-    /**
-     * @param Serializer $serializer
-     */
-    public function setSerializer($serializer)
-    {
-        $this->serializer = $serializer;
     }
 }

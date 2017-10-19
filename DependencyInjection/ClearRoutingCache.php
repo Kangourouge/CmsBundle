@@ -5,7 +5,9 @@ namespace KRG\SeoBundle\DependencyInjection;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class ClearRoutingCache
 {
@@ -24,6 +26,13 @@ class ClearRoutingCache
      */
     private $kernel;
 
+    public function __construct(RouterInterface $router, Filesystem $filesystem, KernelInterface $kernel)
+    {
+        $this->router = $router;
+        $this->filesystem = $filesystem;
+        $this->kernel = $kernel;
+    }
+
     public function exec()
     {
         $cacheDir = $this->kernel->getCacheDir();
@@ -38,29 +47,5 @@ class ClearRoutingCache
         $ret = $cache->clear();
 
         $this->router->warmUp($cacheDir);
-    }
-
-    /**
-     * @param Router $router
-     */
-    public function setRouter($router)
-    {
-        $this->router = $router;
-    }
-
-    /**
-     * @param Filesystem $filesystem
-     */
-    public function setFilesystem($filesystem)
-    {
-        $this->filesystem = $filesystem;
-    }
-
-    /**
-     * @param Kernel $kernel
-     */
-    public function setKernel($kernel)
-    {
-        $this->kernel = $kernel;
     }
 }

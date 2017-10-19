@@ -5,18 +5,18 @@
 
             {% if not app.request.get('_seo_page') %}
                 <br>
-                <a href="{{ path('krg_seo_admin_edit_seo_page', {'id': seo.seoPage.id, 'parameters': app.request.get(formName)}) }}" class="btn btn-primary">Update form parameters</a>
+                {#<a href="{{ path('krg_seo_admin_edit_seo_page', {'id': seo.seoPage.id, 'parameters': app.request.get(formName)}) }}" class="btn btn-primary">Update form parameters</a>#}
             {% endif %}
         {% endif %}
 
         {% if seo.seoPage is null %}
-            <a href="{{ path('admin_app_seo_edit', {'id': seo.id}) }}" class="btn btn-primary">Edit SEO</a>
+            {#<a href="{{ path('admin_app_seo_edit', {'id': seo.id}) }}" class="btn btn-primary">Edit SEO</a>#}
         {% endif %}
     {% else %}
         {% if app.request.request|length %}
-            <a href="{{ path('admin_app_seo_page_create', {'parameters': app.request.request|first}) }}" class="btn btn-primary">Create FORM SEO</a>
+            {#<a href="{{ path('admin_app_seo_page_create', {'parameters': app.request.request|first}) }}" class="btn btn-primary">Create FORM SEO</a>#}
         {% else %}
-            <a href="{{ path('admin_app_seo_create', {'route': app.request.get('_route')}) }}" class="btn btn-primary">Create SEO</a>
+            {#<a href="{{ path('admin_app_seo_create', {'route': app.request.get('_route')}) }}" class="btn btn-primary">Create SEO</a>#}
         {% endif %}
     {% endif %}
 </div>

@@ -14,8 +14,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-            ->scalarNode('seo_class')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('seo_page_class')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('title_prefix')->end()
             ->scalarNode('title_suffix')->end()
             ->end()

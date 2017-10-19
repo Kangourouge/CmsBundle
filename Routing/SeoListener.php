@@ -2,23 +2,29 @@
 
 namespace KRG\SeoBundle\Routing;
 
+use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Repository\SeoRepository;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class SeoListener
 {
     /**
-     * @var $router Router
+     * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var $entityManager EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
+
+    public function __construct(RouterInterface $router, EntityManagerInterface $entityManager)
+    {
+        $this->router = $router;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Update current request if URI match with one of SEOBUNDLE urls
@@ -61,23 +67,5 @@ class SeoListener
                 $request->attributes->set($key, $value);
             }
         }
-    }
-
-    /* */
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param Router $router
-     */
-    public function setRouter(Router $router)
-    {
-        $this->router = $router;
     }
 }

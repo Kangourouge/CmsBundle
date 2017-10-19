@@ -20,7 +20,6 @@ class Router extends BaseRouter
         $generator->setSeoRoutes(array_filter($this->getRouteCollection()->all(), function (Route $route) {
             return $route instanceof \KRG\SeoBundle\Routing\Route;
         }));
-
         $generator->setSerializer(new Serializer(
             array(new PropertyNormalizer()),
             array(new JsonEncoder())

@@ -2,12 +2,12 @@
 
 namespace KRG\SeoBundle\Routing;
 
+use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\SeoInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -36,6 +36,13 @@ class SeoLoader extends Loader
      */
     private $normalizer;
 
+    public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer)
+    {
+        $this->entityManager = $entityManager;
+        $this->encoder = $encoder;
+        $this->normalizer = $normalizer;
+    }
+
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
@@ -49,11 +56,9 @@ class SeoLoader extends Loader
         ));
 
         $routes = new RouteCollection();
-
         $this->normalizer->setCircularReferenceHandler(function($object) {
             return $object->getId();
         });
-
         $serializer = new Serializer(array($this->normalizer), array($this->encoder));
 
         /* @var $seo SeoInterface */
@@ -69,34 +74,8 @@ class SeoLoader extends Loader
         return $routes;
     }
 
-    /* */
-
     public function supports($resource, $type = null)
     {
         return 'seo' === $type;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param EncoderInterface $encoder
-     */
-    public function setEncoder($encoder)
-    {
-        $this->encoder = $encoder;
-    }
-
-    /**
-     * @param NormalizerInterface $normalizer
-     */
-    public function setNormalizer($normalizer)
-    {
-        $this->normalizer = $normalizer;
     }
 }
