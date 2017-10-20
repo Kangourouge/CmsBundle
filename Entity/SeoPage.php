@@ -26,6 +26,13 @@ class SeoPage implements SeoPageInterface
     protected $seo;
 
     /**
+     * Unmapped url field used for new SeoPage
+     *
+     * @var string
+     */
+    protected $url;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $title;
@@ -122,6 +129,33 @@ class SeoPage implements SeoPageInterface
     public function getSeo()
     {
         return $this->seo;
+    }
+
+    /**
+     * Set Url
+     *
+     * @param $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        if ($this->getSeo()) {
+            return $this->getSeo()->getUrl();
+        }
+
+        return $this->url;
     }
 
     /**
@@ -253,6 +287,10 @@ class SeoPage implements SeoPageInterface
      */
     public function setFormData($formData)
     {
+        if (false === is_array($formData)) {
+            $formData = json_decode($formData, true);
+        }
+
         unset($formData['_token']);
 
         $this->formData = $formData;
@@ -316,5 +354,13 @@ class SeoPage implements SeoPageInterface
     public function getPostContent()
     {
         return $this->postContent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->getPreContent().' '.$this->getPostContent();
     }
 }

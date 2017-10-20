@@ -10,7 +10,7 @@ class PageFormCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('krg_seo.form.registry')) {
+        if (!$container->hasDefinition(SeoFormRegistry::class)) {
             return;
         }
 

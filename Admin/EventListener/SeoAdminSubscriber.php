@@ -3,39 +3,23 @@
 namespace KRG\SeoBundle\Admin\EventListener;
 
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
-use KRG\SeoBundle\DependencyInjection\ClearRoutingCache;
 use KRG\SeoBundle\Entity\SeoInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use KRG\SeoBundle\Util\Redirector;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Routing\RouterInterface;
 
-class SeoAdminSubscriber implements EventSubscriberInterface
+class SeoAdminSubscriber extends AbstractSeoEventSubscriber
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var ClearRoutingCache
-     */
-    private $clearRoutingCache;
-
-    public function __construct(RouterInterface $router, ClearRoutingCache $clearRoutingCache)
-    {
-        $this->router = $router;
-        $this->clearRoutingCache = $clearRoutingCache;
-    }
-
     public static function getSubscribedEvents()
     {
         return array(
             EasyAdminEvents::PRE_PERSIST  => array('prePersist'),
-            EasyAdminEvents::POST_UPDATE  => array('postUpdate'),
+            EasyAdminEvents::POST_UPDATE  => array('clear'),
+            EasyAdminEvents::POST_PERSIST => array('postPersist'),
+            EasyAdminEvents::POST_REMOVE  => array('clear'),
         );
     }
 
-    public function postUpdate(GenericEvent $event)
+    public function clear(GenericEvent $event)
     {
         $entity = $event->getSubject();
 
@@ -43,7 +27,7 @@ class SeoAdminSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->clearRoutingCache->exec();
+        $this->clearRoutingCache();
     }
 
     /**
@@ -59,25 +43,22 @@ class SeoAdminSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $entity->setEnabled(false);
-        $entity->setUrl($this->getPathFromRoute($entity->getRoute()));
-
-        $event['entity'] = $entity;
+        $event['entity'] = $this->initSeo($entity, $this->getPathFromRoute($entity->getRoute()));
     }
 
     /**
-     * Return url from route name
+     * After creating redirect to edition page instead of list
      *
-     * @param $route
-     * @return null|string
+     * @param GenericEvent $event
      */
-    private function getPathFromRoute($route)
+    public function postPersist(GenericEvent $event)
     {
-        if ($route = $this->router->getRouteCollection()->get($route)) {
-            return $route->getPath();
+        $entity = $event->getSubject();
+
+        if (!($entity instanceof SeoInterface)) {
+            return;
         }
 
-        return null;
+        $event['request'] = Redirector::redirector($event, $this->router->generate('easyadmin'), 'Seo', 'edit', $entity->getId());
     }
-
 }

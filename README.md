@@ -51,6 +51,19 @@ seo:
     type:     annotation
 ```
 
+Form tags
+---------
+
+In order to be able to create a custom form, you need to tag your form:
+
+```yaml
+services:
+    AppBundle\Form\ExampleType:
+        tags:
+            - { name: 'form.type', alias: 'form_alias' }
+            - { name: 'seo.page.form', route: 'form_page_route', alias: 'form_alias' }
+```
+
 Entity
 ------
 

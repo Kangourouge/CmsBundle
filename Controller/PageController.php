@@ -35,18 +35,22 @@ class PageController extends AbstractController
 
             // If there is no request, inject form data into request
             if (!$request->get($formName)) {
-                $csrf = $this->container->get(CsrfTokenManagerInterface::class);
+                $csrf = $this->container->get('security.csrf.token_manager');
                 $request->setMethod('POST');
                 $request->request->set($formName, array_merge(
                     $seoPage->getFormData(),
                     ['_token' => $csrf->refreshToken($formName)]
                 ));
                 $request->request->set('_seo_page', true);
+            } else {
+                // Store form data into session to be able to forward it to database later (AdminController)
+                $this->container->get('session')->set(sprintf('seo_page_%s', $seoPage->getId()), $request->get($formName));
             }
 
-            $routes = $this->container->get(RouterInterface::class)->getRouteCollection();
+            $routes = $this->container->get('router')->getRouteCollection();
             $controller = $routes->get($seoPage->getFormRoute())->getDefaults()['_controller'];
         }
+
 
         return [
             'seoPage'    => $seoPage,
