@@ -28,27 +28,11 @@ interface SeoInterface
     public function getEnabled();
 
     /**
-     * Set seoPage
-     *
-     * @param SeoPageInterface $seoPage
-     *
-     * @return SeoInterface
-     */
-    public function setSeoPage(SeoPageInterface $seoPage = null);
-
-    /**
-     * Get seoPage
-     *
-     * @return SeoPageInterface
-     */
-    public function getSeoPage();
-
-    /**
      * Set uid
      *
      * @param string $uid
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUid($uid);
 
@@ -64,7 +48,7 @@ interface SeoInterface
      *
      * @param string $route
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setRoute($route);
 
@@ -80,7 +64,7 @@ interface SeoInterface
      *
      * @param string $url
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUrl($url);
 
@@ -96,7 +80,7 @@ interface SeoInterface
      *
      * @param array $parameters
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setParameters($parameters);
 
@@ -112,7 +96,7 @@ interface SeoInterface
      *
      * @param string $metaTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaTitle($metaTitle);
 
@@ -128,7 +112,7 @@ interface SeoInterface
      *
      * @param string $metaDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaDescription($metaDescription);
 
@@ -144,7 +128,7 @@ interface SeoInterface
      *
      * @param string $ogTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgTitle($ogTitle);
 
@@ -160,7 +144,7 @@ interface SeoInterface
      *
      * @param string $ogDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgDescription($ogDescription);
 
@@ -176,7 +160,7 @@ interface SeoInterface
      *
      * @param string $ogImage
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgImage($ogImage);
 
@@ -188,11 +172,13 @@ interface SeoInterface
     public function getOgImage();
 
     /**
+     * @param array $parameters
      * @return int
      */
     public function diff(array $parameters);
 
     /**
+     * @param array $parameters
      * @return boolean
      */
     public function isValid(array $parameters);

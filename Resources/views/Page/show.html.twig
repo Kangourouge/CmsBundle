@@ -1,13 +1,5 @@
-{% block seo_pre_content %}
-    {% include "@KRGSeo/Page/show_content.html.twig" with {'content': seoPage.preContent, 'title': seoPage.seo.metaTitle, 'controller': controller} %}
-{% endblock seo_pre_content %}
+{% extends '::base.html.twig' %}
 
-{% block seo_search %}
-    {% if controller %}
-        {{ render(controller(controller, {'request': app.request})) }}
-    {% endif %}
-{% endblock seo_search %}
-
-{% block seo_post_content %}
-    {% include "@KRGSeo/Page/show_content.html.twig" with {'content': seoPage.postContent} %}
-{% endblock seo_post_content %}
+{% block container %}
+    {{ page.content }}
+{% endblock %}

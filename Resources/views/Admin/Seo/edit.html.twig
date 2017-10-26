@@ -1,4 +1,5 @@
 {% extends '@EasyAdmin/default/edit.html.twig' %}
+{% form_theme form with '@EasyAdmin/form/bootstrap_3_layout.html.twig' %}
 
 {% block entity_form %}
     {{ form_start(form) }}
@@ -30,10 +31,6 @@
     {{ form_row(form.ogImage) }}
 
     <input type="submit" value="submit">
-
-    <div class="hidden">
-        {{ form_rest(form) }}
-    </div>
 
     {{ form_end(form) }}
 {% endblock entity_form %}

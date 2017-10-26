@@ -4,8 +4,13 @@ services:
         autoconfigure: true
         public: false
 
-    KRG\SeoBundle\Twig\SeoExtension:
+    KRG\SeoBundle\Twig\:
+        resource: '../../Twig/*'
         tags: [twig.extension]
+
+    KRG\SeoBundle\Twig\BlockExtension:
+        arguments:
+            $cacheDir: '%kernel.cache_dir%'
 
     KRG\SeoBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]

@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle\Admin\Controller;
 
-use JavierEguiluz\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use KRG\SeoBundle\Entity\SeoPageInterface;
 use KRG\SeoBundle\Form\SeoFormRegistry;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,7 +12,7 @@ class SeoPageController extends BaseAdminController
 {
     protected function createSeoPageEntityFormBuilder(SeoPageInterface $entity, $view)
     {
-        $formBuilder = $this->createEntityFormBuilder($entity, $view);
+        $formBuilder = parent::createEntityFormBuilder($entity, $view);
 
         // Assign Seo.form choices
         $formBuilder->remove('formType');
@@ -22,7 +22,6 @@ class SeoPageController extends BaseAdminController
             'required' => false
         ]);
 
-        if ($formBuilder)
         $formBuilder->remove('formData');
         $formBuilder->add('formData', HiddenType::class, [
             'required' => false,

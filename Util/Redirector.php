@@ -8,6 +8,8 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 class Redirector
 {
     /**
+     * Generate easyadmin EasyAdmin working URL
+     *
      * @param $basePath /admin
      * @param $entityName
      * @param $action
@@ -27,6 +29,8 @@ class Redirector
     }
 
     /**
+     * Update GenericEvent request with EasyAdmin working URL
+     *
      * @param GenericEvent $event
      * @param $basePath
      * @param $entityName
@@ -45,5 +49,4 @@ class Redirector
 
         return $request;
     }
-
 }

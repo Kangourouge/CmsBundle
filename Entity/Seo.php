@@ -26,11 +26,6 @@ class Seo implements SeoInterface
     protected $enabled;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo", cascade={"all"})
-     */
-    protected $seoPage;
-
-    /**
      * @ORM\Column(type="string", unique=true)
      */
     protected $uid;
@@ -80,28 +75,14 @@ class Seo implements SeoInterface
      */
     protected $ogImage;
 
-    /**
-     * @var string
-     */
-    private $className;
-
     public function __construct()
     {
         $this->routeParameters = new ArrayCollection();
-        $this->className = static::class;
     }
 
     public function __toString()
     {
         return $this->getUid() ?: '';
-    }
-
-    /**
-     * @ORM\PostLoad()
-     */
-    public function onPostLoad()
-    {
-        $this->className = static::class;
     }
 
     /**
@@ -136,8 +117,6 @@ class Seo implements SeoInterface
         // $this->url = $slugify->slugify($this->url));
     }
 
-    /* */
-
     /**
      * Get id
      *
@@ -170,30 +149,6 @@ class Seo implements SeoInterface
     public function getEnabled()
     {
         return $this->enabled;
-    }
-
-    /**
-     * Set seoPage
-     *
-     * @param SeoPageInterface $seoPage
-     *
-     * @return SeoInterface
-     */
-    public function setSeoPage(SeoPageInterface $seoPage = null)
-    {
-        $this->seoPage = $seoPage;
-
-        return $this;
-    }
-
-    /**
-     * Get seoPage
-     *
-     * @return SeoPageInterface
-     */
-    public function getSeoPage()
-    {
-        return $this->seoPage;
     }
 
     /**
@@ -447,8 +402,6 @@ class Seo implements SeoInterface
     {
         return $this->ogImage;
     }
-
-    /* */
 
     public function diff(array $parameters)
     {

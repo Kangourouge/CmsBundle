@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class SeoExtension extends \Twig_Extension
@@ -56,13 +55,13 @@ class SeoExtension extends \Twig_Extension
     public function getSeoHead(\Twig_Environment $environment)
     {
         if ($this->request === null) {
-            return;
+            return null;
         }
 
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return;
+            return null;
         }
 
         // Get usefull parameters from the request
@@ -98,12 +97,12 @@ class SeoExtension extends \Twig_Extension
     public function getSeoAdmin(\Twig_Environment $environment)
     {
         if ($this->request === null) {
-            return;
+            return null;
         }
 
         if (false === $this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
             false === $this->authorizationChecker->isGranted(KRGSeoBundle::ROLE_SEO)) {
-            return;
+            return null;
         }
 
         /* @var $seo SeoInterface */
@@ -148,21 +147,5 @@ class SeoExtension extends \Twig_Extension
                 'is_safe' => array('html'),
             )),
         );
-    }
-
-    /**
-     * @return UserInterface
-     */
-    public function getUser()
-    {
-        return $this->tokenStorage->getToken()->getUser();
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'krg_seo_bundle';
     }
 }

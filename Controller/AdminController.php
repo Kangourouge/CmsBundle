@@ -16,6 +16,9 @@ class AdminController extends AbstractController
 {
     /**
      * @Route("/edit/{id}", name="krg_seo_admin_seo_page_update");
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateSeoPageAction(Request $request, $id)
     {

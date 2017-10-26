@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle\Admin\Controller;
 
-use JavierEguiluz\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Routing\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,14 +14,14 @@ class SeoController extends BaseAdminController
 {
     protected function createSeoEntityFormBuilder(SeoInterface $entity, $view)
     {
-        $formBuilder = $this->createEntityFormBuilder($entity, $view);
+        $formBuilder = parent::createEntityFormBuilder($entity, $view);
 
         // Assign Seo.route choices
         $formBuilder->remove('route');
         $formBuilder->add('route', ChoiceType::class, array(
             'choices'  => $this->getRouteChoices(),
             'disabled' => (bool)$entity->getId(), // Disabled on edition
-            'data'     => $this->request->get('route')
+            'data'     => (bool)$entity->getId() ? $entity->getRoute() : $this->request->get('route')
         ));
 
         if ($view === 'edit') {

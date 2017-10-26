@@ -30,6 +30,7 @@ class SeoListener
      * Update current request if URI match with one of SEOBUNDLE urls
      *
      * @param GetResponseEvent $event
+     * @return null|void
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -42,7 +43,7 @@ class SeoListener
 
         // Retrieve the original route
         if (!preg_match("/^krg_seo_.+/", $route)) {
-            return;
+            return null;
         }
 
         /* @var $seoRepository SeoRepository */
@@ -52,7 +53,7 @@ class SeoListener
         /* @var $seo SeoInterface */
         $seo = $seoRepository->findOneByUid($route);
         if ($seo === null) {
-            return;
+            return null;
         }
 
         // Update request to keep url intact
