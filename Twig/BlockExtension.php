@@ -4,25 +4,15 @@ namespace KRG\SeoBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\BlockFormInterface;
+use KRG\SeoBundle\Entity\BlockInterface;
 use KRG\SeoBundle\Entity\BlockStaticInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
-use KRG\SeoBundle\Entity\SeoPageInterface;
-use Doctrine\ORM\EntityManager;
-use KRG\SeoBundle\KRGSeoBundle;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\Simple\FilesystemCache;
-use Symfony\Component\Cache\Simple\PhpArrayCache;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
+use Twig\Node\Expression\BlockReferenceExpression;
 
+/**
+ * Class BlockExtension
+ * @package KRG\SeoBundle\Twig
+ */
 class BlockExtension extends \Twig_Extension
 {
     /**
@@ -38,25 +28,66 @@ class BlockExtension extends \Twig_Extension
     /**
      * @var string
      */
-    private $cacheKey;
+    private $cacheDirKrg;
 
+    /**
+     * @var string
+     */
+    private $cacheFileName;
+
+    /**
+     * @var \Twig_TemplateWrapper
+     */
+    private $template;
+
+    /**
+     * BlockExtension constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param $cacheDir
+     */
     public function __construct(EntityManagerInterface $entityManager, $cacheDir)
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
-        $this->cacheKey = 'krg_seo_blocks';
+        $this->cacheDirKrg = $cacheDir.'/krg';
+        $this->cacheFileName = 'krg_seo_blocks.html.twig';
     }
 
     /**
      * Build blocks into a specific template
      *
-     * @return \Twig_Template
+     * @param \Twig_Environment $environment
+     * @return \Twig_TemplateWrapper
      */
-    private function getTemplateFromCache()
+    private function getTemplateFromCache(\Twig_Environment $environment)
     {
-        // Dossier krg a faire
-        $path = sprintf('%s/twig/krg_seo_blocks.html.twig', $this->cacheDir);
 
+        if ($this->template) {
+            return $this->template;
+        }
+
+        $this->createFileTemplate();
+        $environment->setCache($this->cacheDir);
+        $environment->setLoader(new \Twig_Loader_Chain([
+            $environment->getLoader(), // Preserve old loader
+            new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
+        ]));
+
+        $this->template = $environment->load($this->cacheFileName); // Load template from cache
+
+        return $this->template;
+    }
+
+    /**
+     * Generate $this->cacheFileName twig template composed of each blocks
+     */
+    public function createFileTemplate()
+    {
+        if (!is_dir($this->cacheDirKrg)) {
+            mkdir($this->cacheDirKrg);
+        }
+
+        $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
         if (!file_exists($path)) {
             $blocksStatic = $this->entityManager->getRepository(BlockStaticInterface::class)->findAll();
             $blocksForm = $this->entityManager->getRepository(BlockFormInterface::class)->findAll();
@@ -64,52 +95,55 @@ class BlockExtension extends \Twig_Extension
             $content = [];
             /* @var $block BlockStaticInterface */
             foreach ($blocksStatic as $blockStatic) {
-                $content[] = sprintf("{%% block %s %%}%s{%% endblock %%}\n", $blockStatic->getKey(), $blockStatic->getContent());
+                if (false === $this->hasBlockLoop($blockStatic)) {
+                    $content[] = sprintf("{%% block %s %%}%s{%% endblock %%}\n", $blockStatic->getKey(), $blockStatic->getContent());
+                }
             }
+
             /* @var $blockForm BlockFormInterface */
             foreach ($blocksForm as $blockForm) {
-    //            $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGSeoBundle:Block:form', {'blockForm': %d})) }}{%% endblock %%}\n", $blockForm->getKey(), $blockForm->getId());
+                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGSeoBundle:Block:form', {'blockForm': %d})) }}{%% endblock %%}\n", $blockForm->getKey(), $blockForm->getId());
             }
 
-            file_put_contents($path, implode('', $content));
+            return (bool)file_put_contents($path, implode('', $content));
         }
 
-
-        $loader = new \Twig_Loader_Filesystem(sprintf('%s/twig', $this->cacheDir));
-        $twig = new \Twig_Environment($loader, array('cache' => $this->cacheDir));
-        $template = $twig->load('krg_seo_blocks.html.twig');
-
-        return $template;
+        return false;
     }
 
     /**
-     * Render a block by is key
+     * Render a block by its key
      *
      * @param \Twig_Environment $environment
      * @param $key
      */
     public function getBlock(\Twig_Environment $environment, $key)
     {
-        $block = $this->entityManager->getRepository(BlockStaticInterface::class)->findOneBy([
-            'key'     => $key,
-            'enabled' => true,
-        ]);
+        $template = $this->getTemplateFromCache($environment);
 
-        if ($block) {
-            $template = $this->getTemplateFromCache();
-            if ($template->hasBlock($key, [])) {
-                echo $template->renderBlock($key, []);
-            }
+        if ($template->hasBlock($key)) {
+            echo $template->renderBlock($key);
         }
+    }
+
+    /**
+     * Simple block loop detect, can be improved
+     *
+     * @param BlockInterface $block
+     * @return int
+     */
+    protected function hasBlockLoop(BlockInterface $block)
+    {
+        return (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
     }
 
     public function getFunctions()
     {
-        return array(
-            'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'getBlock'), array(
-                'needs_environment' => true,
-                'is_safe'           => array('html'),
-            ))
-        );
+        return [
+            'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'getBlock'), [
+                'needs_environment' => true, // Tell twig we need the environment
+                'is_safe' => ['html'],
+            ]),
+        ];
     }
 }
