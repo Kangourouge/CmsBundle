@@ -37,22 +37,6 @@ interface BlockFormInterface extends BlockInterface
     public function getType();
 
     /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return BlockFormInterface
-     */
-    public function setParameters($parameters);
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters();
-
-    /**
      * Set data
      *
      * @param string $data

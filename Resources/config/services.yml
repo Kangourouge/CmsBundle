@@ -8,7 +8,19 @@ services:
         resource: '../../Twig/*'
         tags: [twig.extension]
 
+    KRG\SeoBundle\Form\Type\:
+        resource: '../../Form/Type/*'
+        tags: [form.type]
+
+    KRG\SeoBundle\Form\EventListener\:
+        resource: '../../Form/EventListener/*'
+        tags: [kernel.event_subscriber]
+
     KRG\SeoBundle\Twig\BlockExtension:
+        arguments:
+            $cacheDir: '%kernel.cache_dir%'
+
+    KRG\SeoBundle\Twig\MenuExtension:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
 

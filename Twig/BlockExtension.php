@@ -5,9 +5,6 @@ namespace KRG\SeoBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\BlockFormInterface;
 use KRG\SeoBundle\Entity\BlockInterface;
-use KRG\SeoBundle\Entity\BlockStaticInterface;
-use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
-use Twig\Node\Expression\BlockReferenceExpression;
 
 /**
  * Class BlockExtension
@@ -59,7 +56,7 @@ class BlockExtension extends \Twig_Extension
      * @param \Twig_Environment $environment
      * @return \Twig_TemplateWrapper
      */
-    private function getTemplateFromCache(\Twig_Environment $environment)
+    private function getTemplate(\Twig_Environment $environment)
     {
 
         if ($this->template) {
@@ -89,11 +86,11 @@ class BlockExtension extends \Twig_Extension
 
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
         if (!file_exists($path)) {
-            $blocksStatic = $this->entityManager->getRepository(BlockStaticInterface::class)->findAll();
+            $blocksStatic = $this->entityManager->getRepository(BlockInterface::class)->findAll();
             $blocksForm = $this->entityManager->getRepository(BlockFormInterface::class)->findAll();
 
             $content = [];
-            /* @var $block BlockStaticInterface */
+            /* @var $block BlockInterface */
             foreach ($blocksStatic as $blockStatic) {
                 if (false === $this->hasBlockLoop($blockStatic)) {
                     $content[] = sprintf("{%% block %s %%}%s{%% endblock %%}\n", $blockStatic->getKey(), $blockStatic->getContent());
@@ -119,8 +116,9 @@ class BlockExtension extends \Twig_Extension
      */
     public function getBlock(\Twig_Environment $environment, $key)
     {
-        $template = $this->getTemplateFromCache($environment);
-
+        $template = $this->getTemplate($environment);
+dump($template);
+        die;
         if ($template->hasBlock($key)) {
             echo $template->renderBlock($key);
         }

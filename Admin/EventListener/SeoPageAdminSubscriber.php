@@ -2,14 +2,11 @@
 
 namespace KRG\SeoBundle\Admin\EventListener;
 
-use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
-use KRG\SeoBundle\DependencyInjection\ClearRoutingCache;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Entity\SeoPageInterface;
 use KRG\SeoBundle\Util\Redirector;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Routing\RouterInterface;
 
 class SeoPageAdminSubscriber extends AbstractSeoEventSubscriber
 {

@@ -9,17 +9,48 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  */
-class Page extends BlockStatic implements PageInterface
+class Page extends Block implements PageInterface, BlockContentInterface
 {
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    protected $name;
+
     /**
      * @ORM\OneToOne(targetEntity="KRG\SeoBundle\Entity\SeoInterface", inversedBy="page", cascade={"all"})
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id")
+     * @var SeoInterface
      */
     protected $seo;
 
-    function __toString()
+    public function __toString()
     {
-        return $this->getSeo() ? (string) $this->getSeo() : '';
+        return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Page
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -44,5 +75,17 @@ class Page extends BlockStatic implements PageInterface
     public function getSeo()
     {
         return $this->seo;
+    }
+
+    /**
+     * @param $enabled
+     *
+     * @return PageInterface
+     */
+    public function setEnabled($enabled)
+    {
+        parent::setEnabled($enabled);
+        $this->seo->setEnabled($enabled);
+        return $this;
     }
 }

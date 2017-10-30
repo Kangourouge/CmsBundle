@@ -7,22 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BlockForm
  *
- * @ORM\Entity
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="krg_block_form")
  */
 class BlockForm extends AbstractBlock implements BlockFormInterface
 {
     /**
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $route;
-
-    /**
      * @ORM\Column(type="json_array", nullable=true)
      * @var string
      */
-    protected $parameters;
+    protected $route;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -82,30 +76,6 @@ class BlockForm extends AbstractBlock implements BlockFormInterface
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return BlockFormInterface
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
     }
 
     /**

@@ -1,0 +1,17 @@
+easy_admin:
+    entities:
+        Menu:
+            class: '%easy_admin_seo_menu_class%'
+            list:
+                fields:
+                    - name
+                    - parent
+                    - title
+                    - url
+            form:
+                fields:
+                    - name
+                    - parent
+                    - title
+                    - { property: route, type: KRG\SeoBundle\Form\Type\RouteType }
+                    - url

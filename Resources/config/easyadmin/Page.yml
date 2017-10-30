@@ -1,0 +1,16 @@
+easy_admin:
+    entities:
+        Page:
+            class: '%easy_admin_seo_page_class%'
+            list:
+                fields:
+                    - key
+                    - name
+                    - { property: seo.url, label: 'Url' }
+                    - { property: enabled, type: toggle, label: 'Enabled' }
+            form:
+                fields:
+                    - key
+                    - name
+                    - { property: seo, type: KRG\SeoBundle\Form\Type\SeoPageSeoType }
+                    - content

@@ -2,14 +2,14 @@
 
 namespace KRG\SeoBundle\Entity;
 
-interface BlockStaticInterface extends BlockInterface
+interface BlockContentInterface extends BlockInterface
 {
     /**
      * Set content
      *
      * @param string $content
      *
-     * @return BlockStaticInterface
+     * @return BlockInterface
      */
     public function setContent($content);
 

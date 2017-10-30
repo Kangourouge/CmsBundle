@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle\Entity;
 
-interface PageInterface extends BlockStaticInterface
+interface PageInterface extends BlockInterface
 {
     /**
      * Set seo

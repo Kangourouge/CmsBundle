@@ -5,12 +5,12 @@ namespace KRG\SeoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BlockStatic
+ * Block
  *
  * @ORM\MappedSuperclass()
  * @ORM\Table(name="krg_block_static")
  */
-class BlockStatic extends AbstractBlock implements BlockStaticInterface
+class Block extends AbstractBlock implements BlockInterface, BlockContentInterface
 {
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -22,7 +22,7 @@ class BlockStatic extends AbstractBlock implements BlockStaticInterface
      *
      * @param string $content
      *
-     * @return BlockStaticInterface
+     * @return BlockInterface
      */
     public function setContent($content)
     {

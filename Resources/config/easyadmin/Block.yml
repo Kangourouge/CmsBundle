@@ -1,0 +1,15 @@
+easy_admin:
+    entities:
+        Block:
+            class: '%easy_admin_seo_block_class%'
+            list:
+                fields:
+                    - key
+                    - name
+                    - { property: enabled, type: toggle, label: 'Enabled' }
+            form:
+                fields:
+                    - key
+                    - name
+                    - title
+                    - content
