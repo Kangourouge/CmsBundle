@@ -26,7 +26,7 @@ class Page extends Block implements PageInterface, BlockContentInterface
 
     public function __toString()
     {
-        return $this->name;
+        return (string)$this->name;
     }
 
     /**
@@ -85,7 +85,11 @@ class Page extends Block implements PageInterface, BlockContentInterface
     public function setEnabled($enabled)
     {
         parent::setEnabled($enabled);
-        $this->seo->setEnabled($enabled);
+
+        if ($this->seo) {
+            $this->seo->setEnabled($enabled);
+        }
+
         return $this;
     }
 }

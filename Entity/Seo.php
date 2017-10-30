@@ -21,7 +21,7 @@ class Seo implements SeoInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", options={"default": false})
+     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
      */
     protected $enabled;
 
@@ -78,6 +78,7 @@ class Seo implements SeoInterface
     public function __construct()
     {
         $this->routeParameters = new ArrayCollection();
+        $this->enabled = false;
     }
 
     public function __toString()

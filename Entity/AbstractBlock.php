@@ -20,7 +20,7 @@ abstract class AbstractBlock implements BlockInterface
     protected $key;
 
     /**
-     * @ORM\Column(type="boolean", name="is_enabled")
+     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
      * @var boolean
      */
     protected $enabled;

@@ -10,7 +10,8 @@ easy_admin:
                     - { property: enabled, type: toggle, label: 'Enabled' }
             form:
                 fields:
+                    - enabled
                     - key
                     - name
-                    - { property: seo, type: KRG\SeoBundle\Form\Type\SeoPageSeoType }
+                    - { property: seo, type: KRG\SeoBundle\Form\Type\SeoType }
                     - content
