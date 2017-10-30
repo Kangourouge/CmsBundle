@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle;
 
-use KRG\SeoBundle\DependencyInjection\Compiler\PageFormCompilerPass;
+use KRG\SeoBundle\DependencyInjection\Compiler\SeoFormCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -14,6 +14,6 @@ class KRGSeoBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new PageFormCompilerPass());
+        $container->addCompilerPass(new SeoFormCompilerPass());
     }
 }

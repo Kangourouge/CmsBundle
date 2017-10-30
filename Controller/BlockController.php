@@ -3,6 +3,7 @@
 namespace KRG\SeoBundle\Controller;
 
 use KRG\SeoBundle\Entity\BlockFormInterface;
+use KRG\SeoBundle\Form\SeoFormRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,32 +14,51 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BlockController extends AbstractController
 {
+    /**
+     * @Route("/show/{key}", name="krg_block_form")
+     *
+     * @param Request $request
+     * @param BlockFormInterface $blockForm
+     * @return Response
+     */
     public function formAction(Request $request, BlockFormInterface $blockForm)
     {
-        $controller = null;
-        if ($formType = $blockForm->getType()) {
-            $form = $this->createForm($formType);
+        $seoFormRegistry = $this->container->get(SeoFormRegistry::class);
+        $seoForm = $seoFormRegistry->get($blockForm->getType());
+
+        if ($seoForm) {
+            $form = $this->createForm($seoForm['form']);
             $formName = $form->getConfig()->getName();
 
-            // If there is no request, inject form data into request
+            // If there is no request, build data
             if (!$request->get($formName)) {
                 $csrf = $this->container->get('security.csrf.token_manager');
-                $request->setMethod('POST');
-                $request->request->set($formName, array_merge(
+                $data = array_merge(
                     $blockForm->getData(),
                     ['_token' => $csrf->refreshToken($formName)]
-                ));
+                );
+
+                // Manually submit form with blockForm data
+                $form->submit($data);
             }
 
-            $routes = $this->container->get('router')->getRouteCollection();
-            $controller = $routes->get($blockForm->getRoute())->getDefaults()['_controller'];
+            // Call service handler (from tag)
+            $seoForm['handler']->handle($request, $form);
 
-            // Forward marche pas
-
-            return $this->render('@KRGSeo/Block/show_form.html.twig', ['controller' => $controller]);
+            return $this->render($seoForm['template'], [
+                'form' => $form->createView()
+            ]);
         }
 
         return new Response();
+    }
+
+    public static function getSubscribedServices()
+    {
+        return array_merge(
+            parent::getSubscribedServices(), [
+            '?'.SeoFormRegistry::class,
+        ]);
     }
 }
 

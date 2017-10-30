@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class PageFormCompilerPass implements CompilerPassInterface
+class SeoFormCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -15,17 +15,17 @@ class PageFormCompilerPass implements CompilerPassInterface
         }
 
         $definition = $container->findDefinition(SeoFormRegistry::class);
-        $taggedServices = $container->findTaggedServiceIds('seo.page.form');
+        $taggedServices = $container->findTaggedServiceIds('seo.form');
 
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall('add', [
-                    new Reference($id),
+                    $id,
                     $attributes['alias'],
-                    $attributes['route'],
+                    new Reference($attributes['handler']),
+                    $attributes['template'],
                 ]);
             }
         }
-
     }
 }

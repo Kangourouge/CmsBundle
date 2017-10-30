@@ -7,34 +7,35 @@ class SeoFormRegistry
     /**
      * @var array
      */
-    private $services;
+    private $seoForms;
 
     function __construct()
     {
-        $this->services = array();
+        $this->seoForms = array();
     }
 
-    public function add($service, $alias, $route)
+    public function add($form, $alias, $handler, $template)
     {
-        $this->services[get_class($service)] = array(
-            'alias' => $alias,
-            'form'  => $service,
-            'route' => $route
+        $this->seoForms[$form] = array(
+            'alias'    => $alias,
+            'form'     => $form,
+            'handler'  => $handler,
+            'template' => $template,
         );
     }
 
     /**
-     * @param $alias
+     * @param $id
      *
      * @return array
      */
-    public function get($alias)
+    public function get($id)
     {
-        if (!array_key_exists($alias, $this->services)) {
-            throw new \InvalidArgumentException(sprintf('The service "%s" is not registered with the service container.', $alias));
+        if (!array_key_exists($id, $this->seoForms)) {
+            throw new \InvalidArgumentException(sprintf('The service "%s" is not registered with the service container.', $id));
         }
 
-        return $this->services[$alias];
+        return $this->seoForms[$id];
     }
 
     /**
@@ -42,16 +43,19 @@ class SeoFormRegistry
      */
     public function all()
     {
-        return $this->services;
+        return $this->seoForms;
     }
 
     /**
-     * @param $alias
+     * @param $id
      *
      * @return bool
      */
-    public function has($alias)
+    public function has($id)
     {
-        return isset($this->services[$alias]);
+        return isset($this->seoForms[$id]);
     }
+
+
+
 }

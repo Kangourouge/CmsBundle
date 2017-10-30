@@ -32,8 +32,10 @@ doctrine:
     orm:
         resolve_target_entities:
             KRG\SeoBundle\Entity\SeoInterface: AppBundle\Entity\Seo
-            KRG\SeoBundle\Entity\SeoPageInterface: AppBundle\Entity\SeoPage
-            
+            KRG\SeoBundle\Entity\PageInterface: AppBundle\Entity\Page
+            KRG\SeoBundle\Entity\MenuInterface: AppBundle\Entity\Menu
+            KRG\SeoBundle\Entity\BlockInterface: AppBundle\Entity\Block
+            KRG\SeoBundle\Entity\BlockFormInterface: AppBundle\Entity\BlockForm
 ```
 
 Routing
@@ -61,47 +63,38 @@ services:
     AppBundle\Form\ExampleType:
         tags:
             - { name: 'form.type', alias: 'form_alias' }
-            - { name: 'seo.page.form', route: 'form_page_route', alias: 'form_alias' }
+            - { name: 'seo.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
+```
+
+```php
+<?php
+
+namespace AppBundle\Form\Handler;
+
+class TestHandler implements FormHandlerInterface
+{
+    public function handle(Request $request, FormInterface $form)
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $form->handleRequest($request);
+        }
+
+        return null;
+    }
+}
+
 ```
 
 Entity
 ------
 
-```php
-<?php
+Create 5 entities:
 
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use KRG\SeoBundle\Entity\Seo as BaseSeo;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="seo")
- */
-class Seo extends BaseSeo
-{
-}
-```
-
-```php
-<?php
-
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use KRG\SeoBundle\Entity\SeoPage as BaseSeoPage;
-
-/**
- * SeoPage
- *
- * @ORM\Entity
- * @ORM\Table(name="seo_page")
- */
-class SeoPage extends BaseSeoPage
-{
-}
-```
+class Seo extends \KRG\SeoBundle\Entity\Seo;
+class Page extends \KRG\SeoBundle\Entity\Page;
+class Menu extends \KRG\SeoBundle\Entity\Menu;
+class Block extends \KRG\SeoBundle\Entity\Block;
+class BlockForm extends \KRG\SeoBundle\Entity\BlockForm;
 
 Twig
 ----
