@@ -7,7 +7,8 @@ use Symfony\Component\Form\DataTransformerInterface;
 class JsonToStringTransformer implements DataTransformerInterface
 {
     /**
-     * Transform an array to a JSON string
+     * @param mixed $array
+     * @return string
      */
     public function transform($array)
     {
@@ -15,7 +16,8 @@ class JsonToStringTransformer implements DataTransformerInterface
     }
 
     /**
-     * Transform a JSON string to an array
+     * @param mixed $string
+     * @return mixed
      */
     public function reverseTransform($string)
     {

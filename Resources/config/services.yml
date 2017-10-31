@@ -12,10 +12,6 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-    KRG\SeoBundle\Form\EventListener\:
-        resource: '../../Form/EventListener/*'
-        tags: [kernel.event_subscriber]
-
     KRG\SeoBundle\Twig\BlockExtension:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
@@ -38,8 +34,13 @@ services:
         tags: [doctrine.event_subscriber]
         public: true
 
-    KRG\SeoBundle\DependencyInjection\ClearRoutingCache:
+    KRG\SeoBundle\Entity\Validator\:
+        resource: '../../Entity/Validator/*'
+        tags: [validator.constraint_validator]
+        public: true
 
-#    KRG\SeoBundle\Admin\EventListener\:
-#        resource: '../../Admin/EventListener'
-#        tags: [kernel.event_subscriber]
+    KRG\SeoBundle\Service\:
+        resource: '../../Service/*'
+        public: true
+
+    KRG\SeoBundle\DependencyInjection\ClearRoutingCache:

@@ -5,6 +5,7 @@ namespace KRG\SeoBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use KRG\SeoBundle\Entity\MenuInterface;
+use KRG\SeoBundle\Service\MenuBuilderInterface;
 
 /**
  * Class MenuExtension
@@ -38,15 +39,23 @@ class MenuExtension extends \Twig_Extension
     private $template;
 
     /**
-     * BlockExtension constructor.
+     * @var MenuBuilderInterface
+     */
+    private $menuBuilder;
+
+    /**
+     * MenuExtension constructor.
      * @param EntityManagerInterface $entityManager
      * @param $cacheDir
+     * @param MenuBuilderInterface $menuBuilder
+     * @param null $theme
      */
-    public function __construct(EntityManagerInterface $entityManager, $cacheDir, $theme = null)
+    public function __construct(EntityManagerInterface $entityManager, $cacheDir, MenuBuilderInterface $menuBuilder, $theme = null)
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
-        $this->theme = $theme;
+        $this->menuBuilder = $menuBuilder;
+        $this->theme = $theme ?? 'KRGSeoBundle:Menu:layout.html.twig';
     }
 
     /**
@@ -60,7 +69,9 @@ class MenuExtension extends \Twig_Extension
         if ($this->template) {
             return $this->template;
         }
+
         $this->template = $environment->load($this->theme); // Load template from cache
+
         return $this->template;
     }
 
@@ -77,38 +88,34 @@ class MenuExtension extends \Twig_Extension
         if (!file_exists($path)) {
             /* @var $repository NestedTreeRepository */
             $repository = $this->entityManager->getRepository(MenuInterface::class);
+            $nodes = $repository->childrenHierarchy();
+            $content = $this->menuBuilder->build($nodes);
 
-            $nodes = $repository->getNodesHierarchy();
-
-            $content = $this->build($nodes);
-
-            return (bool)file_put_contents($path, implode('', $content));
+            return $content;
+//            return (bool)file_put_contents($path, implode('', $content));
         }
 
         return false;
-    }
-
-    private function build(array $nodes) {
-        if (count($nodes) === 0) {
-            return [];
-        }
-
-        /* @var $menu MenuInterface */
-        $menu = array_shift($nodes);
-
-        return array_merge([
-            'name' => $menu->getName(),
-            'title' => $menu->getTitle(),
-            'url' => null,
-            'children' => $this->build($menu->getChildren()->toArray())
-        ], $this->build($nodes));
     }
 
     public function getMenu(\Twig_Environment $environment, $key)
     {
         $template = $this->getTemplate($environment);
 
-        return $template->displayBlock('menu');
+        $content = $this->createFileTemplate();
+
+        return $environment->render('@KRGSeo/Menu/layout.html.twig', ['menu' => [$content]]);
+
+
+//        $environment->setCache($this->cacheDir);
+//        $environment->setLoader(new \Twig_Loader_Chain([
+//            $environment->getLoader(), // Preserve old loader
+//            new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
+//        ]));
+//
+//        $this->template = $environment->load($this->cacheFileName); // Load template from cache
+
+        $template->renderBlock($key);
     }
 
     public function getFunctions()
@@ -116,7 +123,7 @@ class MenuExtension extends \Twig_Extension
         return [
             'krg_menu' => new \Twig_SimpleFunction('krg_menu', array($this, 'getMenu'), [
                 'needs_environment' => true, // Tell twig we need the environment
-                'is_safe' => ['html'],
+                'is_safe'           => ['html'],
             ]),
         ];
     }

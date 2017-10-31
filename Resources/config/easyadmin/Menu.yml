@@ -4,12 +4,14 @@ easy_admin:
             class: '%easy_admin_seo_menu_class%'
             list:
                 fields:
+                    - enabled
                     - name
                     - parent
                     - title
                     - url
             form:
                 fields:
+                    - enabled
                     - name
                     - parent
                     - title

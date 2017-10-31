@@ -4,10 +4,10 @@ easy_admin:
             class: '%easy_admin_seo_page_class%'
             list:
                 fields:
+                    - enabled
                     - key
                     - name
                     - { property: seo.url, label: 'Url' }
-                    - { property: enabled, type: toggle, label: 'Enabled' }
             form:
                 fields:
                     - key

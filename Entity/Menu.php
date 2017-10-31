@@ -66,7 +66,8 @@ class Menu implements MenuInterface
     protected $children;
 
     /**
-     * @ORM\Column(type="integer")
+     * TODO: WIP
+     * @ORM\Column(type="integer", nullable=true)
      * @var integer
      */
     protected $position;
@@ -84,10 +85,13 @@ class Menu implements MenuInterface
         $this->children = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return (string) $this->getName();
+    }
+
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -95,11 +99,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Menu
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -109,21 +109,15 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Menu
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -133,9 +127,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Get title
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -143,11 +135,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return Menu
+     * {@inheritdoc}
      */
     public function setUrl($url)
     {
@@ -157,9 +145,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Get url
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUrl()
     {
@@ -167,11 +153,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Set position
-     *
-     * @param integer $position
-     *
-     * @return Menu
+     * {@inheritdoc}
      */
     public function setPosition($position)
     {
@@ -181,9 +163,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Get position
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getPosition()
     {
@@ -191,11 +171,7 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Set enabled
-     *
-     * @param $enabled
-     *
-     * @return BlockInterface
+     * {@inheritdoc}
      */
     public function setEnabled($enabled)
     {
@@ -205,11 +181,17 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Get enabled
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEnabled()
     {
         return $this->enabled;
     }

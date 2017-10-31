@@ -37,19 +37,21 @@ class SeoRouteType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', ChoiceType::class, [
-                    'choices' => $this->getChoices(),
-                    'choice_attr' => function($key) {
-                        $route = $this->routes->get($key);
-                        $compiledRoute = $route->compile();
-                        $parameters = array_flip($compiledRoute->getPathVariables());
-                        return ['data-params' => json_encode($parameters)];
-                    }
-                ])
-                ->add('params', CollectionType::class, [
-                    'allow_add' => true,
-                    'allow_delete' => true
-                ]);
+        $builder
+            ->add('name', ChoiceType::class, [
+                'choices'     => $this->getChoices(),
+                'choice_attr' => function ($key) {
+                    $route = $this->routes->get($key);
+                    $compiledRoute = $route->compile();
+                    $parameters = array_flip($compiledRoute->getPathVariables());
+
+                    return ['data-params' => json_encode($parameters)];
+                },
+            ])
+            ->add('params', CollectionType::class, [
+                'allow_add'    => true,
+                'allow_delete' => true,
+            ]);
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
@@ -63,7 +65,7 @@ class SeoRouteType extends AbstractType
     {
         $choices = [];
 
-        /* @var $route Route */
+        /* @var $route RouterInterface */
         foreach ($this->routes as $name => $route) {
             if (preg_match($this->regexp, $name)) {
                 continue;
@@ -71,10 +73,5 @@ class SeoRouteType extends AbstractType
             $choices[sprintf('%s (%s)', $name, $route->getPath())] = $name;
         }
         return $choices;
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'seo_route';
     }
 }

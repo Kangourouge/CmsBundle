@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Page extends Block implements PageInterface, BlockContentInterface
 {
-
     /**
      * @ORM\OneToOne(targetEntity="KRG\SeoBundle\Entity\SeoInterface", cascade={"all"})
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id")
@@ -20,11 +19,7 @@ class Page extends Block implements PageInterface, BlockContentInterface
     protected $seo;
 
     /**
-     * Set seo
-     *
-     * @param SeoInterface $seo
-     *
-     * @return PageInterface
+     * {@inheritdoc}
      */
     public function setSeo(SeoInterface $seo = null)
     {
@@ -34,9 +29,7 @@ class Page extends Block implements PageInterface, BlockContentInterface
     }
 
     /**
-     * Get seo
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function getSeo()
     {

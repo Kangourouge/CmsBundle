@@ -1,21 +1,7 @@
 <div id="seo-top-panel-wrapper">
     {% if seo is defined and seo %}
-        {% if seo.seoPage is not null %}
-            <p>To edit SEO parameters, set the form to your liking, submit it and click "Update form data"</p>
-
-            {% if not app.request.get('_seo_page') %}
-                <a href="{{ path('krg_seo_admin_seo_page_update', {id: seo.seoPage.id}) }}" class="btn">Update form data</a>
-            {% endif %}
-        {% endif %}
-
         {% if seo.seoPage is null %}
             <a href="{{ path('easyadmin') }}?entity=Seo&action=edit&id={{ seo.id }}" class="btn">Edit SEO</a>
-        {% endif %}
-    {% else %}
-        {% if app.request.request|length %}
-            <a href="{{ path('easyadmin') }}?entity=SeoPage&action=new&formData={{ app.request.request|first|json_encode() }}" class="btn">Create Form SEO</a>
-        {% else %}
-            <a href="{{ path('easyadmin') }}?entity=Seo&action=new&route={{ app.request.get('_route') }}" class="btn">Create SEO</a>
         {% endif %}
     {% endif %}
 </div>

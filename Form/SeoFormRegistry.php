@@ -14,13 +14,13 @@ class SeoFormRegistry
         $this->seoForms = array();
     }
 
-    public function add($form, $alias, $handler, $template)
+    public function add($form, $alias, $template, $handler = null)
     {
         $this->seoForms[$form] = array(
-            'alias'    => $alias,
             'form'     => $form,
-            'handler'  => $handler,
+            'alias'    => $alias,
             'template' => $template,
+            'handler'  => $handler,
         );
     }
 

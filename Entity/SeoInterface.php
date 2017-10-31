@@ -28,6 +28,13 @@ interface SeoInterface extends SeoRouteInterface
     public function getEnabled();
 
     /**
+     * Is enabled
+     *
+     * @return boolean
+     */
+    public function isEnabled();
+
+    /**
      * Set uid
      *
      * @param string $uid

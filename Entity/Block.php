@@ -3,12 +3,13 @@
 namespace KRG\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use KRG\SeoBundle\Entity\Validator\UniqueKey;
 
 /**
  * Block
  *
  * @ORM\MappedSuperclass()
- * @ORM\Table(name="krg_block_static")
+ * @UniqueKey()
  */
 class Block extends AbstractBlock implements BlockInterface, BlockContentInterface
 {
@@ -18,11 +19,7 @@ class Block extends AbstractBlock implements BlockInterface, BlockContentInterfa
     protected $content;
 
     /**
-     * Set content
-     *
-     * @param string $content
-     *
-     * @return BlockInterface
+     * {@inheritdoc}
      */
     public function setContent($content)
     {
@@ -32,9 +29,7 @@ class Block extends AbstractBlock implements BlockInterface, BlockContentInterfa
     }
 
     /**
-     * Get content
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getContent()
     {

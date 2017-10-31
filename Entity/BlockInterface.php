@@ -12,20 +12,20 @@ interface BlockInterface
     public function getId();
 
     /**
-     * Set enabled
+     * Set name
      *
-     * @param $enabled
+     * @param string $name
      *
-     * @return BlockInterface
+     * @return Page
      */
-    public function setEnabled($enabled);
+    public function setName($name);
 
     /**
-     * Get enabled
+     * Get name
      *
-     * @return boolean
+     * @return string
      */
-    public function getEnabled();
+    public function getName();
 
     /**
      * Set key
@@ -42,4 +42,50 @@ interface BlockInterface
      * @return string
      */
     public function getKey();
+
+    /**
+     * Set enabled
+     *
+     * @param $enabled
+     *
+     * @return BlockInterface
+     */
+    public function setEnabled($enabled);
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled();
+
+    /**
+     * Is enabled
+     *
+     * @return boolean
+     */
+    public function isEnabled();
+
+    /**
+     * Set working
+     *
+     * @param $working
+     *
+     * @return BlockInterface
+     */
+    public function setWorking($working);
+
+    /**
+     * Get working
+     *
+     * @return boolean
+     */
+    public function getWorking();
+
+    /**
+     * Is working
+     *
+     * @return boolean
+     */
+    public function isWorking();
 }

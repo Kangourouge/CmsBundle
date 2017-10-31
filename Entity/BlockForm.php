@@ -3,12 +3,15 @@
 namespace KRG\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use KRG\SeoBundle\Entity\Validator\BlockFormWorking;
+use KRG\SeoBundle\Entity\Validator\UniqueKey;
 
 /**
  * BlockForm
  *
  * @ORM\MappedSuperclass
- * @ORM\Table(name="krg_block_form")
+ * @BlockFormWorking()
+ * @UniqueKey()
  */
 class BlockForm extends AbstractBlock implements BlockFormInterface
 {
@@ -18,22 +21,39 @@ class BlockForm extends AbstractBlock implements BlockFormInterface
      */
     protected $form;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFormType()
     {
         return $this->form['type'] ?? null;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFormData()
     {
         return $this->form['data'] ?? null;
     }
 
     /**
-     * Set form
-     *
-     * @param array $form
-     *
-     * @return BlockFormInterface
+     * {@inheritdoc}
+     */
+    public function getPureFormData()
+    {
+        $pureData = [];
+        foreach ($this->getFormData() as $name => $data) {
+            if (preg_match('/\[([^\]]*)\]/', $name, $match)) {
+                $pureData[$match[1]] = $data;
+            }
+        }
+
+        return $pureData;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setForm(array $form)
     {
@@ -43,9 +63,7 @@ class BlockForm extends AbstractBlock implements BlockFormInterface
     }
 
     /**
-     * Get form
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getForm()
     {

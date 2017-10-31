@@ -24,6 +24,13 @@ interface BlockFormInterface extends BlockInterface
     public function setForm(array $form);
 
     /**
+     * Get form data compatible with form->submit
+     *
+     * @return array
+     */
+    public function getPureFormData();
+
+    /**
      * Get form
      *
      * @return array

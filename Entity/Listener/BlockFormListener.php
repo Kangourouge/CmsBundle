@@ -5,38 +5,36 @@ namespace KRG\SeoBundle\Entity\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use KRG\SeoBundle\Entity\PageInterface;
+use Doctrine\ORM\Events;
+use KRG\SeoBundle\Entity\BlockFormInterface;
 
-class PageListener implements EventSubscriber
+class BlockFormListener implements EventSubscriber
 {
     public function getSubscribedEvents()
     {
-        return ['prePersist', 'preUpdate'];
+        return [Events::prePersist, Events::preUpdate];
     }
 
     public function prePersist(LifecycleEventArgs $event)
     {
-        if ($event->getEntity() instanceof PageInterface) {
+        if ($event->getEntity() instanceof BlockFormInterface) {
             $this->prePersistOrUpdate($event->getEntity());
         }
     }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
-        if ($event->getEntity() instanceof PageInterface) {
+        if ($event->getEntity() instanceof BlockFormInterface) {
             $this->prePersistOrUpdate($event->getEntity());
         }
     }
 
-    public function prePersistOrUpdate(PageInterface $page)
+    /**
+     * Can't be there if it is not working
+     * @param BlockFormInterface $blockForm
+     */
+    public function prePersistOrUpdate(BlockFormInterface $blockForm)
     {
-        $seo = $page->getSeo();
-
-        $seo->setRoute([
-            'name'   => 'krg_page_show',
-            'params' => ['key' => $page->getKey()],
-        ]);
-
-        $seo->setEnabled($page->getEnabled());
+        $blockForm->setWorking(true);
     }
 }

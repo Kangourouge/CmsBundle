@@ -3,8 +3,12 @@ easy_admin:
         Seo:
             class: '%easy_admin_seo_class%'
             list:
-                fields: ['enabled', 'routeName', 'metaTitle', 'metaDescription', 'parameters', 'url']
-                dql_filter: "entity.route != 'krg_seo_page_show'"
+                fields:
+                    - enabled
+                    - url
+                    - routeName
+                    - metaTitle
+                    - metaDescription
             form:
                 fields:
                     - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }

@@ -4,9 +4,9 @@ easy_admin:
             class: '%easy_admin_seo_block_class%'
             list:
                 fields:
+                    - enabled
                     - key
                     - name
-                    - enabled
             form:
                 fields:
                     - key

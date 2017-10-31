@@ -5,6 +5,7 @@ namespace KRG\SeoBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\BlockFormInterface;
 use KRG\SeoBundle\Entity\BlockInterface;
+use Twig\TwigFunction;
 
 /**
  * Class BlockExtension
@@ -58,7 +59,6 @@ class BlockExtension extends \Twig_Extension
      */
     private function getTemplate(\Twig_Environment $environment)
     {
-
         if ($this->template) {
             return $this->template;
         }
@@ -117,14 +117,14 @@ class BlockExtension extends \Twig_Extension
     public function getBlock(\Twig_Environment $environment, $key)
     {
         $template = $this->getTemplate($environment);
-dump($template);
-        die;
+
         if ($template->hasBlock($key)) {
-            echo $template->renderBlock($key);
+            $template->renderBlock($key);
         }
     }
 
     /**
+     * TODO: deport on block validator constraint
      * Simple block loop detect, can be improved
      *
      * @param BlockInterface $block
@@ -139,9 +139,10 @@ dump($template);
     {
         return [
             'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'getBlock'), [
-                'needs_environment' => true, // Tell twig we need the environment
-                'is_safe' => ['html'],
+                'needs_environment' => true,
+                'is_safe'           => ['html'],
             ]),
+            new TwigFunction('menu_item', null, array('node_class' => 'Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode', 'is_safe' => array('html'))),
         ];
     }
 }

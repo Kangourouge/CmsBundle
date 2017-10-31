@@ -78,9 +78,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -88,11 +86,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set enabled
-     *
-     * @param $enabled
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setEnabled($enabled)
     {
@@ -102,9 +96,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get enabled
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function getEnabled()
     {
@@ -112,11 +104,15 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set uid
-     *
-     * @param string $uid
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setUid($uid)
     {
@@ -124,9 +120,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get uid
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUid()
     {
@@ -134,11 +128,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setUrl($url)
     {
@@ -148,9 +138,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get url
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUrl()
     {
@@ -302,9 +290,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * @param array $parameters
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function diff(array $parameters)
     {
@@ -312,9 +298,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * @param array $parameters
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function isValid(array $parameters)
     {

@@ -36,12 +36,12 @@ class SeoFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('type', ChoiceType::class, [
-                    'choices' => $this->getChoices()
-                ])
-                ->add('data', HiddenType::class);
-
-        $builder->addModelTransformer(new SeoFormDataTransformer());
+        $builder
+            ->add('type', ChoiceType::class, [
+                'choices' => $this->getChoices(),
+            ])
+            ->add('data', HiddenType::class)
+            ->addModelTransformer(new SeoFormDataTransformer());
     }
 
     public function getChoices()
@@ -52,10 +52,5 @@ class SeoFormType extends AbstractType
         }
 
         return $choices;
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'seo_form';
     }
 }

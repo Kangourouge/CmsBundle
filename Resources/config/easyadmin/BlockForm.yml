@@ -4,11 +4,13 @@ easy_admin:
             class: '%easy_admin_seo_block_form_class%'
             list:
                 fields:
+                    - enabled
+                    - working
                     - key
                     - name
-                    - enabled
             form:
                 fields:
+                    - enabled
                     - name
-                    - key
-                    - {property: form, type: KRG\SeoBundle\Form\Type\SeoFormType }
+                    - { property: key, type_options: { required: true } }
+                    - { property: form, type: KRG\SeoBundle\Form\Type\SeoFormType }

@@ -3,6 +3,7 @@
 namespace KRG\SeoBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KRG\SeoBundle\Entity\PageInterface;
 use KRG\SeoBundle\Entity\SeoInterface;
 use KRG\SeoBundle\Entity\SeoPageInterface;
 use Doctrine\ORM\EntityManager;
@@ -108,25 +109,21 @@ class SeoExtension extends \Twig_Extension
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
 
-        $formName = null;
-        /* @var $seoPage SeoPageInterface */
-        if ($seo && $seo->getSeoPage() && $seo->getSeoPage()->getFormType()) {
-            $form = $this->formFactory->create($seo->getSeoPage()->getFormType());
-            $formName = $form->getName();
-        }
-
         return $environment->render('KRGSeoBundle:Seo:front.html.twig', array(
-            'seo'      => $this->request->get('_seo'),
-            'formName' => $formName
+            'seo' => $seo,
         ));
     }
 
-    public function getSeoUrlBySeoPageKey($key)
+    public function getSeoUrl($key)
     {
-        /* @var $seo SeoInterface */
-        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBySeoPageKey($key);
-        if ($seo) {
-            return $seo->getUrl();
+        /* @var $page PageInterface */
+        $page = $this->entityManager->getRepository(PageInterface::class)->findBy([
+            'enabled' => true,
+            'key'     => $key,
+        ]);
+
+        if ($page) {
+            return $page->getSeo()->getUrl();
         }
 
         return '#';
@@ -143,7 +140,7 @@ class SeoExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
             )),
-            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrlBySeoPageKey'), array(
+            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrl'), array(
                 'is_safe' => array('html'),
             )),
         );

@@ -31,9 +31,16 @@ abstract class AbstractBlock implements BlockInterface
      */
     protected $enabled;
 
+    /**
+     * @ORM\Column(type="boolean", name="is_working", options={"default":true})
+     * @var boolean
+     */
+    protected $working;
+
     public function __construct()
     {
         $this->enabled = false;
+        $this->working = false;
     }
 
     public function __toString()
@@ -42,9 +49,7 @@ abstract class AbstractBlock implements BlockInterface
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -52,35 +57,7 @@ abstract class AbstractBlock implements BlockInterface
     }
 
     /**
-     * Set key
-     *
-     * @param string $key
-     *
-     * @return BlockInterface
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * Get key
-     *
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Page
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -90,9 +67,7 @@ abstract class AbstractBlock implements BlockInterface
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -100,11 +75,25 @@ abstract class AbstractBlock implements BlockInterface
     }
 
     /**
-     * Set enabled
-     *
-     * @param $enabled
-     *
-     * @return BlockInterface
+     * {@inheritdoc}
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setEnabled($enabled)
     {
@@ -114,12 +103,44 @@ abstract class AbstractBlock implements BlockInterface
     }
 
     /**
-     * Get enabled
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setWorking($working)
+    {
+        $this->working = $working;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWorking()
+    {
+        return $this->working;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWorking()
+    {
+        return $this->working;
     }
 }

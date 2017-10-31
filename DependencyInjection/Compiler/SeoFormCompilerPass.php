@@ -22,8 +22,8 @@ class SeoFormCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('add', [
                     $id,
                     $attributes['alias'],
-                    new Reference($attributes['handler']),
                     $attributes['template'],
+                    new Reference($attributes['handler']),
                 ]);
             }
         }

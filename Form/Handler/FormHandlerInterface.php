@@ -12,5 +12,5 @@ interface FormHandlerInterface
      * @param FormInterface $form
      * @return mixed
      */
-    public function handle(Request $request, FormInterface $form);
+    public function perform(Request $request, FormInterface $form);
 }
