@@ -18,6 +18,16 @@ class BlockForm extends AbstractBlock implements BlockFormInterface
      */
     protected $form;
 
+    public function getFormType()
+    {
+        return $this->form['type'] ?? null;
+    }
+
+    public function getFormData()
+    {
+        return $this->form['data'] ?? null;
+    }
+
     /**
      * Set form
      *

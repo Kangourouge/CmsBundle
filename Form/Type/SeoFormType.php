@@ -8,35 +8,39 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class SeoFormType extends AbstractType
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
     /**
      * @var SeoFormRegistry
      */
     private $registry;
 
     /**
-     * SeoRouteType constructor.
-     *
-     * @param FormFactoryInterface $formFactory
-     * @param SeoFormRegistry $registry
+     * @var RouterInterface
      */
-    public function __construct(FormFactoryInterface $formFactory, SeoFormRegistry $registry)
+    private $router;
+
+    /**
+     * SeoFormType constructor.
+     *
+     * @param SeoFormRegistry $registry
+     * @param RouterInterface $router
+     */
+    public function __construct(SeoFormRegistry $registry, RouterInterface $router)
     {
-        $this->formFactory = $formFactory;
         $this->registry = $registry;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('type', ChoiceType::class, [
-                    'choices' => $this->getChoices()
+                    'choices' => $this->getChoices(),
+                    'choice_attr' => function($type) {
+                        return ['data-url' => $this->router->generate('krg_block_form_admin', ['type' => $type])];
+                    }
                 ])
                 ->add('data', HiddenType::class);
     }

@@ -2,6 +2,7 @@
 
 namespace KRG\SeoBundle\Controller;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use KRG\SeoBundle\Entity\BlockFormInterface;
 use KRG\SeoBundle\Form\SeoFormRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BlockController extends AbstractController
 {
     /**
-     * @Route("/show/{key}", name="krg_block_form")
+     * @Route("/form/show/{key}", name="krg_block_form")
      *
      * @param Request $request
      * @param BlockFormInterface $blockForm
@@ -24,17 +25,18 @@ class BlockController extends AbstractController
     public function formAction(Request $request, BlockFormInterface $blockForm)
     {
         $seoFormRegistry = $this->container->get(SeoFormRegistry::class);
-        $seoForm = $seoFormRegistry->get($blockForm->getType());
+        $seoForm = $seoFormRegistry->get($blockForm->getFormType());
 
         if ($seoForm) {
             $form = $this->createForm($seoForm['form']);
             $formName = $form->getConfig()->getName();
 
+
             // If there is no request, build data
             if (!$request->get($formName)) {
                 $csrf = $this->container->get('security.csrf.token_manager');
                 $data = array_merge(
-                    $blockForm->getData(),
+                    $blockForm->getFormData(),
                     ['_token' => $csrf->refreshToken($formName)]
                 );
 
@@ -51,6 +53,37 @@ class BlockController extends AbstractController
         }
 
         return new Response();
+    }
+
+    /**
+     * @Route("/form/admin/{type}", name="krg_block_form_admin")
+     */
+    public function formAdminAction(Request $request, $type)
+    {
+        $seoFormRegistry = $this->container->get(SeoFormRegistry::class);
+        $seoForm = $seoFormRegistry->get($type);
+
+        if (!$seoForm) {
+            throw new InvalidArgumentException('FormType is not managed');
+        }
+
+        $form = $this->createForm($seoForm['form']);
+        $formName = $form->getConfig()->getName();
+
+        // If there is no request, build data
+        if (!$request->get($formName)) {
+            $csrf = $this->container->get('security.csrf.token_manager');
+            $data = array_merge(
+                $request->get('data'),
+                ['_token' => $csrf->refreshToken($formName)]
+            );
+
+            $form->submit($data);
+        }
+
+        return $this->render('KRGSeoBundle:Block:admin.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     public static function getSubscribedServices()
