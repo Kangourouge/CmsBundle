@@ -17,6 +17,7 @@ use GEGM\CommonBundle\Entity\Tree\NestedTreeEntity;
 class Menu implements MenuInterface
 {
     use NestedTreeEntity;
+    use SeoRouteTrait;
 
     /**
      * @ORM\Id
@@ -38,13 +39,13 @@ class Menu implements MenuInterface
     protected $title;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json_array", nullable=true)
      * @var string
      */
     protected $route;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     protected $url;
@@ -78,16 +79,10 @@ class Menu implements MenuInterface
 
     public function __construct()
     {
-        $this->children = new ArrayCollection();
-        $this->parameters = [];
+        $this->route = [];
         $this->enabled = false;
+        $this->children = new ArrayCollection();
     }
-
-    function __toString()
-    {
-        return $this->name;
-    }
-
 
     /**
      * Get id
@@ -122,7 +117,7 @@ class Menu implements MenuInterface
     {
         return $this->name;
     }
-
+    
     /**
      * Set title
      *
@@ -148,51 +143,27 @@ class Menu implements MenuInterface
     }
 
     /**
-     * Set route
+     * Set url
      *
-     * @param string $route
+     * @param string $url
      *
      * @return Menu
      */
-    public function setRoute($route)
+    public function setUrl($url)
     {
-        $this->route = $route;
+        $this->url = $url;
 
         return $this;
     }
 
     /**
-     * Get route
+     * Get url
      *
      * @return string
      */
-    public function getRoute()
+    public function getUrl()
     {
-        return $this->route;
-    }
-
-    /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return Menu
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
+        return $this->url;
     }
 
     /**
@@ -241,29 +212,5 @@ class Menu implements MenuInterface
     public function getEnabled()
     {
         return $this->enabled;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return Menu
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get url
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 }

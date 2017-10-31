@@ -48,9 +48,6 @@ class SeoType extends AbstractType
             /* @var $seo SeoInterface */
             $classMetadata = $this->entityManager->getClassMetadata(SeoInterface::class);
             $seo = $classMetadata->getReflectionClass()->newInstanceArgs();
-
-            $seo->setRoute('krg_page_show'); // Route à définir
-
             $event->setData($seo);
         }
     }

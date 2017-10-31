@@ -33,8 +33,13 @@ services:
     KRG\SeoBundle\Form\SeoFormRegistry:
         public: true
 
+    KRG\SeoBundle\Entity\Listener\:
+        resource: '../../Entity/Listener/*'
+        tags: [doctrine.event_subscriber]
+        public: true
+
     KRG\SeoBundle\DependencyInjection\ClearRoutingCache:
 
-    KRG\SeoBundle\Admin\EventListener\:
-        resource: '../../Admin/EventListener'
-        tags: [kernel.event_subscriber]
+#    KRG\SeoBundle\Admin\EventListener\:
+#        resource: '../../Admin/EventListener'
+#        tags: [kernel.event_subscriber]

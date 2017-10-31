@@ -11,12 +11,13 @@ class SeoAdminSubscriber extends AbstractSeoEventSubscriber
 {
     public static function getSubscribedEvents()
     {
-        return array(
-            EasyAdminEvents::PRE_PERSIST  => array('prePersist'),
-            EasyAdminEvents::POST_UPDATE  => array('clear'),
-            EasyAdminEvents::POST_PERSIST => array('postPersist'),
-            EasyAdminEvents::POST_REMOVE  => array('clear'),
-        );
+        return [];
+//        return array(
+//            EasyAdminEvents::PRE_PERSIST  => array('prePersist'),
+//            EasyAdminEvents::POST_UPDATE  => array('clear'),
+//            EasyAdminEvents::POST_PERSIST => array('postPersist'),
+//            EasyAdminEvents::POST_REMOVE  => array('clear'),
+//        );
     }
 
     public function clear(GenericEvent $event)

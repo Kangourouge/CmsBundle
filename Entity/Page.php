@@ -11,47 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Page extends Block implements PageInterface, BlockContentInterface
 {
-    /**
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="KRG\SeoBundle\Entity\SeoInterface", inversedBy="page", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="KRG\SeoBundle\Entity\SeoInterface", cascade={"all"})
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id")
      * @var SeoInterface
      */
     protected $seo;
-
-    public function __toString()
-    {
-        return (string)$this->name;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Page
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
 
     /**
      * Set seo
@@ -75,21 +41,5 @@ class Page extends Block implements PageInterface, BlockContentInterface
     public function getSeo()
     {
         return $this->seo;
-    }
-
-    /**
-     * @param $enabled
-     *
-     * @return PageInterface
-     */
-    public function setEnabled($enabled)
-    {
-        parent::setEnabled($enabled);
-
-        if ($this->seo) {
-            $this->seo->setEnabled($enabled);
-        }
-
-        return $this;
     }
 }

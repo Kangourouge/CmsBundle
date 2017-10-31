@@ -6,10 +6,10 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - { property: enabled, type: toggle, label: 'Enabled' }
+                    - enabled
             form:
                 fields:
                     - key
                     - name
-                    - title
                     - content
+                    - enabled

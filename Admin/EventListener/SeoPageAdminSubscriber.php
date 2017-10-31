@@ -12,11 +12,12 @@ class SeoPageAdminSubscriber extends AbstractSeoEventSubscriber
 {
     public static function getSubscribedEvents()
     {
-        return array(
-            EasyAdminEvents::PRE_PERSIST  => array('prePersist'),
-            EasyAdminEvents::POST_UPDATE  => array('postUpdate'),
-            EasyAdminEvents::POST_PERSIST => array('postPersist'),
-        );
+        return [];
+//        return array(
+//            EasyAdminEvents::PRE_PERSIST  => array('prePersist'),
+//            EasyAdminEvents::POST_UPDATE  => array('postUpdate'),
+//            EasyAdminEvents::POST_PERSIST => array('postPersist'),
+//        );
     }
 
     public function postUpdate(GenericEvent $event)

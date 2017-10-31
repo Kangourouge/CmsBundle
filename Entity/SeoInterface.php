@@ -2,7 +2,7 @@
 
 namespace KRG\SeoBundle\Entity;
 
-interface SeoInterface
+interface SeoInterface extends SeoRouteInterface
 {
     /**
      * Get id
@@ -44,22 +44,6 @@ interface SeoInterface
     public function getUid();
 
     /**
-     * Set route
-     *
-     * @param string $route
-     *
-     * @return SeoInterface
-     */
-    public function setRoute($route);
-
-    /**
-     * Get route
-     *
-     * @return string
-     */
-    public function getRoute();
-
-    /**
      * Set url
      *
      * @param string $url
@@ -74,22 +58,6 @@ interface SeoInterface
      * @return string
      */
     public function getUrl();
-
-    /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return SeoInterface
-     */
-    public function setParameters($parameters);
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters();
 
     /**
      * Set metaTitle

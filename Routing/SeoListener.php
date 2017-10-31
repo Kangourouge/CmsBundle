@@ -47,8 +47,7 @@ class SeoListener
         }
 
         /* @var $seoRepository SeoRepository */
-        $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
-        $seoRepository = $this->entityManager->getRepository($className);
+        $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
 
         /* @var $seo SeoInterface */
         $seo = $seoRepository->findOneByUid($route);
@@ -57,13 +56,13 @@ class SeoListener
         }
 
         // Update request to keep url intact
-        $route = $this->router->getRouteCollection()->get($seo->getRoute());
-        $params = array_merge($request->attributes->get('_route_params'), $seo->getParameters());
+        $route = $this->router->getRouteCollection()->get($seo->getRouteName());
+        $params = array_merge($request->attributes->get('_route_params'), $seo->getRouteParams());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
-        $request->attributes->set('_route', $seo->getRoute());
+        $request->attributes->set('_route', $seo->getRouteName());
         $request->attributes->set('_seo', $seo); // Store initial SEO to reuse it after
         $request->attributes->set('_route_params', $params);
-        foreach($seo->getRouteParameters() as $key => $value) {
+        foreach($seo->getRouteParams() as $key => $value) {
             if ($value) {
                 $request->attributes->set($key, $value);
             }

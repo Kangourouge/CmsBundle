@@ -9,10 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Seo
  *
  * @ORM\MappedSuperclass(repositoryClass="KRG\SeoBundle\Repository\SeoRepository")
- * @ORM\HasLifecycleCallbacks()
  */
 class Seo implements SeoInterface
 {
+    use SeoRouteTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -29,16 +30,6 @@ class Seo implements SeoInterface
      * @ORM\Column(type="string", unique=true)
      */
     protected $uid;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $route;
-
-    /**
-     * @ORM\Column(type="json_array", nullable=true)
-     */
-    protected $parameters;
 
     /**
      * @ORM\Column(type="string", nullable=false)
@@ -77,45 +68,13 @@ class Seo implements SeoInterface
 
     public function __construct()
     {
-        $this->routeParameters = new ArrayCollection();
         $this->enabled = false;
+        $this->route = [];
     }
 
     public function __toString()
     {
         return $this->getUid() ?: '';
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function onPrePersist()
-    {
-        $route = $this->route;
-
-        $prefix = preg_match("/^krg_seo_.+/", $route) ? '' : 'krg_seo_';
-        $this->uid = sprintf('%s%s_%s', $prefix, $this->route, uniqid());
-
-        $this->slugifyUrl();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function onPreUpdate()
-    {
-        $this->slugifyUrl();
-    }
-
-    // Todo: suglify URL
-    public function slugifyUrl()
-    {
-        if ($this->url && $this->url[0] != '/') {
-            $this->url = '/'.$this->url;
-        }
-
-        // $slugify = new Slugify();
-        // $this->url = $slugify->slugify($this->url));
     }
 
     /**
@@ -175,30 +134,6 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set route
-     *
-     * @param string $route
-     *
-     * @return SeoInterface
-     */
-    public function setRoute($route)
-    {
-        $this->route = $route;
-
-        return $this;
-    }
-
-    /**
-     * Get route
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
      * Set url
      *
      * @param string $url
@@ -220,44 +155,6 @@ class Seo implements SeoInterface
     public function getUrl()
     {
         return $this->url;
-    }
-
-    /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return SeoInterface
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getRouteParameters()
-    {
-        if ($this->seoPage === null || $this->parameters === null) {
-            return $this->parameters;
-        }
-
-        return array_merge($this->parameters, array('id' => $this->seoPage->getId()));
     }
 
     /**
@@ -404,11 +301,21 @@ class Seo implements SeoInterface
         return $this->ogImage;
     }
 
+    /**
+     * @param array $parameters
+     *
+     * @return int
+     */
     public function diff(array $parameters)
     {
-        return count(array_diff_assoc(array_filter($this->parameters), $parameters));
+        return count(array_diff_assoc(array_filter($this->getRouteParams()), $parameters));
     }
 
+    /**
+     * @param array $parameters
+     *
+     * @return bool
+     */
     public function isValid(array $parameters)
     {
         return $this->diff($parameters) === 0;

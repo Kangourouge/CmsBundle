@@ -2,17 +2,12 @@ easy_admin:
     entities:
         Seo:
             class: '%easy_admin_seo_class%'
-            controller: KRG\SeoBundle\Admin\Controller\SeoController
-            templates:
-                edit: '@KRGSeo/Admin/Seo/edit.html.twig'
             list:
-                fields: ['enabled', 'route', 'metaTitle', 'metaDescription', 'parameters', 'url']
+                fields: ['enabled', 'routeName', 'metaTitle', 'metaDescription', 'parameters', 'url']
                 dql_filter: "entity.route != 'krg_seo_page_show'"
-            new:
-                fields: ['route']
-            edit:
+            form:
                 fields:
-                    - enabled
+                    - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
                     - { property: url, label: 'Redirect url' }
                     - metaTitle
                     - { property: metaDescription, type: textarea }
@@ -20,3 +15,4 @@ easy_admin:
                     - ogTitle
                     - ogDescription
                     - ogImage
+                    - enabled

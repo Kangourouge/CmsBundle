@@ -1,0 +1,23 @@
+{% block seo_form_widget %}
+    {{ form_widget(form) }}
+    <script type="text/javascript">
+        (function(){
+            var container = document.getElementById('{{ form.vars.id }}');
+            var type = document.getElementById('{{ form.type.vars.id }}');
+            var data = document.getElementById('{{ form.data.vars.id }}');
+
+            var iframe = document.createElement('iframe');
+
+            container.appendChild(iframe);
+
+            type.addEventListener('change', onChange);
+            function onChange() {
+                var selectedOption = type.options[type.selectedIndex];
+                params.innerHTML = '';
+
+                fetch('{{ path('') }}')
+
+            }
+        })();
+    </script>
+{% endblock %}

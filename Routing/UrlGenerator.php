@@ -93,7 +93,7 @@ class UrlGenerator extends BaseUrlGenerator
             /* @var $seo SeoInterface */
             $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
 
-            return $seo->getRoute() === $name && $seo->isValid($parameters);
+            return $seo->getRouteName() === $name && $seo->isValid($parameters);
         });
         $nbRoute = count($routes);
 

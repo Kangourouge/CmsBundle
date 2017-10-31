@@ -13,5 +13,5 @@ easy_admin:
                     - name
                     - parent
                     - title
-                    - { property: route, type: KRG\SeoBundle\Form\Type\RouteType }
+                    - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
                     - url

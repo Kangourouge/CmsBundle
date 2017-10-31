@@ -20,8 +20,8 @@ class SeoRepository extends EntityRepository
     {
         $qb = $this
             ->createQuerybuilder('s')
-            ->where('s.route = :route')
-            ->setParameter('route', $route);
+            ->where('s.route LIKE :route')
+            ->setParameter('route', sprintf('%%name=%s,', $route));
 
         return $qb;
     }
@@ -40,7 +40,7 @@ class SeoRepository extends EntityRepository
         /* @var $seo \KRG\SeoBundle\Entity\SeoInterface */
         foreach ($results as $seo) {
             // "==" TRUE if $a and $b have the same key/value pairs, not matter the order
-            if ($seo->getParameters() == $parameters) {
+            if ($seo->getRouteParams() == $parameters) {
                 $seos->add($seo);
             }
         }

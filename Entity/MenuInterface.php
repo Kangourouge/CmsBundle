@@ -2,6 +2,6 @@
 
 namespace KRG\SeoBundle\Entity;
 
-interface MenuInterface
+interface MenuInterface extends SeoRouteInterface
 {
 }

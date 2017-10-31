@@ -14,6 +14,12 @@ abstract class AbstractBlock implements BlockInterface
     protected $id;
 
     /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
      * @var string
      */
@@ -28,6 +34,11 @@ abstract class AbstractBlock implements BlockInterface
     public function __construct()
     {
         $this->enabled = false;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->name;
     }
 
     /**
@@ -62,6 +73,30 @@ abstract class AbstractBlock implements BlockInterface
     public function getKey()
     {
         return $this->key;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Page
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

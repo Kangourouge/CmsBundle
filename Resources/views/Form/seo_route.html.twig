@@ -1,0 +1,29 @@
+{% block seo_route_widget %}
+    {{ form_widget(form) }}
+    <script type="text/javascript">
+        (function(){
+            var select = document.getElementById('{{ form.name.vars.id }}');
+            var params = document.getElementById('{{ form.params.vars.id }}');
+            var prototype = params.dataset.prototype;
+
+            select.addEventListener('change', onChange);
+            function onChange() {
+                var selectedOption = select.options[select.selectedIndex];
+                params.innerHTML = '';
+                var _params = JSON.parse(selectedOption.dataset.params);
+                for(var key in _params) {
+                    addParam(key, _params[key]);
+                }
+            }
+
+            function addParam(name, value){
+                var param = prototype
+                                .replace(/\>__name__label__\</g, '>' + name + '<')
+                                .replace(/_params___name__/g, '_params_' + name)
+                                .replace(/params\]\[__name__\]/g, 'params][' + name + ']')
+                        ;
+                params.innerHTML += param;
+            }
+        })();
+    </script>
+{% endblock %}

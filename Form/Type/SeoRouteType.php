@@ -6,10 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
-class RouteType extends AbstractType
+class SeoRouteType extends AbstractType
 {
     /**
      * @var RouteCollection
@@ -39,14 +41,22 @@ class RouteType extends AbstractType
                     'choices' => $this->getChoices(),
                     'choice_attr' => function($key) {
                         $route = $this->routes->get($key);
-                        $parameters = array_flip($route->compile()->getPathVariables());
-                        return ['data-requirements' => json_encode($parameters)];
+                        $compiledRoute = $route->compile();
+                        $parameters = array_flip($compiledRoute->getPathVariables());
+                        return ['data-params' => json_encode($parameters)];
                     }
                 ])
                 ->add('params', CollectionType::class, [
                     'allow_add' => true,
                     'allow_delete' => true
                 ]);
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
+        $view->children['params']->vars['allow_add'] = false;
+        $view->children['params']->vars['allow_delete'] = false;
     }
 
     public function getChoices()
@@ -61,5 +71,10 @@ class RouteType extends AbstractType
             $choices[sprintf('%s (%s)', $name, $route->getPath())] = $name;
         }
         return $choices;
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'seo_route';
     }
 }

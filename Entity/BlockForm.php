@@ -13,98 +13,32 @@ use Doctrine\ORM\Mapping as ORM;
 class BlockForm extends AbstractBlock implements BlockFormInterface
 {
     /**
-     * @ORM\Column(type="json_array", nullable=true)
-     * @var string
+     * @ORM\Column(type="json_array")
+     * @var array
      */
-    protected $route;
+    protected $form;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * @ORM\Column(type="json_array", nullable=true)
-     * @var string
-     */
-    protected $data;
-
-    /**
-     * Set route
+     * Set form
      *
-     * @param string $route
+     * @param array $form
      *
      * @return BlockFormInterface
      */
-    public function setRoute($route)
+    public function setForm(array $form)
     {
-        $this->route = $route;
+        $this->form = $form;
 
         return $this;
     }
 
     /**
-     * Get route
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return BlockFormInterface
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set data
-     *
-     * @param string $data
-     *
-     * @return BlockFormInterface
-     */
-    public function setData($data)
-    {
-        if (false === is_array($data)) {
-            $data = json_decode($data, true);
-        }
-
-        unset($data['_token']);
-
-        $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * Get data
+     * Get form
      *
      * @return array
      */
-    public function getData()
+    public function getForm()
     {
-        return $this->data;
+        return $this->form;
     }
 }

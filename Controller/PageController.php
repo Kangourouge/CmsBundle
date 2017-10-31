@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class PageController extends AbstractController
 {
     /**
-     * @Route("/show/{id}", name="krg_seo_page_show")
+     * @Route("/show/{key}", name="krg_seo_page_show")
      * @Template
      */
     public function showAction(Request $request, PageInterface $page)

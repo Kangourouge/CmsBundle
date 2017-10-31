@@ -6,11 +6,9 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - { property: enabled, type: toggle }
+                    - enabled
             form:
                 fields:
-                    - key
                     - name
-                    - route
-                    - type
-                    - data
+                    - key
+                    - {property: form, type: KRG\SeoBundle\Form\Type\SeoFormType }
