@@ -7,14 +7,49 @@
             var data = document.getElementById('{{ form.data.vars.id }}');
 
             var iframe = document.createElement('iframe');
+            iframe.width = '100%';
+            iframe.height = '300px';
+
+            type.form.addEventListener('submit', function(event){
+                var iframeDocument = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document;
+
+                var form = iframeDocument.querySelector('form');
+
+                if (!form.reportValidity()) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    return false;
+                }
+
+                var formData = new FormData(form);
+
+                var _data = {};
+                formData.forEach(function(value, key) {
+                    _data[key] = value;
+                });
+
+                data.value = JSON.stringify(_data);
+            });
 
             container.appendChild(iframe);
 
             type.addEventListener('change', onChange);
-            function onChange() {
+            function onChange(event, data) {
                 var selectedOption = type.options[type.selectedIndex];
-                params.innerHTML = '';
+                var src = '{{ path('krg_block_form_admin') }}';
+                if (typeof(data) === 'object') {
+                    var _data = ['type=' + selectedOption.value];
+                    for(var key in data) {
+                        _data.push(key + '=' + data[key]);
+                    }
+                    console.log(_data);
+                    src += '?' + encodeURI(_data.join('&'));
+                }
+                console.log(src);
+                iframe.src = src;
             }
+
+            onChange(null, JSON.parse(data.value));
         })();
     </script>
 {% endblock %}

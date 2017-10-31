@@ -2,12 +2,12 @@
 
 namespace KRG\SeoBundle\Form\Type;
 
+use KRG\SeoBundle\Form\DataTransformer\SeoFormDataTransformer;
 use KRG\SeoBundle\Form\SeoFormRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class SeoFormType extends AbstractType
@@ -37,12 +37,11 @@ class SeoFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('type', ChoiceType::class, [
-                    'choices' => $this->getChoices(),
-                    'choice_attr' => function($type) {
-                        return ['data-url' => $this->router->generate('krg_block_form_admin', ['type' => $type])];
-                    }
+                    'choices' => $this->getChoices()
                 ])
                 ->add('data', HiddenType::class);
+
+        $builder->addModelTransformer(new SeoFormDataTransformer());
     }
 
     public function getChoices()
