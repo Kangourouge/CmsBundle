@@ -17,8 +17,6 @@ services:
             $cacheDir: '%kernel.cache_dir%'
 
     KRG\SeoBundle\Twig\MenuExtension:
-        arguments:
-            $cacheDir: '%kernel.cache_dir%'
 
     KRG\SeoBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
@@ -39,8 +37,8 @@ services:
         tags: [validator.constraint_validator]
         public: true
 
-    KRG\SeoBundle\Service\:
-        resource: '../../Service/*'
+    KRG\SeoBundle\Menu\:
+        resource: '../../Menu/*'
         public: true
 
     KRG\SeoBundle\DependencyInjection\ClearRoutingCache:

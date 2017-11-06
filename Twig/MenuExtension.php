@@ -5,7 +5,7 @@ namespace KRG\SeoBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use KRG\SeoBundle\Entity\MenuInterface;
-use KRG\SeoBundle\Service\MenuBuilderInterface;
+use KRG\SeoBundle\Menu\MenuBuilderInterface;
 
 /**
  * Class MenuExtension
@@ -19,24 +19,9 @@ class MenuExtension extends \Twig_Extension
     private $entityManager;
 
     /**
-     * @var string
+     * @var array
      */
-    private $cacheDir;
-
-    /**
-     * @var string
-     */
-    private $cacheFileName;
-
-    /**
-     * @var string
-     */
-    private $theme;
-
-    /**
-     * @var \Twig_TemplateWrapper
-     */
-    private $template;
+    private $templates;
 
     /**
      * @var MenuBuilderInterface
@@ -46,82 +31,52 @@ class MenuExtension extends \Twig_Extension
     /**
      * MenuExtension constructor.
      * @param EntityManagerInterface $entityManager
-     * @param $cacheDir
      * @param MenuBuilderInterface $menuBuilder
-     * @param null $theme
      */
-    public function __construct(EntityManagerInterface $entityManager, $cacheDir, MenuBuilderInterface $menuBuilder, $theme = null)
+    public function __construct(EntityManagerInterface $entityManager, MenuBuilderInterface $menuBuilder)
     {
         $this->entityManager = $entityManager;
-        $this->cacheDir = $cacheDir;
         $this->menuBuilder = $menuBuilder;
-        $this->theme = $theme ?? 'KRGSeoBundle:Menu:layout.html.twig';
+        $this->templates = [];
     }
 
     /**
      * Build blocks into a specific template
      *
      * @param \Twig_Environment $environment
-     * @return \Twig_TemplateWrapper
+     * @param $theme
+     *
+     * @return mixed
      */
-    private function getTemplate(\Twig_Environment $environment)
+    private function getTemplate(\Twig_Environment $environment, $theme)
     {
-        if ($this->template) {
-            return $this->template;
+        if (isset($this->templates[$theme])) {
+            return $this->templates[$theme];
         }
 
-        $this->template = $environment->load($this->theme); // Load template from cache
+        $this->templates[$theme] = $environment->load($theme);
 
-        return $this->template;
+        return $this->templates[$theme];
     }
 
-    /**
-     * Generate $this->cacheFileName twig template composed of each blocks
-     */
-    public function createFileTemplate()
+    public function render(\Twig_Environment $environment, $brand = null, array $additionalNodes = [], $theme = 'KRGSeoBundle:Menu:bootstrap.html.twig')
     {
-        if (!is_dir($this->cacheDir)) {
-            mkdir($this->cacheDir);
-        }
+        /* @var $repository NestedTreeRepository */
+        $repository = $this->entityManager->getRepository(MenuInterface::class);
+        $nodes = $this->menuBuilder->build($repository->childrenHierarchy(), $additionalNodes);
 
-        $path = sprintf('%s/seo_menu.html.twig', $this->cacheDir);
-        if (!file_exists($path)) {
-            /* @var $repository NestedTreeRepository */
-            $repository = $this->entityManager->getRepository(MenuInterface::class);
-            $nodes = $repository->childrenHierarchy();
-            $content = $this->menuBuilder->build($nodes);
-
-            return $content;
-//            return (bool)file_put_contents($path, implode('', $content));
-        }
-
-        return false;
-    }
-
-    public function getMenu(\Twig_Environment $environment, $key)
-    {
-        $template = $this->getTemplate($environment);
-
-        $content = $this->createFileTemplate();
-
-        return $environment->render('@KRGSeo/Menu/layout.html.twig', ['menu' => [$content]]);
-
-
-//        $environment->setCache($this->cacheDir);
-//        $environment->setLoader(new \Twig_Loader_Chain([
-//            $environment->getLoader(), // Preserve old loader
-//            new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
-//        ]));
-//
-//        $this->template = $environment->load($this->cacheFileName); // Load template from cache
-
-        $template->renderBlock($key);
+        $template = $this->getTemplate($environment, $theme);
+        return $template->renderBlock('menu', [
+            'id' => uniqid('krg_menu_'),
+            'brand' => $brand,
+            'nodes' => $nodes
+        ]);
     }
 
     public function getFunctions()
     {
         return [
-            'krg_menu' => new \Twig_SimpleFunction('krg_menu', array($this, 'getMenu'), [
+            'krg_menu' => new \Twig_SimpleFunction('krg_menu', array($this, 'render'), [
                 'needs_environment' => true, // Tell twig we need the environment
                 'is_safe'           => ['html'],
             ]),

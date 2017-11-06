@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Service;
+namespace KRG\SeoBundle\Menu;
 
 interface MenuBuilderInterface
 {

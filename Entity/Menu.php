@@ -83,6 +83,7 @@ class Menu implements MenuInterface
         $this->route = [];
         $this->enabled = false;
         $this->children = new ArrayCollection();
+        $this->position = 0;
     }
 
     public function __toString()
