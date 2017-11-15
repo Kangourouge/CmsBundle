@@ -33,6 +33,12 @@ class Menu implements MenuInterface
     protected $name;
 
     /**
+     * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
+     * @var string
+     */
+    protected $key;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
@@ -66,7 +72,6 @@ class Menu implements MenuInterface
     protected $children;
 
     /**
-     * TODO: WIP
      * @ORM\Column(type="integer", nullable=true)
      * @var integer
      */
@@ -115,6 +120,24 @@ class Menu implements MenuInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**

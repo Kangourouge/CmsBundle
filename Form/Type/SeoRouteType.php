@@ -64,7 +64,6 @@ class SeoRouteType extends AbstractType
     public function getChoices()
     {
         $choices = [];
-
         /* @var $route RouterInterface */
         foreach ($this->routes as $name => $route) {
             if (preg_match($this->regexp, $name)) {
@@ -72,6 +71,7 @@ class SeoRouteType extends AbstractType
             }
             $choices[sprintf('%s (%s)', $name, $route->getPath())] = $name;
         }
+
         return $choices;
     }
 }

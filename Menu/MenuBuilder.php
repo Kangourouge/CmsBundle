@@ -22,21 +22,29 @@ class MenuBuilder implements MenuBuilderInterface
         $this->router = $router;
     }
 
-    public function build(array $nodes)
+    /**
+     * @param array $nodes
+     * @param string|null $key
+     * @return array|null
+     */
+    public function build(array $nodes, string $key = null)
     {
         if (count($nodes) === 0) {
             return [];
+        }
+
+        if ($keyed = $this->handleKey($nodes, $key)) {
+            return $keyed;
         }
 
         /* @var $menu MenuInterface */
         $menu = array_shift($nodes);
 
         $url = $menu['url'];
-
         if ($url === null) {
             try {
                 $url = $this->router->generate($menu['route']['name'], $menu['route']['params']);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 return $this->build($nodes);
             }
         }
@@ -45,7 +53,18 @@ class MenuBuilder implements MenuBuilderInterface
             'name'     => $menu['name'],
             'title'    => $menu['title'],
             'url'      => $url,
-            'children' => $this->build($menu['__children']),
-        ]], $this->build($nodes));
+            'children' => $this->build($menu['__children'], $menu['key']),
+        ],], $this->build($nodes));
+    }
+
+
+    /**
+     * @param array $nodes
+     * @param string|null $key
+     * @return null
+     */
+    public function handleKey(array $nodes, string $key = null)
+    {
+        return null;
     }
 }

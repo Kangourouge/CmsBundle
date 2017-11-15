@@ -9,10 +9,14 @@ easy_admin:
                     - parent
                     - title
                     - url
+                sort: ['position', 'ASC']
+                actions:
+                    - { name: 'sortable', field: 'position', label: '' }
             form:
                 fields:
                     - enabled
                     - name
+                    - { property: key, help: 'Unique identifier' }
                     - parent
                     - title
                     - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }

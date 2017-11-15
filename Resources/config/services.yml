@@ -42,3 +42,5 @@ services:
         public: true
 
     KRG\SeoBundle\DependencyInjection\ClearRoutingCache:
+
+    KRG\SeoBundle\Menu\MenuBuilderInterface: '@KRG\SeoBundle\Menu\MenuBuilder'

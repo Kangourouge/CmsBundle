@@ -53,7 +53,6 @@ class MenuExtension extends \Twig_Extension
         if (isset($this->templates[$theme])) {
             return $this->templates[$theme];
         }
-
         $this->templates[$theme] = $environment->load($theme);
 
         return $this->templates[$theme];
@@ -63,11 +62,12 @@ class MenuExtension extends \Twig_Extension
     {
         /* @var $repository NestedTreeRepository */
         $repository = $this->entityManager->getRepository(MenuInterface::class);
-        $nodes = $this->menuBuilder->build($repository->childrenHierarchy(), $additionalNodes);
+        $nodes = $this->menuBuilder->build($repository->childrenHierarchy());
 
         $template = $this->getTemplate($environment, $theme);
+
         return $template->renderBlock('menu', [
-            'id' => uniqid('krg_menu_'),
+            'id'    => uniqid('krg_menu_'),
             'brand' => $brand,
             'nodes' => $nodes
         ]);
@@ -77,7 +77,7 @@ class MenuExtension extends \Twig_Extension
     {
         return [
             'krg_menu' => new \Twig_SimpleFunction('krg_menu', array($this, 'render'), [
-                'needs_environment' => true, // Tell twig we need the environment
+                'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
         ];

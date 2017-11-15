@@ -85,6 +85,16 @@ class TestHandler implements FormHandlerInterface
 
 ```
 
+Override service Menu Builder
+-----------------------------
+
+https://symfony.com/doc/current/service_container/autowiring.html#working-with-interfaces
+
+```yaml
+services:
+    KRG\SeoBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
+```
+
 Entity
 ------
 

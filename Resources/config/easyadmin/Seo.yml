@@ -11,12 +11,14 @@ easy_admin:
                     - metaDescription
             form:
                 fields:
+                    - { type: 'group', label: 'Configuration' }
                     - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
                     - { property: url, label: 'Redirect url' }
+                    - enabled
+                    - { type: 'group', label: 'Metas' }
                     - metaTitle
                     - { property: metaDescription, type: textarea }
                     - metaRobots
                     - ogTitle
                     - ogDescription
                     - ogImage
-                    - enabled

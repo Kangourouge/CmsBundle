@@ -46,7 +46,7 @@ class SeoFormType extends AbstractType
 
     public function getChoices()
     {
-        $choices = [];
+        $choices = [''];
         foreach ($this->registry->all() as $key => $value) {
             $choices[sprintf('%s (%s)', $value['alias'], $key)] = $key;
         }
