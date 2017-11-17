@@ -62,7 +62,9 @@ class MenuExtension extends \Twig_Extension
     {
         /* @var $repository NestedTreeRepository */
         $repository = $this->entityManager->getRepository(MenuInterface::class);
-        $nodes = $this->menuBuilder->build($repository->childrenHierarchy());
+        $qb = $repository->getRootNodesQueryBuilder()->addOrderBy('node.position');
+        $rootNodes = $qb->getQuery()->getResult();
+        $nodes = $this->menuBuilder->build($rootNodes);
 
         $template = $this->getTemplate($environment, $theme);
 

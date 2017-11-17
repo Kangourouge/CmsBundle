@@ -29,34 +29,33 @@ class MenuBuilder implements MenuBuilderInterface
      */
     public function build(array $nodes, string $key = null)
     {
-        if (count($nodes) === 0) {
-            return [];
-        }
-
         if ($keyed = $this->handleKey($nodes, $key)) {
             return $keyed;
+        }
+
+        if (count($nodes) === 0) {
+            return [];
         }
 
         /* @var $menu MenuInterface */
         $menu = array_shift($nodes);
 
-        $url = $menu['url'];
+        $url = $menu->getUrl();
         if ($url === null) {
             try {
-                $url = $this->router->generate($menu['route']['name'], $menu['route']['params']);
+                $url = $this->router->generate($menu->getRouteName(), $menu->getRouteParams());
             } catch (\Exception $exception) {
                 return $this->build($nodes);
             }
         }
 
         return array_merge([[
-            'name'     => $menu['name'],
-            'title'    => $menu['title'],
+            'name'     => $menu->getName(),
+            'title'    => $menu->getTitle(),
             'url'      => $url,
-            'children' => $this->build($menu['__children'], $menu['key']),
+            'children' => $this->build($menu->getChildren()->toArray(), $menu->getKey()),
         ],], $this->build($nodes));
     }
-
 
     /**
      * @param array $nodes
