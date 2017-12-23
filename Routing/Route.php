@@ -1,12 +1,20 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
-use KRG\SeoBundle\Entity\SeoRoute;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Routing\Route as BaseRoute;
 
+/**
+ * Class Route
+ * @package KRG\CmsBundle\Routing
+ */
 class Route extends BaseRoute
 {
+    /**
+     * Store seoClass in route to avoid loading entityManager in UrlGenerator
+     * @var string
+     */
     private $seoClass;
 
     /**
@@ -26,7 +34,7 @@ class Route extends BaseRoute
     }
 
     /**
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function getSeo()
     {

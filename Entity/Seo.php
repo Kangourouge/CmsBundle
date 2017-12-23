@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,11 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Seo
  *
- * @ORM\MappedSuperclass(repositoryClass="KRG\SeoBundle\Repository\SeoRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\MappedSuperclass(repositoryClass="KRG\CmsBundle\Repository\SeoRepository")
  */
 class Seo implements SeoInterface
 {
+    use SeoRouteTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -21,29 +22,14 @@ class Seo implements SeoInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", options={"default": false})
+     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
      */
     protected $enabled;
-
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\SeoPage", mappedBy="seo", cascade={"all"})
-     */
-    protected $seoPage;
 
     /**
      * @ORM\Column(type="string", unique=true)
      */
     protected $uid;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $route;
-
-    /**
-     * @ORM\Column(type="json_array", nullable=true)
-     */
-    protected $parameters;
 
     /**
      * @ORM\Column(type="string", nullable=false)
@@ -80,15 +66,10 @@ class Seo implements SeoInterface
      */
     protected $ogImage;
 
-    /**
-     * @var string
-     */
-    private $className;
-
     public function __construct()
     {
-        $this->routeParameters = new ArrayCollection();
-        $this->className = static::class;
+        $this->enabled = false;
+        $this->route = [];
     }
 
     public function __toString()
@@ -97,51 +78,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * @ORM\PostLoad()
-     */
-    public function onPostLoad()
-    {
-        $this->className = static::class;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function onPrePersist()
-    {
-        $route = $this->route;
-
-        $prefix = preg_match("/^krg_seo_.+/", $route) ? '' : 'krg_seo_';
-        $this->uid = sprintf('%s%s_%s', $prefix, $this->route, uniqid());
-
-        $this->slugifyUrl();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function onPreUpdate()
-    {
-        $this->slugifyUrl();
-    }
-
-    // Todo: suglify URL
-    public function slugifyUrl()
-    {
-        if ($this->url && $this->url[0] != '/') {
-            $this->url = '/'.$this->url;
-        }
-
-        // $slugify = new Slugify();
-        // $this->url = $slugify->slugify($this->url));
-    }
-
-    /* */
-
-    /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -149,11 +86,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set enabled
-     *
-     * @param $enabled
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setEnabled($enabled)
     {
@@ -163,9 +96,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get enabled
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function getEnabled()
     {
@@ -173,35 +104,15 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set seoPage
-     *
-     * @param SeoPageInterface $seoPage
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
-    public function setSeoPage(SeoPageInterface $seoPage = null)
+    public function isEnabled()
     {
-        $this->seoPage = $seoPage;
-
-        return $this;
+        return $this->enabled;
     }
 
     /**
-     * Get seoPage
-     *
-     * @return SeoPageInterface
-     */
-    public function getSeoPage()
-    {
-        return $this->seoPage;
-    }
-
-    /**
-     * Set uid
-     *
-     * @param string $uid
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setUid($uid)
     {
@@ -209,9 +120,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get uid
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUid()
     {
@@ -219,35 +128,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set route
-     *
-     * @param string $route
-     *
-     * @return SeoInterface
-     */
-    public function setRoute($route)
-    {
-        $this->route = $route;
-
-        return $this;
-    }
-
-    /**
-     * Get route
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setUrl($url)
     {
@@ -257,51 +138,11 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get url
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUrl()
     {
         return $this->url;
-    }
-
-    /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return SeoInterface
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getRouteParameters()
-    {
-        if ($this->seoPage === null || $this->parameters === null) {
-            return $this->parameters;
-        }
-
-        return array_merge($this->parameters, array('id' => $this->seoPage->getId()));
     }
 
     /**
@@ -448,13 +289,17 @@ class Seo implements SeoInterface
         return $this->ogImage;
     }
 
-    /* */
-
+    /**
+     * {@inheritdoc}
+     */
     public function diff(array $parameters)
     {
-        return count(array_diff_assoc(array_filter($this->parameters), $parameters));
+        return count(array_diff_assoc(array_filter($this->getRouteParams()), $parameters));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isValid(array $parameters)
     {
         return $this->diff($parameters) === 0;

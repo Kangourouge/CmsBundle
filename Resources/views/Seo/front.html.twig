@@ -1,45 +1,29 @@
 <div id="seo-top-panel-wrapper">
     {% if seo is defined and seo %}
-        {% if seo.seoPage is not null and app.request.get(formName) %}
-            To edit SEO parameters, set the form to your liking and submit it<br>
-
-            {% if not app.request.get('_seo_page') %}
-                <br>
-                <a href="{{ path('krg_seo_admin_edit_seo_page', {'id': seo.seoPage.id, 'parameters': app.request.get(formName)}) }}" class="btn btn-primary">Update form parameters</a>
-            {% endif %}
-        {% endif %}
-
         {% if seo.seoPage is null %}
-            <a href="{{ path('admin_app_seo_edit', {'id': seo.id}) }}" class="btn btn-primary">Edit SEO</a>
-        {% endif %}
-    {% else %}
-        {% if app.request.request|length %}
-            <a href="{{ path('admin_app_seo_page_create', {'parameters': app.request.request|first}) }}" class="btn btn-primary">Create FORM SEO</a>
-        {% else %}
-            <a href="{{ path('admin_app_seo_create', {'route': app.request.get('_route')}) }}" class="btn btn-primary">Create SEO</a>
+            <a href="{{ path('easyadmin') }}?entity=Seo&action=edit&id={{ seo.id }}" class="btn">Edit SEO</a>
         {% endif %}
     {% endif %}
 </div>
 
 <style>
     #seo-top-panel-wrapper {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         position: fixed;
-        bottom: 45px;
+        bottom: 50px;
         left: 10px;
         z-index: 10000;
-        background: rgba(0, 0, 0, 0.6);
+        width: 30%;
+        color: #111111;
+    }
+
+    #seo-top-panel-wrapper .btn {
         color: #fff;
+        background: #222222;
+        border-radius: 30px;
+        font-weight:normal;
+        text-decoration: none;
+        padding: 10px 40px;
         text-align: center;
-        padding: 20px;
-    }
-
-    #seo-top-panel-wrapper btn {
-        font-size: 1.2rem;
-    }
-
-    #seo-left-panel-wrapper {
-        position: fixed;
-        top: 10em;
-        left: 0;
     }
 </style>

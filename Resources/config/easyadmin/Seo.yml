@@ -1,0 +1,24 @@
+easy_admin:
+    entities:
+        Seo:
+            class: '%krg_cms.seo.class%'
+            list:
+                fields:
+                    - enabled
+                    - url
+                    - routeName
+                    - metaTitle
+                    - metaDescription
+            form:
+                fields:
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
+                    - { property: url, label: 'Redirect url' }
+                    - enabled
+                    - { type: 'group', label: 'Metas' }
+                    - metaTitle
+                    - { property: metaDescription, type: textarea }
+                    - metaRobots
+                    - ogTitle
+                    - ogDescription
+                    - ogImage

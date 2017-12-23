@@ -10,7 +10,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new KRG\SeoBundle\KRGSeoBundle()
+        new KRG\CmsBundle\KRGCmsBundle()
         // ...
     );
 }
@@ -21,6 +21,7 @@ Configuration
 
 ```yaml
 # app/config/config.yml
+
 framework:
     # ...
     serializer: { enable_annotations: true }
@@ -30,66 +31,80 @@ framework:
 doctrine:
     orm:
         resolve_target_entities:
-            KRG\SeoBundle\Entity\SeoInterface: AppBundle\Entity\Seo
-            KRG\SeoBundle\Entity\SeoPageInterface: AppBundle\Entity\SeoPage
-            
-...            
-            
-krg_seo:
-    seo_class: AppBundle\Entity\Seo
-    seo_page_class: AppBundle\Entity\SeoPage
-    
+            KRG\CmsBundle\Entity\SeoInterface: AppBundle\Entity\Seo
+            KRG\CmsBundle\Entity\PageInterface: AppBundle\Entity\Page
+            KRG\CmsBundle\Entity\MenuInterface: AppBundle\Entity\Menu
+            KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
+            KRG\CmsBundle\Entity\FilterInterface: AppBundle\Entity\Filter
 ```
 
 Routing
 -------
 
 ```yaml
+# app/config/routing.yml
+
 krg_seo_route_loader:
     resource: .
     type: seo
     
 seo:
-    resource: "@KRGSeoBundle/Controller/"
+    resource: "@KRGCmsBundle/Controller/"
     type:     annotation
+```
+
+Form tags
+---------
+
+In order to be able to create a custom form, you need to tag your form:
+
+```yaml
+services:
+    AppBundle\Form\ExampleType:
+        tags:
+            - { name: 'form.type', alias: 'form_alias' }
+            - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
+```
+
+```php
+<?php
+
+namespace AppBundle\Form\Handler;
+
+class TestHandler implements FormHandlerInterface
+{
+    public function handle(Request $request, FormInterface $form)
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $form->handleRequest($request);
+        }
+
+        return null;
+    }
+}
+
+```
+
+Override service Menu Builder
+-----------------------------
+
+https://symfony.com/doc/current/service_container/autowiring.html#working-with-interfaces
+
+```yaml
+services:
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
 ```
 
 Entity
 ------
 
-```php
-<?php
+Create 5 entities:
 
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use KRG\SeoBundle\Entity\Seo as BaseSeo;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="seo")
- */
-class Seo extends BaseSeo
-{
-}
-```
-
-```
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use KRG\SeoBundle\Entity\SeoPage as BaseSeoPage;
-
-/**
- * SeoPage
- *
- * @ORM\Entity
- * @ORM\Table(name="seo_page")
- */
-class SeoPage extends BaseSeoPage
-{
-}
-```
+class Seo extends \KRG\CmsBundle\Entity\Seo;
+class Page extends \KRG\CmsBundle\Entity\Page;
+class Menu extends \KRG\CmsBundle\Entity\Menu;
+class Block extends \KRG\CmsBundle\Entity\Block;
+class Filter extends \KRG\CmsBundle\Entity\Filter;
 
 Twig
 ----
@@ -110,6 +125,3 @@ Récupérer l'url d'une SeoPage depuis sa key :
 
 Améliorations possibles
 -----------------------
-
-- SeoAdmin : JS - copier d'un clic les variables dans le presse papier
-- SeoAdmin : empêcher l'utilisation de variable dans l'url si le paramètre est déjà renseigné

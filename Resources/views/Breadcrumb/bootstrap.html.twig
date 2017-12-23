@@ -1,0 +1,17 @@
+{% block breadcrumb %}
+    {% if nodes|length > 0 %}
+        <ul class="breadcrumb">
+            {% for node in nodes %}
+                {% if is_granted_roles(node.roles) %}
+                    {{ block('breadcrumb_node') }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb_node %}
+    <li class="{% if node.active %}active{% endif %}">
+        <a href="{{ node.url }}">{{ node.name }}</a>
+    </li>
+{% endblock %}

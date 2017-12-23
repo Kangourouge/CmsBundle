@@ -1,6 +1,6 @@
 {
-  "name"       : "kangourouge/seo-bundle",
-  "description": "Kangourouge Seo Bundle",
+  "name"       : "kangourouge/cms-bundle",
+  "description": "Kangourouge CMS Bundle",
   "type"       : "symfony-bundle",
   "license"    : "MIT",
   "authors"    : [
@@ -20,8 +20,8 @@
   },
   "autoload"   : {
     "psr-0": {
-      "KRG\\SeoBundle": ""
+      "KRG\\CmsBundle": ""
     }
   },
-  "target-dir" : "KRG/SeoBundle"
+  "target-dir" : "KRG/CmsBundle"
 }

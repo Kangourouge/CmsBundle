@@ -1,8 +1,8 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
-interface SeoInterface
+interface SeoInterface extends SeoRouteInterface
 {
     /**
      * Get id
@@ -28,27 +28,18 @@ interface SeoInterface
     public function getEnabled();
 
     /**
-     * Set seoPage
+     * Is enabled
      *
-     * @param SeoPageInterface $seoPage
-     *
-     * @return SeoInterface
+     * @return boolean
      */
-    public function setSeoPage(SeoPageInterface $seoPage = null);
-
-    /**
-     * Get seoPage
-     *
-     * @return SeoPageInterface
-     */
-    public function getSeoPage();
+    public function isEnabled();
 
     /**
      * Set uid
      *
      * @param string $uid
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUid($uid);
 
@@ -60,27 +51,11 @@ interface SeoInterface
     public function getUid();
 
     /**
-     * Set route
-     *
-     * @param string $route
-     *
-     * @return SeoRoute
-     */
-    public function setRoute($route);
-
-    /**
-     * Get route
-     *
-     * @return string
-     */
-    public function getRoute();
-
-    /**
      * Set url
      *
      * @param string $url
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setUrl($url);
 
@@ -92,27 +67,11 @@ interface SeoInterface
     public function getUrl();
 
     /**
-     * Set parameters
-     *
-     * @param array $parameters
-     *
-     * @return SeoRoute
-     */
-    public function setParameters($parameters);
-
-    /**
-     * Get parameters
-     *
-     * @return array
-     */
-    public function getParameters();
-
-    /**
      * Set metaTitle
      *
      * @param string $metaTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaTitle($metaTitle);
 
@@ -128,7 +87,7 @@ interface SeoInterface
      *
      * @param string $metaDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setMetaDescription($metaDescription);
 
@@ -144,7 +103,7 @@ interface SeoInterface
      *
      * @param string $ogTitle
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgTitle($ogTitle);
 
@@ -160,7 +119,7 @@ interface SeoInterface
      *
      * @param string $ogDescription
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgDescription($ogDescription);
 
@@ -176,7 +135,7 @@ interface SeoInterface
      *
      * @param string $ogImage
      *
-     * @return SeoRoute
+     * @return SeoInterface
      */
     public function setOgImage($ogImage);
 
@@ -188,11 +147,13 @@ interface SeoInterface
     public function getOgImage();
 
     /**
+     * @param array $parameters
      * @return int
      */
     public function diff(array $parameters);
 
     /**
+     * @param array $parameters
      * @return boolean
      */
     public function isValid(array $parameters);

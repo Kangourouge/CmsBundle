@@ -1,0 +1,15 @@
+easy_admin:
+    entities:
+        Block:
+            class: '%krg_cms.block.class%'
+            list:
+                fields:
+                    - enabled
+                    - key
+                    - name
+            form:
+                fields:
+                    - key
+                    - name
+                    - { property: 'content', type: 'ckeditor' }
+                    - enabled

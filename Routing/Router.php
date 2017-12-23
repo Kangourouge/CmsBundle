@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Routing\Route;
@@ -18,9 +18,8 @@ class Router extends BaseRouter
 
         $generator = parent::getGenerator();
         $generator->setSeoRoutes(array_filter($this->getRouteCollection()->all(), function (Route $route) {
-            return $route instanceof \KRG\SeoBundle\Routing\Route;
+            return $route instanceof \KRG\CmsBundle\Routing\Route;
         }));
-
         $generator->setSerializer(new Serializer(
             array(new PropertyNormalizer()),
             array(new JsonEncoder())

@@ -1,16 +1,21 @@
 <?php
 
-namespace KRG\SeoBundle\Twig;
+namespace KRG\CmsBundle\Twig;
 
-use KRG\SeoBundle\Entity\SeoInterface;
-use KRG\SeoBundle\Entity\SeoPageInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use KRG\CmsBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoPageInterface;
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Model\UserInterface;
+use KRG\CmsBundle\KRGCmsBundle;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class SeoExtension extends \Twig_Extension
 {
@@ -39,16 +44,25 @@ class SeoExtension extends \Twig_Extension
      */
     private $formFactory;
 
+    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, RequestStack $requestStack)
+    {
+        $this->entityManager = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->formFactory = $formFactory;
+        $this->request = $requestStack->getMasterRequest();
+    }
+
     public function getSeoHead(\Twig_Environment $environment)
     {
         if ($this->request === null) {
-            return;
+            return null;
         }
 
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return;
+            return null;
         }
 
         // Get usefull parameters from the request
@@ -56,7 +70,7 @@ class SeoExtension extends \Twig_Extension
             return substr($key, 0, 1) !== '_';
         }, ARRAY_FILTER_USE_KEY);
 
-        $twig = new \Twig_Environment(new \Twig_Loader_String());
+        $twig = new \Twig_Environment(new \Twig_Loader_Array(array()));
 
         $data = array(
             'metaTitle'       => null,
@@ -67,52 +81,49 @@ class SeoExtension extends \Twig_Extension
             'ogImage'         => null,
         );
 
+        // Use twig environnement to bind {{ var }}
         foreach($data as $key => &$value) {
             $getter = 'get' . ucfirst($key);
-            if (method_exists($seo, $getter) && $template = call_user_func(array($seo, $getter))) {
-                $value = $twig->render($template, $params);
+            if (method_exists($seo, $getter)) {
+                if ($input = call_user_func(array($seo, $getter))) {
+                    $value = $twig->createTemplate($input)->render($params);
+                }
             }
         }
         unset($value);
 
-        return $environment->render('KRGSeoBundle:Seo:head.html.twig', $data);
+        return $environment->render('KRGCmsBundle:Seo:head.html.twig', $data);
     }
 
     public function getSeoAdmin(\Twig_Environment $environment)
     {
         if ($this->request === null) {
-            return;
+            return null;
         }
 
         if (false === $this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
-            false === $this->authorizationChecker->isGranted('ROLE_SEO')) {
-            return;
+            false === $this->authorizationChecker->isGranted(KRGCmsBundle::ROLE_SEO)) {
+            return null;
         }
 
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
 
-        $formName = null;
-        /* @var $seoPage SeoPageInterface */
-        if ($seo && $seo->getSeoPage() && $seo->getSeoPage()->getFormType()) {
-            $form = $this->formFactory->create($seo->getSeoPage()->getFormType());
-            $formName = $form->getName();
-        }
-
-        return $environment->render('KRGSeoBundle:Seo:front.html.twig', array(
-            'seo'      => $this->request->get('_seo'),
-            'formName' => $formName
+        return $environment->render('KRGCmsBundle:Seo:front.html.twig', array(
+            'seo' => $seo,
         ));
     }
 
-    public function getSeoUrlBySeoPageKey($key)
+    public function getSeoUrl($key)
     {
-        /* @var $seo SeoInterface */
-        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBySeoPageKey($key);
+        /* @var $page PageInterface */
+        $page = $this->entityManager->getRepository(PageInterface::class)->findBy([
+            'enabled' => true,
+            'key'     => $key,
+        ]);
 
-
-        if ($seo) {
-            return $seo->getUrl();
+        if ($page) {
+            return $page->getSeo()->getUrl();
         }
 
         return '#';
@@ -129,65 +140,9 @@ class SeoExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
             )),
-            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrlBySeoPageKey'), array(
+            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrl'), array(
                 'is_safe' => array('html'),
             )),
         );
-    }
-
-    /**
-     * @return UserInterface
-     */
-    public function getUser()
-    {
-        return $this->tokenStorage->getToken()->getUser();
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'krg_seo_bundle';
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function setRequestStack(RequestStack $requestStack)
-    {
-        $this->request = $requestStack->getMasterRequest();
-    }
-
-    /**
-     * @param TokenStorage $tokenStorage
-     */
-    public function setTokenStorage(TokenStorage $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
-    }
-
-    /**
-     * @param AuthorizationChecker $authorizationChecker
-     */
-    public function setAuthorizationChecker($authorizationChecker)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-    }
-
-    /**
-     * @param FormFactory $formFactory
-     */
-    public function setFormFactory($formFactory)
-    {
-        $this->formFactory = $formFactory;
     }
 }

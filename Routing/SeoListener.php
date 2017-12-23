@@ -1,29 +1,36 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
-use KRG\SeoBundle\Entity\SeoInterface;
-use KRG\SeoBundle\Repository\SeoRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Repository\SeoRepository;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class SeoListener
 {
     /**
-     * @var $router Router
+     * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var $entityManager EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
+
+    public function __construct(RouterInterface $router, EntityManagerInterface $entityManager)
+    {
+        $this->router = $router;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Update current request if URI match with one of SEOBUNDLE urls
      *
      * @param GetResponseEvent $event
+     * @return null|void
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -36,48 +43,30 @@ class SeoListener
 
         // Retrieve the original route
         if (!preg_match("/^krg_seo_.+/", $route)) {
-            return;
+            return null;
         }
 
         /* @var $seoRepository SeoRepository */
-        $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
-        $seoRepository = $this->entityManager->getRepository($className);
+        $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
 
         /* @var $seo SeoInterface */
         $seo = $seoRepository->findOneByUid($route);
         if ($seo === null) {
-            return;
+            return null;
         }
 
         // Update request to keep url intact
-        $route = $this->router->getRouteCollection()->get($seo->getRoute());
-        $params = array_merge($request->attributes->get('_route_params'), $seo->getParameters());
+        $route = $this->router->getRouteCollection()->get($seo->getRouteName());
+
+        $params = array_merge($request->attributes->get('_route_params'), $seo->getRouteParams());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
-        $request->attributes->set('_route', $seo->getRoute());
+        $request->attributes->set('_route', $seo->getRouteName());
         $request->attributes->set('_seo', $seo); // Store initial SEO to reuse it after
         $request->attributes->set('_route_params', $params);
-        foreach($seo->getRouteParameters() as $key => $value) {
+        foreach($seo->getRouteParams() as $key => $value) {
             if ($value) {
                 $request->attributes->set($key, $value);
             }
         }
-    }
-
-    /* */
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param Router $router
-     */
-    public function setRouter(Router $router)
-    {
-        $this->router = $router;
     }
 }

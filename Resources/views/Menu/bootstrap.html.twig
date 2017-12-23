@@ -1,0 +1,73 @@
+{% block menu %}
+    {% if nodes|length > 0 %}
+        <nav class="navbar">
+            <div class="container-fluid">
+                {{ block('menu_header') }}
+                <div class="collapse navbar-collapse" id="{{ id }}">
+                    <ul class="nav navbar-nav">
+                        {{ block('menu_nodes') }}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block menu_header %}
+    <div class="navbar-header">
+        {{ block('menu_toggle') }}
+        {% if brand %}
+            <a class="navbar-brand" href="#">{{ brand|raw }}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block menu_toggle %}
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{ id }}" aria-expanded="false">
+        <span class="sr-only">{{ 'Toggle navigation'|trans }}</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+{% endblock %}
+
+{% block menu_nodes %}
+    {% for node in nodes %}
+        {% if is_granted_roles(node.roles) %}
+            {{ block('menu_node') }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block menu_node %}
+    {% set hasChildren = node.children is defined and node.children|length > 0 %}
+    <li class="{% if hasChildren %}dropdown{% endif %} {% if node.active %}active{% endif %}">
+        {% if hasChildren %}
+            {{ block('menu_dropdown') }}
+        {% elseif node.url %}
+            {{ block('menu_link') }}
+        {% else %}
+            {{ block('menu_text') }}
+        {% endif %}
+    </li>
+{% endblock %}
+
+{% block menu_link %}
+    <a href="{{ node.url }}" title="{{ node.title|default(node.name) }}">{{ node.name }}</a>
+{% endblock %}
+
+{% block menu_text %}
+    <span title="{{ node.title|default(node.name) }}">{{ node.name }}</span>
+{% endblock %}
+
+{% block menu_dropdown %}
+    {% set nodes = node.children %}
+    <a href="{{ node.url }}" title="{{ node.title|default(node.name) }}" class="dropdown-toggle" data-toggle="dropdown"
+       role="button" aria-haspopup="true" aria-expanded="false">
+        {{ node.name }}
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        {{ block('menu_nodes') }}
+    </ul>
+{% endblock %}

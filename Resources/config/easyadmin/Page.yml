@@ -1,0 +1,17 @@
+easy_admin:
+    entities:
+        Page:
+            class: '%krg_cms.page.class%'
+            list:
+                fields:
+                    - enabled
+                    - key
+                    - name
+                    - { property: seo.url, label: 'Url' }
+            form:
+                fields:
+                    - key
+                    - name
+                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
+                    - { property: 'content', type: 'ckeditor' }
+                    - enabled

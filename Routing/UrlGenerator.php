@@ -1,12 +1,13 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UrlGenerator extends BaseUrlGenerator
 {
@@ -25,6 +26,34 @@ class UrlGenerator extends BaseUrlGenerator
      */
     private $cache;
 
+    /**
+     * UrlGenerator constructor.
+     *
+     * @param RouteCollection $routes
+     * @param RequestContext $context
+     * @param string|null $logger
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(RouteCollection $routes, RequestContext $context, $logger = null, SerializerInterface $serializer)
+    {
+        parent::__construct($routes, $context, $logger);
+
+        $this->serializer = $serializer;
+    }
+
+    /**
+     * @param $variables
+     * @param $defaults
+     * @param $requirements
+     * @param $tokens
+     * @param $parameters
+     * @param $name
+     * @param $referenceType
+     * @param $hostTokens
+     * @param array $requiredSchemes
+     *
+     * @return string
+     */
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (!preg_match("/^krg_seo_.+/", $name)) {
@@ -66,6 +95,12 @@ class UrlGenerator extends BaseUrlGenerator
         );
     }
 
+    /**
+     * @param string $name
+     * @param array $parameters
+     *
+     * @return mixed|null
+     */
     private function resolve($name, array $parameters)
     {
         if (!$this->cache) {
@@ -92,7 +127,7 @@ class UrlGenerator extends BaseUrlGenerator
             /* @var $seo SeoInterface */
             $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
 
-            return $seo->getRoute() === $name && $seo->isValid($parameters);
+            return $seo->getRouteName() === $name && $seo->isValid($parameters);
         });
         $nbRoute = count($routes);
 
@@ -122,18 +157,10 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * @param array $seoRoutes
+     * @param array $routes
      */
     public function setSeoRoutes(array $routes)
     {
         $this->seoRoutes = $routes;
-    }
-
-    /**
-     * @param Serializer $serializer
-     */
-    public function setSerializer($serializer)
-    {
-        $this->serializer = $serializer;
     }
 }
