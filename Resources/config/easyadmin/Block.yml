@@ -11,5 +11,5 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - content
+                    - { property: 'content', type: 'ckeditor' }
                     - enabled

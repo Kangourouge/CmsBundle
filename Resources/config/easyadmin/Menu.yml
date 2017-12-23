@@ -4,20 +4,24 @@ easy_admin:
             class: '%easy_admin_seo_menu_class%'
             list:
                 fields:
-                    - enabled
                     - name
                     - parent
                     - title
                     - url
+                    - roles
+                    - compound
+                    - enabled
                 sort: ['position', 'ASC']
                 actions:
                     - { name: 'sortable', field: 'position', label: '' }
             form:
                 fields:
                     - enabled
+                    - compound
                     - name
                     - { property: key, help: 'Unique identifier' }
                     - parent
                     - title
                     - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
                     - url
+                    - { property: 'roles', type: 'choice', type_options: { multiple: true, required: false, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN': 'ROLE_SUPER_ADMIN' } } }

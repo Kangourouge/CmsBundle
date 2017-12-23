@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
-class ClearRoutingCache
+class ClearCache
 {
     /**
      * @var Router
@@ -22,30 +22,33 @@ class ClearRoutingCache
     private $filesystem;
 
     /**
-     * @var Kernel
+     * @var string
      */
-    private $kernel;
+    private $cacheDir;
 
-    public function __construct(RouterInterface $router, Filesystem $filesystem, KernelInterface $kernel)
+    public function __construct(RouterInterface $router, Filesystem $filesystem, $cacheDir)
     {
         $this->router = $router;
         $this->filesystem = $filesystem;
-        $this->kernel = $kernel;
+        $this->cacheDir = $cacheDir;
     }
 
-    public function exec()
+    public function warmupRouting()
     {
-        $cacheDir = $this->kernel->getCacheDir();
-
         foreach (array('matcher_cache_class', 'generator_cache_class') as $option) {
             $className = $this->router->getOption($option);
-            $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . $className . '.php';
+            $cacheFile = $this->cacheDir . DIRECTORY_SEPARATOR . $className . '.php';
             $this->filesystem->remove($cacheFile);
         }
 
         $cache = new FilesystemAdapter('seo');
-        $ret = $cache->clear();
+        $cache->clear();
 
-        $this->router->warmUp($cacheDir);
+        $this->router->warmUp($this->cacheDir);
+    }
+
+    public function warmupTwig()
+    {
+        $this->filesystem->remove($this->cacheDir . '/krg');
     }
 }

@@ -32,7 +32,7 @@ class SeoRouteType extends AbstractType
     public function __construct(RouterInterface $router, $regexp = null)
     {
         $this->routes = $router->getRouteCollection();
-        $this->regexp = $regexp ?: '`^(_|admin|easyadmin|liip|krg_seo).*`';
+        $this->regexp = $regexp ?: '`^(_|admin|easyadmin|liip).*`';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -33,23 +33,31 @@
 
 {% block menu_nodes %}
     {% for node in nodes %}
-        {{ block('menu_node') }}
+        {% if is_granted_roles(node.roles) %}
+            {{ block('menu_node') }}
+        {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block menu_node %}
     {% set hasChildren = node.children is defined and node.children|length > 0 %}
-    <li {% if hasChildren %}class="dropdown"{% endif %}>
+    <li class="{% if hasChildren %}dropdown{% endif %} {% if node.active %}active{% endif %}">
         {% if hasChildren %}
             {{ block('menu_dropdown') }}
-        {% else %}
+        {% elseif node.url %}
             {{ block('menu_link') }}
+        {% else %}
+            {{ block('menu_text') }}
         {% endif %}
     </li>
 {% endblock %}
 
 {% block menu_link %}
     <a href="{{ node.url }}" title="{{ node.title|default(node.name) }}">{{ node.name }}</a>
+{% endblock %}
+
+{% block menu_text %}
+    <span title="{{ node.title|default(node.name) }}">{{ node.name }}</span>
 {% endblock %}
 
 {% block menu_dropdown %}

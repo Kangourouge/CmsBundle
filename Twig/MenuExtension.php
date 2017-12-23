@@ -2,10 +2,8 @@
 
 namespace KRG\SeoBundle\Twig;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use KRG\SeoBundle\Entity\MenuInterface;
 use KRG\SeoBundle\Menu\MenuBuilderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class MenuExtension
@@ -14,14 +12,9 @@ use KRG\SeoBundle\Menu\MenuBuilderInterface;
 class MenuExtension extends \Twig_Extension
 {
     /**
-     * @var EntityManagerInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $entityManager;
-
-    /**
-     * @var array
-     */
-    private $templates;
+    private $authorizationChecker;
 
     /**
      * @var MenuBuilderInterface
@@ -29,13 +22,18 @@ class MenuExtension extends \Twig_Extension
     private $menuBuilder;
 
     /**
+     * @var array
+     */
+    private $templates;
+
+    /**
      * MenuExtension constructor.
-     * @param EntityManagerInterface $entityManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @param MenuBuilderInterface $menuBuilder
      */
-    public function __construct(EntityManagerInterface $entityManager, MenuBuilderInterface $menuBuilder)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, MenuBuilderInterface $menuBuilder)
     {
-        $this->entityManager = $entityManager;
+        $this->authorizationChecker = $authorizationChecker;
         $this->menuBuilder = $menuBuilder;
         $this->templates = [];
     }
@@ -58,23 +56,36 @@ class MenuExtension extends \Twig_Extension
         return $this->templates[$theme];
     }
 
-    public function render(\Twig_Environment $environment, $brand = null, array $additionalNodes = [], $theme = 'KRGSeoBundle:Menu:bootstrap.html.twig')
+    /**
+     * @param \Twig_Environment $environment
+     * @param $key
+     * @param string $theme
+     * @param null $brand
+     *
+     * @return mixed
+     */
+    public function render(\Twig_Environment $environment, $key, $theme = 'KRGSeoBundle:Menu:bootstrap.html.twig', $brand = null)
     {
-        /* @var $repository NestedTreeRepository */
-        $repository = $this->entityManager->getRepository(MenuInterface::class);
-        $qb = $repository->getRootNodesQueryBuilder()->addOrderBy('node.position');
-        $rootNodes = $qb->getQuery()->getResult();
-        $nodes = $this->menuBuilder->build($rootNodes);
-
         $template = $this->getTemplate($environment, $theme);
-
         return $template->renderBlock('menu', [
             'id'    => uniqid('krg_menu_'),
             'brand' => $brand,
-            'nodes' => $nodes
+            'nodes' => $this->menuBuilder->getNodes($key)
         ]);
     }
 
+    /**
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function isGranted(array $roles) {
+        return count($roles) === 0 || $this->authorizationChecker->isGranted($roles);
+    }
+
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         return [
@@ -82,6 +93,9 @@ class MenuExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
+            'is_granted_roles' => new \Twig_SimpleFunction('is_granted_roles', array($this, 'isGranted'), [
+                'needs_environment' => false
+            ])
         ];
     }
 }

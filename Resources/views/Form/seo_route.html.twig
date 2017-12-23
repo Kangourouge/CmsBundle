@@ -3,18 +3,18 @@
 
     <script type="text/javascript">
         (function(){
-            let select = document.getElementById('{{ form.name.vars.id }}');
-            let params = document.getElementById('{{ form.params.vars.id }}');
-            let prototype = params.dataset.prototype;
+            var select = document.getElementById('{{ form.name.vars.id }}');
+            var params = document.getElementById('{{ form.params.vars.id }}');
+            var prototype = params.dataset.prototype;
 
             select.addEventListener('change', onChange);
 
             function onChange() {
-                let selectedOption = select.options[select.selectedIndex];
-                let _params = JSON.parse(selectedOption.dataset.params);
+                var selectedOption = select.options[select.selectedIndex];
+                var _params = JSON.parse(selectedOption.dataset.params);
 
                 params.innerHTML = '';
-                for(let key in _params) {
+                for(var key in _params) {
                     addParam(key, _params[key]);
                 }
 
@@ -22,7 +22,7 @@
             }
 
             function addParam(name, value) {
-                let param = prototype
+                var param = prototype
                     .replace(/\>__name__label__\</g, '>' + name + '<')
                     .replace(/_params___name__/g, '_params_' + name)
                     .replace(/params\]\[__name__\]/g, 'params][' + name + ']');

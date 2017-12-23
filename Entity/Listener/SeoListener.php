@@ -7,24 +7,24 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use KRG\SeoBundle\DependencyInjection\ClearRoutingCache;
+use KRG\SeoBundle\DependencyInjection\ClearCache;
 use KRG\SeoBundle\Entity\SeoInterface;
 
 class SeoListener implements EventSubscriber
 {
     /**
-     * @var ClearRoutingCache
+     * @var ClearCache
      */
-    private $clearRoutingCache;
+    private $clearCache;
 
     /**
      * SeoListener constructor.
      *
-     * @param ClearRoutingCache $clearRoutingCache
+     * @param ClearCache $clearCache
      */
-    public function __construct(ClearRoutingCache $clearRoutingCache)
+    public function __construct(ClearCache $clearCache)
     {
-        $this->clearRoutingCache = $clearRoutingCache;
+        $this->clearCache = $clearCache;
     }
 
     public function getSubscribedEvents()
@@ -55,6 +55,6 @@ class SeoListener implements EventSubscriber
 
     public function postFlush(PostFlushEventArgs $event)
     {
-        $this->clearRoutingCache->exec();
+        $this->clearCache->warmupRouting();
     }
 }

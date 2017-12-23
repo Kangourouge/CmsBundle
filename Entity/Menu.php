@@ -78,6 +78,18 @@ class Menu implements MenuInterface
     protected $position;
 
     /**
+     * @ORM\Column(type="json_array")
+     * @var string
+     */
+    protected $roles;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_compound")
+     * @var boolean
+     */
+    protected $compound;
+
+    /**
      * @ORM\Column(type="boolean", name="is_enabled")
      * @var boolean
      */
@@ -89,6 +101,7 @@ class Menu implements MenuInterface
         $this->enabled = false;
         $this->children = new ArrayCollection();
         $this->position = 0;
+        $this->roles = [];
     }
 
     public function __toString()
@@ -139,7 +152,7 @@ class Menu implements MenuInterface
     {
         return $this->key;
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -192,6 +205,91 @@ class Menu implements MenuInterface
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Add role
+     *
+     * @param $role
+     * @return $this
+     */
+    public function addRole($role)
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param $role
+     * @return $this
+     */
+    public function removeRole($role)
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = [];
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCompound($compound)
+    {
+        $this->compound = $compound;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompound()
+    {
+        return $this->compound;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCompound()
+    {
+        return $this->compound;
     }
 
     /**

@@ -12,11 +12,17 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
+    KRG\SeoBundle\Menu\:
+        resource: '../../Menu/*'
+        public: true
+
     KRG\SeoBundle\Twig\BlockExtension:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
 
-    KRG\SeoBundle\Twig\MenuExtension:
+    KRG\SeoBundle\Menu\MenuBuilder:
+        arguments:
+            $cacheDir: '%kernel.cache_dir%'
 
     KRG\SeoBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
@@ -37,10 +43,8 @@ services:
         tags: [validator.constraint_validator]
         public: true
 
-    KRG\SeoBundle\Menu\:
-        resource: '../../Menu/*'
-        public: true
-
-    KRG\SeoBundle\DependencyInjection\ClearRoutingCache:
+    KRG\SeoBundle\DependencyInjection\ClearCache:
+        arguments:
+            $cacheDir: '%kernel.cache_dir%'
 
     KRG\SeoBundle\Menu\MenuBuilderInterface: '@KRG\SeoBundle\Menu\MenuBuilder'

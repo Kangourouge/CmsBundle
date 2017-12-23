@@ -5,6 +5,8 @@ namespace KRG\SeoBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\SeoBundle\Entity\BlockFormInterface;
 use KRG\SeoBundle\Entity\BlockInterface;
+use KRG\SeoBundle\Entity\PageInterface;
+use Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode;
 use Twig\TwigFunction;
 
 /**
@@ -86,41 +88,52 @@ class BlockExtension extends \Twig_Extension
 
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
         if (!file_exists($path)) {
-            $blocksStatic = $this->entityManager->getRepository(BlockInterface::class)->findAll();
-            $blocksForm = $this->entityManager->getRepository(BlockFormInterface::class)->findAll();
+            $staticBlocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
+            $formBlocks = $this->entityManager->getRepository(BlockFormInterface::class)->findAll();
+            $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
 
             $content = [];
             /* @var $block BlockInterface */
-            foreach ($blocksStatic as $blockStatic) {
+            foreach ($staticBlocks as $blockStatic) {
                 if (false === $this->hasBlockLoop($blockStatic)) {
-                    $content[] = sprintf("{%% block %s %%}%s{%% endblock %%}\n", $blockStatic->getKey(), $blockStatic->getContent());
+                    $content[] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $blockStatic->getKey(), $blockStatic->getContent(), $blockStatic->getKey());
                 }
             }
 
             /* @var $blockForm BlockFormInterface */
-            foreach ($blocksForm as $blockForm) {
-                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGSeoBundle:Block:form', {'blockForm': %d})) }}{%% endblock %%}\n", $blockForm->getKey(), $blockForm->getId());
+            foreach ($formBlocks as $blockForm) {
+                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGSeoBundle:Block:form', {'blockForm': %d})) }}{%% endblock %s %%}\n", $blockForm->getKey(), $blockForm->getId(), $blockForm->getKey());
             }
 
-            return (bool)file_put_contents($path, implode('', $content));
+            /* @var $page PageInterface */
+            foreach ($pages as $page) {
+                $content[] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
+            }
+
+            return (bool) file_put_contents($path, implode('', $content));
         }
 
         return false;
     }
 
     /**
-     * Render a block by its key
+     * Render a block by it's key
      *
      * @param \Twig_Environment $environment
      * @param $key
+     * @param array $context
+     *
+     * @return null|string
      */
-    public function getBlock(\Twig_Environment $environment, $key)
+    public function getBlock(\Twig_Environment $environment, $key, $context = array())
     {
         $template = $this->getTemplate($environment);
 
         if ($template->hasBlock($key)) {
-            $template->renderBlock($key);
+            return $template->renderBlock($key, $context);
         }
+
+        return null;
     }
 
     /**
@@ -142,7 +155,7 @@ class BlockExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            new TwigFunction('menu_item', null, array('node_class' => 'Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode', 'is_safe' => array('html'))),
+            new TwigFunction('menu_item', null, array('node_class' => SearchAndRenderBlockNode::class, 'is_safe' => array('html'))),
         ];
     }
 }

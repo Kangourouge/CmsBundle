@@ -94,6 +94,61 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
     public function getPosition();
 
     /**
+     * Add role
+     *
+     * @param $role
+     * @return $this
+     */
+    public function addRole($role);
+
+    /**
+     * Remove role
+     *
+     * @param $role
+     * @return $this
+     */
+    public function removeRole($role);
+
+    /**
+     * Get roles
+     *
+     * @return array
+     */
+    public function getRoles();
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles(array $roles);
+
+    /**
+     * Set compound
+     *
+     * @param $compound
+     *
+     * @return BlockInterface
+     */
+    public function setCompound($compound);
+
+    /**
+     * Get compound
+     *
+     * @return boolean
+     */
+    public function getCompound();
+
+    /**
+     * Is compound
+     *
+     * @return boolean
+     */
+    public function isCompound();
+
+    /**
      * Set enabled
      *
      * @param $enabled

@@ -57,6 +57,7 @@ class SeoListener
 
         // Update request to keep url intact
         $route = $this->router->getRouteCollection()->get($seo->getRouteName());
+
         $params = array_merge($request->attributes->get('_route_params'), $seo->getRouteParams());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
         $request->attributes->set('_route', $seo->getRouteName());

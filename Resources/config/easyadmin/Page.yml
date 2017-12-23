@@ -13,5 +13,5 @@ easy_admin:
                     - key
                     - name
                     - { property: seo, type: KRG\SeoBundle\Form\Type\SeoType }
-                    - content
+                    - { property: 'content', type: 'ckeditor' }
                     - enabled
