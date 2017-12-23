@@ -1,12 +1,12 @@
 <?php
 
-namespace KRG\SeoBundle\Entity\Listener;
+namespace KRG\CmsBundle\Entity\Listener;
 
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use KRG\SeoBundle\DependencyInjection\ClearCache;
-use KRG\SeoBundle\Entity\BlockInterface;
+use KRG\CmsBundle\DependencyInjection\ClearCache;
+use KRG\CmsBundle\Entity\BlockInterface;
 
 class BlockListener implements EventSubscriber
 {

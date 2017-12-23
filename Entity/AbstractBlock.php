@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

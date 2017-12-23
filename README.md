@@ -10,7 +10,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new KRG\SeoBundle\KRGSeoBundle()
+        new KRG\CmsBundle\KRGCmsBundle()
         // ...
     );
 }
@@ -31,11 +31,11 @@ framework:
 doctrine:
     orm:
         resolve_target_entities:
-            KRG\SeoBundle\Entity\SeoInterface: AppBundle\Entity\Seo
-            KRG\SeoBundle\Entity\PageInterface: AppBundle\Entity\Page
-            KRG\SeoBundle\Entity\MenuInterface: AppBundle\Entity\Menu
-            KRG\SeoBundle\Entity\BlockInterface: AppBundle\Entity\Block
-            KRG\SeoBundle\Entity\BlockFormInterface: AppBundle\Entity\BlockForm
+            KRG\CmsBundle\Entity\SeoInterface: AppBundle\Entity\Seo
+            KRG\CmsBundle\Entity\PageInterface: AppBundle\Entity\Page
+            KRG\CmsBundle\Entity\MenuInterface: AppBundle\Entity\Menu
+            KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
+            KRG\CmsBundle\Entity\BlockFormInterface: AppBundle\Entity\BlockForm
 ```
 
 Routing
@@ -49,7 +49,7 @@ krg_seo_route_loader:
     type: seo
     
 seo:
-    resource: "@KRGSeoBundle/Controller/"
+    resource: "@KRGCmsBundle/Controller/"
     type:     annotation
 ```
 
@@ -63,7 +63,7 @@ services:
     AppBundle\Form\ExampleType:
         tags:
             - { name: 'form.type', alias: 'form_alias' }
-            - { name: 'seo.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
+            - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
 ```
 
 ```php
@@ -92,7 +92,7 @@ https://symfony.com/doc/current/service_container/autowiring.html#working-with-i
 
 ```yaml
 services:
-    KRG\SeoBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
 ```
 
 Entity
@@ -100,11 +100,11 @@ Entity
 
 Create 5 entities:
 
-class Seo extends \KRG\SeoBundle\Entity\Seo;
-class Page extends \KRG\SeoBundle\Entity\Page;
-class Menu extends \KRG\SeoBundle\Entity\Menu;
-class Block extends \KRG\SeoBundle\Entity\Block;
-class BlockForm extends \KRG\SeoBundle\Entity\BlockForm;
+class Seo extends \KRG\CmsBundle\Entity\Seo;
+class Page extends \KRG\CmsBundle\Entity\Page;
+class Menu extends \KRG\CmsBundle\Entity\Menu;
+class Block extends \KRG\CmsBundle\Entity\Block;
+class BlockForm extends \KRG\CmsBundle\Entity\BlockForm;
 
 Twig
 ----

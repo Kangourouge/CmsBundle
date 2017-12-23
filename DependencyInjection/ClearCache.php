@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\DependencyInjection;
+namespace KRG\CmsBundle\DependencyInjection;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Filesystem\Filesystem;

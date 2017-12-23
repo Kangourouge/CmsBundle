@@ -1,13 +1,13 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Routing\Route as BaseRoute;
 
 /**
  * Class Route
- * @package KRG\SeoBundle\Routing
+ * @package KRG\CmsBundle\Routing
  */
 class Route extends BaseRoute
 {

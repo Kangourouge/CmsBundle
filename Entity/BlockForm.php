@@ -1,10 +1,10 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KRG\SeoBundle\Entity\Validator\BlockFormWorking;
-use KRG\SeoBundle\Entity\Validator\UniqueKey;
+use KRG\CmsBundle\Entity\Validator\BlockFormWorking;
+use KRG\CmsBundle\Entity\Validator\UniqueKey;
 
 /**
  * BlockForm

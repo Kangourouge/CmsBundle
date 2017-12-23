@@ -1,11 +1,11 @@
 <?php
 
-namespace KRG\SeoBundle\Entity\Validator;
+namespace KRG\CmsBundle\Entity\Validator;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\BlockFormInterface;
-use KRG\SeoBundle\Entity\BlockInterface;
-use KRG\SeoBundle\Form\SeoFormRegistry;
+use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\BlockInterface;
+use KRG\CmsBundle\Form\BlockFormRegistry;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
@@ -24,7 +24,7 @@ class BlockFormWorkingValidator extends ConstraintValidator
     protected $formFactory;
 
     /**
-     * @var SeoFormRegistry
+     * @var BlockFormRegistry
      */
     protected $registry;
 
@@ -32,7 +32,7 @@ class BlockFormWorkingValidator extends ConstraintValidator
      * UniqueKey constructor.
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, SeoFormRegistry $registry)
+    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, BlockFormRegistry $registry)
     {
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
@@ -41,17 +41,16 @@ class BlockFormWorkingValidator extends ConstraintValidator
 
     public function validate($blockForm, Constraint $constraint)
     {
-        dump($blockForm);
-        die;
-        $seoForm = $this->registry->get($blockForm->getFormType());
-        $form = $this->formFactory->create($seoForm['form'], null, ['csrf_protection' => false]);
+
+        $config = $this->registry->get($blockForm->getFormType());
+        $form = $this->formFactory->create($config['form'], null, ['csrf_protection' => false]);
 
         $request = new Request();
         try {
             $form->submit($blockForm->getPureFormData());
             $form->handleRequest($request);
-            if ($seoForm['handler']) {
-                $seoForm['handler']->perform($request, $form);
+            if ($config['handler']) {
+                $config['handler']->perform($request, $form);
             }
         } catch (\Exception $exception) {
             $this->context->buildViolation($constraint->message)

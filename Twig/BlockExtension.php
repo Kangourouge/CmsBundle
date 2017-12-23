@@ -1,17 +1,17 @@
 <?php
 
-namespace KRG\SeoBundle\Twig;
+namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\BlockFormInterface;
-use KRG\SeoBundle\Entity\BlockInterface;
-use KRG\SeoBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\BlockInterface;
+use KRG\CmsBundle\Entity\PageInterface;
 use Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode;
 use Twig\TwigFunction;
 
 /**
  * Class BlockExtension
- * @package KRG\SeoBundle\Twig
+ * @package KRG\CmsBundle\Twig
  */
 class BlockExtension extends \Twig_Extension
 {
@@ -50,7 +50,7 @@ class BlockExtension extends \Twig_Extension
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
         $this->cacheDirKrg = $cacheDir.'/krg';
-        $this->cacheFileName = 'krg_seo_blocks.html.twig';
+        $this->cacheFileName = 'blocks.html.twig';
     }
 
     /**
@@ -102,7 +102,7 @@ class BlockExtension extends \Twig_Extension
 
             /* @var $blockForm BlockFormInterface */
             foreach ($formBlocks as $blockForm) {
-                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGSeoBundle:Block:form', {'blockForm': %d})) }}{%% endblock %s %%}\n", $blockForm->getKey(), $blockForm->getId(), $blockForm->getKey());
+                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGCmsBundle:Block:form', {'blockForm': %d})) }}{%% endblock %s %%}\n", $blockForm->getKey(), $blockForm->getId(), $blockForm->getKey());
             }
 
             /* @var $page PageInterface */

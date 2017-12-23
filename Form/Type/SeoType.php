@@ -1,9 +1,9 @@
 <?php
 
-namespace KRG\SeoBundle\Form\Type;
+namespace KRG\CmsBundle\Form\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

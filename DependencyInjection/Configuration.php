@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\DependencyInjection;
+namespace KRG\CmsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -10,12 +10,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('krg_seo');
+        $rootNode = $treeBuilder->root('krg_cms');
 
         $rootNode
             ->children()
-            ->scalarNode('title_prefix')->end()
-            ->scalarNode('title_suffix')->end()
+            ->scalarNode('title')->end()
+            ->scalarNode('default_title')->end()
             ->end()
         ;
 

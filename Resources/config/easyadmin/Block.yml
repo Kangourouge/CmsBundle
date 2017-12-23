@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Block:
-            class: '%easy_admin_seo_block_class%'
+            class: '%krg_cms.block.class%'
             list:
                 fields:
                     - enabled

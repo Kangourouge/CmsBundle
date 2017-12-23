@@ -1,10 +1,10 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
-use KRG\SeoBundle\Repository\SeoRepository;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Repository\SeoRepository;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 

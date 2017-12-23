@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity\Validator;
+namespace KRG\CmsBundle\Entity\Validator;
 
 use Symfony\Component\Validator\Constraint;
 

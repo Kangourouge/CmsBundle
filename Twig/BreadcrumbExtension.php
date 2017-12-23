@@ -1,12 +1,12 @@
 <?php
 
-namespace KRG\SeoBundle\Twig;
+namespace KRG\CmsBundle\Twig;
 
-use KRG\SeoBundle\Menu\MenuBuilderInterface;
+use KRG\CmsBundle\Menu\MenuBuilderInterface;
 
 /**
  * Class BreadcrumbExtension
- * @package KRG\SeoBundle\Twig
+ * @package KRG\CmsBundle\Twig
  */
 class BreadcrumbExtension extends \Twig_Extension
 {
@@ -54,7 +54,7 @@ class BreadcrumbExtension extends \Twig_Extension
      *
      * @return mixed
      */
-    public function render(\Twig_Environment $environment, $key, $theme = 'KRGSeoBundle:Breadcrumb:bootstrap.html.twig')
+    public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
     {
         $template = $this->getTemplate($environment, $theme);
         $nodes = $this->menuBuilder->getActiveNodes($key);

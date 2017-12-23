@@ -1,12 +1,12 @@
 <?php
 
-namespace KRG\SeoBundle\Annotation;
+namespace KRG\CmsBundle\Annotation;
 
 /**
  * Class Menu
  * @Annotation
  * @Target("METHOD")
- * @package KRG\SeoBundle\Annotation
+ * @package KRG\CmsBundle\Annotation
  */
 class Menu
 {

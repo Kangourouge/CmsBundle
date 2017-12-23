@@ -1,13 +1,13 @@
 <?php
 
-namespace KRG\SeoBundle\Menu;
+namespace KRG\CmsBundle\Menu;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use KRG\SeoBundle\Annotation\Menu as Annotation;
-use KRG\SeoBundle\Entity\MenuInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Annotation\Menu as Annotation;
+use KRG\CmsBundle\Entity\MenuInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

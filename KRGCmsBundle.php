@@ -1,12 +1,12 @@
 <?php
 
-namespace KRG\SeoBundle;
+namespace KRG\CmsBundle;
 
-use KRG\SeoBundle\DependencyInjection\Compiler\SeoFormCompilerPass;
+use KRG\CmsBundle\DependencyInjection\Compiler\CmsCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KRGSeoBundle extends Bundle
+class KRGCmsBundle extends Bundle
 {
     const ROLE_SEO = 'ROLE_SEO';
 
@@ -14,6 +14,6 @@ class KRGSeoBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new SeoFormCompilerPass());
+        $container->addCompilerPass(new CmsCompilerPass());
     }
 }

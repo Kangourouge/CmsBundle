@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 interface SeoInterface extends SeoRouteInterface
 {

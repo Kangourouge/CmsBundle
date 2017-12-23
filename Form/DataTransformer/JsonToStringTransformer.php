@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Form\DataTransformer;
+namespace KRG\CmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 

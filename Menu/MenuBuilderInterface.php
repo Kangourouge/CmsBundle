@@ -1,8 +1,8 @@
 <?php
 
-namespace KRG\SeoBundle\Menu;
+namespace KRG\CmsBundle\Menu;
 
-use KRG\SeoBundle\Entity\MenuInterface;
+use KRG\CmsBundle\Entity\MenuInterface;
 
 interface MenuBuilderInterface
 {

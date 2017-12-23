@@ -1,16 +1,16 @@
 <?php
 
-namespace KRG\SeoBundle\Controller;
+namespace KRG\CmsBundle\Controller;
 
-use KRG\SeoBundle\Entity\PageInterface;
-use KRG\SeoBundle\Entity\SeoPageInterface;
+use KRG\CmsBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\SeoPageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * @Route("/seo/page")
+ * @Route("/cms/page")
  */
 class PageController extends AbstractController
 {

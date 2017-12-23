@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Form\Handler;
+namespace KRG\CmsBundle\Form\Handler;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

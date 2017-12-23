@@ -1,13 +1,13 @@
 <?php
 
-namespace KRG\SeoBundle\Twig;
+namespace KRG\CmsBundle\Twig;
 
-use KRG\SeoBundle\Menu\MenuBuilderInterface;
+use KRG\CmsBundle\Menu\MenuBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class MenuExtension
- * @package KRG\SeoBundle\Twig
+ * @package KRG\CmsBundle\Twig
  */
 class MenuExtension extends \Twig_Extension
 {
@@ -64,7 +64,7 @@ class MenuExtension extends \Twig_Extension
      *
      * @return mixed
      */
-    public function render(\Twig_Environment $environment, $key, $theme = 'KRGSeoBundle:Menu:bootstrap.html.twig', $brand = null)
+    public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Menu:bootstrap.html.twig', $brand = null)
     {
         $template = $this->getTemplate($environment, $theme);
         return $template->renderBlock('menu', [

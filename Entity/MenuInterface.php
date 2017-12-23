@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use GEGM\CommonBundle\Entity\Tree\NestedTreeInterface;
 

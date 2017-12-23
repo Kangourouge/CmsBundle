@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Menu:
-            class: '%easy_admin_seo_menu_class%'
+            class: '%krg_cms.menu.class%'
             list:
                 fields:
                     - name
@@ -22,6 +22,6 @@ easy_admin:
                     - { property: key, help: 'Unique identifier' }
                     - parent
                     - title
-                    - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
                     - url
                     - { property: 'roles', type: 'choice', type_options: { multiple: true, required: false, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN': 'ROLE_SUPER_ADMIN' } } }

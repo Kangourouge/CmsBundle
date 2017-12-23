@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,7 +57,7 @@ class Menu implements MenuInterface
     protected $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="KRG\SeoBundle\Entity\MenuInterface", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="KRG\CmsBundle\Entity\MenuInterface", inversedBy="children")
      * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * @Gedmo\TreeParent
      * @var MenuInterface
@@ -65,7 +65,7 @@ class Menu implements MenuInterface
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="KRG\SeoBundle\Entity\MenuInterface", mappedBy="parent", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="KRG\CmsBundle\Entity\MenuInterface", mappedBy="parent", cascade={"all"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var Collection
      */

@@ -1,14 +1,14 @@
 <?php
 
-namespace KRG\SeoBundle\Repository;
+namespace KRG\CmsBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 
 /**
  * Class SeoRepository
- * @package KRG\SeoBundle\Repository
+ * @package KRG\CmsBundle\Repository
  */
 class SeoRepository extends EntityRepository
 {
@@ -37,7 +37,7 @@ class SeoRepository extends EntityRepository
 
         $results = $qb->getQuery()->getResult();
         $seos = new ArrayCollection();
-        /* @var $seo \KRG\SeoBundle\Entity\SeoInterface */
+        /* @var $seo \KRG\CmsBundle\Entity\SeoInterface */
         foreach ($results as $seo) {
             // "==" TRUE if $a and $b have the same key/value pairs, not matter the order
             if ($seo->getRouteParams() == $parameters) {

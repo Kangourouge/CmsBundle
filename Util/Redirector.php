@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Util;
+namespace KRG\CmsBundle\Util;
 
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\EventDispatcher\GenericEvent;

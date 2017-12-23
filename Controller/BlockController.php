@@ -1,10 +1,10 @@
 <?php
 
-namespace KRG\SeoBundle\Controller;
+namespace KRG\CmsBundle\Controller;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
-use KRG\SeoBundle\Entity\BlockFormInterface;
-use KRG\SeoBundle\Form\SeoFormRegistry;
+use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Form\BlockFormRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @Route("/seo/block")
+ * @Route("/cms/block")
  */
 class BlockController extends AbstractController
 {
@@ -26,16 +26,16 @@ class BlockController extends AbstractController
             throw new BadRequestHttpException('Request must have a type parameter');
         }
 
-        $seoFormRegistry = $this->container->get(SeoFormRegistry::class);
-        $seoForm = $seoFormRegistry->get($type);
-        if (!$seoForm) {
+        $blockFormRegistry = $this->container->get(BlockFormRegistry::class);
+        $config = $blockFormRegistry->get($type);
+        if (!$config) {
             throw new InvalidArgumentException('FormType is not managed');
         }
 
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
         $form->handleRequest($request);
 
-        return $this->render('KRGSeoBundle:Block:admin_form.html.twig', [
+        return $this->render('KRGCmsBundle:Block:admin_form.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -49,10 +49,10 @@ class BlockController extends AbstractController
      */
     public function formAction(Request $request, BlockFormInterface $blockForm)
     {
-        $seoFormRegistry = $this->container->get(SeoFormRegistry::class);
-        $seoForm = $seoFormRegistry->get($blockForm->getFormType());
-        if ($blockForm->isEnabled() && $blockForm->isWorking() && $seoForm) {
-            $form = $this->createForm($seoForm['form'], null, ['csrf_protection' => false]);
+        $blockFormRegistry = $this->container->get(BlockFormRegistry::class);
+        $config = $blockFormRegistry->get($blockForm->getFormType());
+        if ($blockForm->isEnabled() && $blockForm->isWorking() && $config) {
+            $form = $this->createForm($config['form'], null, ['csrf_protection' => false]);
 
             if (true /* TODO: check request */) {
                 // Manually submit form with blockForm data
@@ -62,11 +62,11 @@ class BlockController extends AbstractController
             try {
                 // Call service handler (from tag)
                 $form->handleRequest($request);
-                if ($form->isValid() && $seoForm['handler']) {
-                    $seoForm['handler']->perform($request, $form);
+                if ($form->isValid() && $config['handler']) {
+                    $config['handler']->perform($request, $form);
                 }
 
-                return $this->render($seoForm['template'], [
+                return $this->render($config['template'], [
                     'form' => $form->createView()
                 ]);
             } catch(\Exception $exception) {

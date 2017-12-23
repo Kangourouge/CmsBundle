@@ -1,19 +1,19 @@
 <?php
 
-namespace KRG\SeoBundle\Form\Type;
+namespace KRG\CmsBundle\Form\Type;
 
-use KRG\SeoBundle\Form\DataTransformer\SeoFormDataTransformer;
-use KRG\SeoBundle\Form\SeoFormRegistry;
+use KRG\CmsBundle\Form\DataTransformer\BlockFormDataTransformer;
+use KRG\CmsBundle\Form\BlockFormRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class SeoFormType extends AbstractType
+class BlockFormType extends AbstractType
 {
     /**
-     * @var SeoFormRegistry
+     * @var BlockFormRegistry
      */
     private $registry;
 
@@ -25,10 +25,10 @@ class SeoFormType extends AbstractType
     /**
      * SeoFormType constructor.
      *
-     * @param SeoFormRegistry $registry
+     * @param BlockFormRegistry $registry
      * @param RouterInterface $router
      */
-    public function __construct(SeoFormRegistry $registry, RouterInterface $router)
+    public function __construct(BlockFormRegistry $registry, RouterInterface $router)
     {
         $this->registry = $registry;
         $this->router = $router;
@@ -41,7 +41,7 @@ class SeoFormType extends AbstractType
                 'choices' => $this->getChoices(),
             ])
             ->add('data', HiddenType::class)
-            ->addModelTransformer(new SeoFormDataTransformer());
+            ->addModelTransformer(new BlockFormDataTransformer());
     }
 
     public function getChoices()

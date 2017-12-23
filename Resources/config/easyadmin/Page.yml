@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Page:
-            class: '%easy_admin_seo_page_class%'
+            class: '%krg_cms.page.class%'
             list:
                 fields:
                     - enabled
@@ -12,6 +12,6 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - { property: seo, type: KRG\SeoBundle\Form\Type\SeoType }
+                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     - { property: 'content', type: 'ckeditor' }
                     - enabled

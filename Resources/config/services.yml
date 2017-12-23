@@ -1,50 +1,57 @@
+parameters:
+    krg_cms.block.class: KRG\CmsBundle\Entity\BlockInterface
+    krg_cms.block_form.class: KRG\CmsBundle\Entity\BlockFormInterface
+    krg_cms.menu.class: KRG\CmsBundle\Entity\MenuInterface
+    krg_cms.page.class: KRG\CmsBundle\Entity\PageInterface
+    krg_cms.seo.class: KRG\CmsBundle\Entity\SeoInterface
+
 services:
     _defaults:
         autowire: true
         autoconfigure: true
         public: false
 
-    KRG\SeoBundle\Twig\:
+    KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
         tags: [twig.extension]
 
-    KRG\SeoBundle\Form\Type\:
+    KRG\CmsBundle\Form\Type\:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-    KRG\SeoBundle\Menu\:
+    KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'
         public: true
 
-    KRG\SeoBundle\Twig\BlockExtension:
+    KRG\CmsBundle\Twig\BlockExtension:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
 
-    KRG\SeoBundle\Menu\MenuBuilder:
+    KRG\CmsBundle\Menu\MenuBuilder:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
 
-    KRG\SeoBundle\Routing\SeoListener:
+    KRG\CmsBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
 
-    KRG\SeoBundle\Routing\SeoLoader:
+    KRG\CmsBundle\Routing\SeoLoader:
         tags: [routing.loader]
 
-    KRG\SeoBundle\Form\SeoFormRegistry:
+    KRG\CmsBundle\Form\BlockFormRegistry:
         public: true
 
-    KRG\SeoBundle\Entity\Listener\:
+    KRG\CmsBundle\Entity\Listener\:
         resource: '../../Entity/Listener/*'
         tags: [doctrine.event_subscriber]
         public: true
 
-    KRG\SeoBundle\Entity\Validator\:
+    KRG\CmsBundle\Entity\Validator\:
         resource: '../../Entity/Validator/*'
         tags: [validator.constraint_validator]
         public: true
 
-    KRG\SeoBundle\DependencyInjection\ClearCache:
+    KRG\CmsBundle\DependencyInjection\ClearCache:
         arguments:
             $cacheDir: '%kernel.cache_dir%'
 
-    KRG\SeoBundle\Menu\MenuBuilderInterface: '@KRG\SeoBundle\Menu\MenuBuilder'
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'

@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Seo:
-            class: '%easy_admin_seo_class%'
+            class: '%krg_cms.seo.class%'
             list:
                 fields:
                     - enabled
@@ -12,7 +12,7 @@ easy_admin:
             form:
                 fields:
                     - { type: 'group', label: 'Configuration' }
-                    - { property: route, type: KRG\SeoBundle\Form\Type\SeoRouteType }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
                     - { property: url, label: 'Redirect url' }
                     - enabled
                     - { type: 'group', label: 'Metas' }

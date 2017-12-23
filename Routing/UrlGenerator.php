@@ -1,8 +1,8 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;

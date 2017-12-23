@@ -1,10 +1,10 @@
 <?php
 
-namespace KRG\SeoBundle\Form\DataTransformer;
+namespace KRG\CmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
-class SeoFormDataTransformer implements DataTransformerInterface
+class BlockFormDataTransformer implements DataTransformerInterface
 {
     /**
      * @param mixed $value

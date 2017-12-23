@@ -1,10 +1,10 @@
 <?php
 
-namespace KRG\SeoBundle\Entity\Validator;
+namespace KRG\CmsBundle\Entity\Validator;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\BlockFormInterface;
-use KRG\SeoBundle\Entity\BlockInterface;
+use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\BlockInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

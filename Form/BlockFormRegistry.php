@@ -1,22 +1,22 @@
 <?php
 
-namespace KRG\SeoBundle\Form;
+namespace KRG\CmsBundle\Form;
 
-class SeoFormRegistry
+class BlockFormRegistry
 {
     /**
      * @var array
      */
-    private $seoForms;
+    private $forms;
 
     function __construct()
     {
-        $this->seoForms = array();
+        $this->forms = array();
     }
 
     public function add($form, $alias, $template, $handler = null)
     {
-        $this->seoForms[$form] = array(
+        $this->forms[$form] = array(
             'form'     => $form,
             'alias'    => $alias,
             'template' => $template,
@@ -31,11 +31,11 @@ class SeoFormRegistry
      */
     public function get($id)
     {
-        if (!array_key_exists($id, $this->seoForms)) {
+        if (!array_key_exists($id, $this->forms)) {
             throw new \InvalidArgumentException(sprintf('The service "%s" is not registered with the service container.', $id));
         }
 
-        return $this->seoForms[$id];
+        return $this->forms[$id];
     }
 
     /**
@@ -43,7 +43,7 @@ class SeoFormRegistry
      */
     public function all()
     {
-        return $this->seoForms;
+        return $this->forms;
     }
 
     /**
@@ -53,7 +53,7 @@ class SeoFormRegistry
      */
     public function has($id)
     {
-        return isset($this->seoForms[$id]);
+        return isset($this->forms[$id]);
     }
 
 

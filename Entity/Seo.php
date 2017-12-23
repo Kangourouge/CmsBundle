@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Seo
  *
- * @ORM\MappedSuperclass(repositoryClass="KRG\SeoBundle\Repository\SeoRepository")
+ * @ORM\MappedSuperclass(repositoryClass="KRG\CmsBundle\Repository\SeoRepository")
  */
 class Seo implements SeoInterface
 {

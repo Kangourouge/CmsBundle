@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Form\Type;
+namespace KRG\CmsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
-class SeoRouteType extends AbstractType
+class RouteType extends AbstractType
 {
     /**
      * @var RouteCollection

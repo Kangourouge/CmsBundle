@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\SeoBundle\Entity;
+namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Page extends Block implements PageInterface, BlockContentInterface
 {
     /**
-     * @ORM\OneToOne(targetEntity="KRG\SeoBundle\Entity\SeoInterface", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="KRG\CmsBundle\Entity\SeoInterface", cascade={"all"})
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id")
      * @var SeoInterface
      */

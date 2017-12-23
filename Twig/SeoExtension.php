@@ -1,13 +1,13 @@
 <?php
 
-namespace KRG\SeoBundle\Twig;
+namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\PageInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
-use KRG\SeoBundle\Entity\SeoPageInterface;
+use KRG\CmsBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoPageInterface;
 use Doctrine\ORM\EntityManager;
-use KRG\SeoBundle\KRGSeoBundle;
+use KRG\CmsBundle\KRGCmsBundle;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,7 +92,7 @@ class SeoExtension extends \Twig_Extension
         }
         unset($value);
 
-        return $environment->render('KRGSeoBundle:Seo:head.html.twig', $data);
+        return $environment->render('KRGCmsBundle:Seo:head.html.twig', $data);
     }
 
     public function getSeoAdmin(\Twig_Environment $environment)
@@ -102,14 +102,14 @@ class SeoExtension extends \Twig_Extension
         }
 
         if (false === $this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
-            false === $this->authorizationChecker->isGranted(KRGSeoBundle::ROLE_SEO)) {
+            false === $this->authorizationChecker->isGranted(KRGCmsBundle::ROLE_SEO)) {
             return null;
         }
 
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
 
-        return $environment->render('KRGSeoBundle:Seo:front.html.twig', array(
+        return $environment->render('KRGCmsBundle:Seo:front.html.twig', array(
             'seo' => $seo,
         ));
     }

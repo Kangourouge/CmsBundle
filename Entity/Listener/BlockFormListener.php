@@ -1,12 +1,12 @@
 <?php
 
-namespace KRG\SeoBundle\Entity\Listener;
+namespace KRG\CmsBundle\Entity\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use KRG\SeoBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\BlockFormInterface;
 
 class BlockFormListener implements EventSubscriber
 {

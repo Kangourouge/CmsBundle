@@ -1,9 +1,9 @@
 <?php
 
-namespace KRG\SeoBundle\Routing;
+namespace KRG\CmsBundle\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;

@@ -1,9 +1,9 @@
 <?php
 
-namespace KRG\SeoBundle\Admin\Controller;
+namespace KRG\CmsBundle\Admin\Controller;
 
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
-use KRG\SeoBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SeoController extends BaseAdminController
