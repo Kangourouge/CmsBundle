@@ -3,8 +3,8 @@
 namespace KRG\CmsBundle\Controller;
 
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
-use KRG\CmsBundle\Entity\BlockFormInterface;
-use KRG\CmsBundle\Form\BlockFormRegistry;
+use KRG\CmsBundle\Entity\FilterInterface;
+use KRG\CmsBundle\Form\FilterRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,22 +12,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @Route("/cms/block")
+ * @Route("/cms/filter")
  */
-class BlockController extends AbstractController
+class FilterController extends AbstractController
 {
     /**
-     * @Route("/admin/form", name="krg_block_form_admin")
+     * @Route("/admin", name="krg_cms_filter_admin")
      */
-    public function formAdminAction(Request $request)
+    public function adminAction(Request $request)
     {
         $type = $request->get('type');
         if (!$type) {
             throw new BadRequestHttpException('Request must have a type parameter');
         }
 
-        $blockFormRegistry = $this->container->get(BlockFormRegistry::class);
-        $config = $blockFormRegistry->get($type);
+        $filterRegistry = $this->container->get(FilterRegistry::class);
+        $config = $filterRegistry->get($type);
         if (!$config) {
             throw new InvalidArgumentException('FormType is not managed');
         }
@@ -41,22 +41,23 @@ class BlockController extends AbstractController
     }
 
     /**
-     * @Route("/form/show/{key}", name="krg_block_form")
+     * @Route("/show/{key}", name="krg_cms_filter_show")
      *
      * @param Request $request
-     * @param BlockFormInterface $blockForm
+     * @param FilterInterface $filter
+     *
      * @return Response
      */
-    public function formAction(Request $request, BlockFormInterface $blockForm)
+    public function showAction(Request $request, FilterInterface $filter)
     {
-        $blockFormRegistry = $this->container->get(BlockFormRegistry::class);
-        $config = $blockFormRegistry->get($blockForm->getFormType());
-        if ($blockForm->isEnabled() && $blockForm->isWorking() && $config) {
+        $filterRegistry = $this->container->get(FilterRegistry::class);
+        $config = $filterRegistry->get($filter->getFormType());
+        if ($filter->isEnabled() && $filter->isWorking() && $config) {
             $form = $this->createForm($config['form'], null, ['csrf_protection' => false]);
 
             if (true /* TODO: check request */) {
-                // Manually submit form with blockForm data
-                $form->submit($blockForm->getPureFormData());
+                // Manually submit form with filter data
+                $form->submit($filter->getPureFormData());
             }
 
             try {
@@ -70,10 +71,10 @@ class BlockController extends AbstractController
                     'form' => $form->createView()
                 ]);
             } catch(\Exception $exception) {
-                // Log an error and update blockForm
+                // Log an error and update filter
                 $logger = $this->container->get('logger');
-                $logger->error(sprintf('Block form error (id: %d) (%s)', $blockForm->getId(), $exception->getMessage()));
-                $blockForm->setWorking(false);
+                $logger->error(sprintf('Block form error (id: %d) (%s)', $filter->getId(), $exception->getMessage()));
+                $filter->setWorking(false);
                 $this->getDoctrine()->getManager()->flush();
             }
         }

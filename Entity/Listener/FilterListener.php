@@ -6,9 +6,9 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\FilterInterface;
 
-class BlockFormListener implements EventSubscriber
+class FilterListener implements EventSubscriber
 {
     public function getSubscribedEvents()
     {
@@ -17,24 +17,25 @@ class BlockFormListener implements EventSubscriber
 
     public function prePersist(LifecycleEventArgs $event)
     {
-        if ($event->getEntity() instanceof BlockFormInterface) {
+        if ($event->getEntity() instanceof FilterInterface) {
             $this->prePersistOrUpdate($event->getEntity());
         }
     }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
-        if ($event->getEntity() instanceof BlockFormInterface) {
+        if ($event->getEntity() instanceof FilterInterface) {
             $this->prePersistOrUpdate($event->getEntity());
         }
     }
 
     /**
      * Can't be there if it is not working
-     * @param BlockFormInterface $blockForm
+     *
+     * @param FilterInterface $filter
      */
-    public function prePersistOrUpdate(BlockFormInterface $blockForm)
+    public function prePersistOrUpdate(FilterInterface $filter)
     {
-        $blockForm->setWorking(true);
+        $filter->setWorking(true);
     }
 }

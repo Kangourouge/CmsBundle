@@ -1,10 +1,3 @@
-parameters:
-    krg_cms.block.class: KRG\CmsBundle\Entity\BlockInterface
-    krg_cms.block_form.class: KRG\CmsBundle\Entity\BlockFormInterface
-    krg_cms.menu.class: KRG\CmsBundle\Entity\MenuInterface
-    krg_cms.page.class: KRG\CmsBundle\Entity\PageInterface
-    krg_cms.seo.class: KRG\CmsBundle\Entity\SeoInterface
-
 services:
     _defaults:
         autowire: true
@@ -37,7 +30,7 @@ services:
     KRG\CmsBundle\Routing\SeoLoader:
         tags: [routing.loader]
 
-    KRG\CmsBundle\Form\BlockFormRegistry:
+    KRG\CmsBundle\Form\FilterRegistry:
         public: true
 
     KRG\CmsBundle\Entity\Listener\:

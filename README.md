@@ -35,7 +35,7 @@ doctrine:
             KRG\CmsBundle\Entity\PageInterface: AppBundle\Entity\Page
             KRG\CmsBundle\Entity\MenuInterface: AppBundle\Entity\Menu
             KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
-            KRG\CmsBundle\Entity\BlockFormInterface: AppBundle\Entity\BlockForm
+            KRG\CmsBundle\Entity\FilterInterface: AppBundle\Entity\Filter
 ```
 
 Routing
@@ -104,7 +104,7 @@ class Seo extends \KRG\CmsBundle\Entity\Seo;
 class Page extends \KRG\CmsBundle\Entity\Page;
 class Menu extends \KRG\CmsBundle\Entity\Menu;
 class Block extends \KRG\CmsBundle\Entity\Block;
-class BlockForm extends \KRG\CmsBundle\Entity\BlockForm;
+class Filter extends \KRG\CmsBundle\Entity\Filter;
 
 Twig
 ----

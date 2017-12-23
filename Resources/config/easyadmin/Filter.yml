@@ -1,7 +1,7 @@
 easy_admin:
     entities:
-        BlockForm:
-            class: '%krg_cms.block_form.class%'
+        Filter:
+            class: '%krg_cms.filter.class%'
             list:
                 fields:
                     - enabled
@@ -13,4 +13,4 @@ easy_admin:
                     - enabled
                     - name
                     - { property: key, type_options: { required: true } }
-                    - { property: form, type: KRG\CmsBundle\Form\Type\BlockFormType }
+                    - { property: form, type: KRG\CmsBundle\Form\Type\FilterType }

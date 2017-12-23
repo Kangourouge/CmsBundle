@@ -3,7 +3,7 @@
 namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\Entity\BlockFormInterface;
+use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode;
@@ -89,7 +89,7 @@ class BlockExtension extends \Twig_Extension
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
         if (!file_exists($path)) {
             $staticBlocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
-            $formBlocks = $this->entityManager->getRepository(BlockFormInterface::class)->findAll();
+            $formBlocks = $this->entityManager->getRepository(FilterInterface::class)->findAll();
             $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
 
             $content = [];
@@ -100,9 +100,9 @@ class BlockExtension extends \Twig_Extension
                 }
             }
 
-            /* @var $blockForm BlockFormInterface */
-            foreach ($formBlocks as $blockForm) {
-                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGCmsBundle:Block:form', {'blockForm': %d})) }}{%% endblock %s %%}\n", $blockForm->getKey(), $blockForm->getId(), $blockForm->getKey());
+            /* @var $filter FilterInterface */
+            foreach ($formBlocks as $filter) {
+                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGCmsBundle:Block:form', {'filter': %d})) }}{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
             }
 
             /* @var $page PageInterface */

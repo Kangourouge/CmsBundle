@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class BlockFormWorking extends Constraint
+class FilterWorking extends Constraint
 {
     public $message = 'The block form "{{ string }}" is not working with those parameters';
 

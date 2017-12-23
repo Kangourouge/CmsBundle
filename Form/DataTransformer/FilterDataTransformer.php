@@ -4,7 +4,7 @@ namespace KRG\CmsBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
-class BlockFormDataTransformer implements DataTransformerInterface
+class FilterDataTransformer implements DataTransformerInterface
 {
     /**
      * @param mixed $value

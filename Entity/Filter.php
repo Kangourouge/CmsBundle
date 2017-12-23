@@ -3,17 +3,17 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KRG\CmsBundle\Entity\Validator\BlockFormWorking;
+use KRG\CmsBundle\Entity\Validator\FilterWorking;
 use KRG\CmsBundle\Entity\Validator\UniqueKey;
 
 /**
- * BlockForm
+ * Filter
  *
  * @ORM\MappedSuperclass
- * @BlockFormWorking()
+ * @FilterWorking()
  * @UniqueKey()
  */
-class BlockForm extends AbstractBlock implements BlockFormInterface
+class Filter extends AbstractBlock implements FilterInterface
 {
     /**
      * @ORM\Column(type="json_array")

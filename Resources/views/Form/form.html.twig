@@ -6,7 +6,6 @@
             var type = document.getElementById('{{ form.type.vars.id }}');
             var data = document.getElementById('{{ form.data.vars.id }}');
             var iframe = document.createElement('iframe');
-            iframe.setAttribute('class', 'seo-iframe');
             iframe.width = '100%';
             iframe.height = '300px';
 
@@ -34,7 +33,7 @@
 
             function onChange(event, data) {
                 var selectedOption = type.options[type.selectedIndex];
-                var src = '{{ path('krg_block_form_admin') }}';
+                var src = '{{ path('krg_cms_filter_admin') }}';
                 if (typeof(data) === 'object') {
                     var _data = ['type=' + selectedOption.value];
                     for (var key in data) {

@@ -2,18 +2,18 @@
 
 namespace KRG\CmsBundle\Form\Type;
 
-use KRG\CmsBundle\Form\DataTransformer\BlockFormDataTransformer;
-use KRG\CmsBundle\Form\BlockFormRegistry;
+use KRG\CmsBundle\Form\DataTransformer\FilterDataTransformer;
+use KRG\CmsBundle\Form\FilterRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class BlockFormType extends AbstractType
+class FilterType extends AbstractType
 {
     /**
-     * @var BlockFormRegistry
+     * @var FilterRegistry
      */
     private $registry;
 
@@ -25,10 +25,10 @@ class BlockFormType extends AbstractType
     /**
      * SeoFormType constructor.
      *
-     * @param BlockFormRegistry $registry
+     * @param FilterRegistry $registry
      * @param RouterInterface $router
      */
-    public function __construct(BlockFormRegistry $registry, RouterInterface $router)
+    public function __construct(FilterRegistry $registry, RouterInterface $router)
     {
         $this->registry = $registry;
         $this->router = $router;
@@ -41,7 +41,7 @@ class BlockFormType extends AbstractType
                 'choices' => $this->getChoices(),
             ])
             ->add('data', HiddenType::class)
-            ->addModelTransformer(new BlockFormDataTransformer());
+            ->addModelTransformer(new FilterDataTransformer());
     }
 
     public function getChoices()

@@ -2,7 +2,7 @@
 
 namespace KRG\CmsBundle\Form;
 
-class BlockFormRegistry
+class FilterRegistry
 {
     /**
      * @var array

@@ -2,7 +2,7 @@
 
 namespace KRG\CmsBundle\Entity;
 
-interface BlockFormInterface extends BlockInterface
+interface FilterInterface extends BlockInterface
 {
     /**
      * @return string
@@ -19,7 +19,7 @@ interface BlockFormInterface extends BlockInterface
      *
      * @param array $form
      *
-     * @return BlockFormInterface
+     * @return FilterInterface
      */
     public function setForm(array $form);
 
