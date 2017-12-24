@@ -1,0 +1,28 @@
+{% extends 'IvoryCKEditorBundle:Form:ckeditor_widget.html.twig' %}
+
+{% block ckeditor_widget_extra %}
+        CKEDITOR.plugins.add('addblock', {
+            icons: 'plus',
+            init: function (editor) {
+                editor.ui.addRichCombo('AddBlock', {
+                    multiSelect: false,
+                    label: 'Add Block',
+                    command: 'addblock',
+                    toolbar: 'insert',
+                    init: function () {
+                        var items = {{ krg_block_list()|json_encode()|raw }};
+                        for (var i = 0; i < items.length; i++) {
+                            this.add(
+                                '<pre block="' + items[i] + '"contenteditable = "false" >\{\{ block("' + items[i] + '") \}\}</pre>',
+                                items[i],
+                                items[i]
+                            );
+                        }
+                    },
+                    onClick: function (value) {
+                        editor.insertHtml(value);
+                    },
+                });
+            }
+        });
+{% endblock %}

@@ -12,6 +12,11 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
+    KRG\CmsBundle\Form\Extension\CKEditorTypeExtension:
+        class: KRG\CmsBundle\Form\Extension\CKEditorTypeExtension
+        tags:
+            - {name: form.type_extension, extended_type: Ivory\CKEditorBundle\Form\Type\CKEditorType}
+
     KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'
         public: true

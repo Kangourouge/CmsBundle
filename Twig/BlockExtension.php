@@ -125,7 +125,7 @@ class BlockExtension extends \Twig_Extension
      *
      * @return null|string
      */
-    public function getBlock(\Twig_Environment $environment, $key, $context = array())
+    public function render(\Twig_Environment $environment, $key, $context = array())
     {
         $template = $this->getTemplate($environment);
 
@@ -148,14 +148,23 @@ class BlockExtension extends \Twig_Extension
         return (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
     }
 
+    /**
+     * @return \string[]
+     */
+    public function getBlocks(\Twig_Environment $environment){
+        return $this->getTemplate($environment)->getBlockNames();
+    }
+
     public function getFunctions()
     {
         return [
-            'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'getBlock'), [
+            'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'render'), [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            new TwigFunction('menu_item', null, array('node_class' => SearchAndRenderBlockNode::class, 'is_safe' => array('html'))),
+            'krg_block_list' => new \Twig_SimpleFunction('krg_block_list', array($this, 'getBlocks'), [
+                'needs_environment' => true
+            ]),
         ];
     }
 }
