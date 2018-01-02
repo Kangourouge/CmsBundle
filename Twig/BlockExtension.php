@@ -49,7 +49,7 @@ class BlockExtension extends \Twig_Extension
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
-        $this->cacheDirKrg = $cacheDir.'/krg';
+        $this->cacheDirKrg = $cacheDir . '/krg';
         $this->cacheFileName = 'blocks.html.twig';
     }
 
