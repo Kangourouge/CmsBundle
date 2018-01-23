@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use KRG\CmsBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 
 class PageListener implements EventSubscriber
 {
@@ -19,18 +20,18 @@ class PageListener implements EventSubscriber
     public function prePersist(LifecycleEventArgs $event)
     {
         if ($event->getEntity() instanceof PageInterface) {
-            $this->prePersistOrUpdate($event->getEntity());
+            $this->prePersistOrUpdate($event, $event->getEntity());
         }
     }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
         if ($event->getEntity() instanceof PageInterface) {
-            $this->prePersistOrUpdate($event->getEntity());
+            $this->prePersistOrUpdate($event, $event->getEntity());
         }
     }
 
-    public function prePersistOrUpdate(PageInterface $page)
+    public function prePersistOrUpdate(PreUpdateEventArgs $event, PageInterface $page)
     {
         $seo = $page->getSeo();
 
@@ -40,5 +41,12 @@ class PageListener implements EventSubscriber
         ]);
 
         $seo->setEnabled($page->getEnabled());
+
+        $uow = $event->getEntityManager()->getUnitOfWork();
+
+        $classMetadata = $event->getEntityManager()->getClassMetadata(SeoInterface::class);
+
+        $uow->computeChangeSet($classMetadata, $seo);
+        $uow->scheduleExtraUpdate($seo, $uow->getEntityChangeSet($seo));
     }
 }

@@ -51,12 +51,6 @@ class Menu implements MenuInterface
     protected $route;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
-     */
-    protected $url;
-
-    /**
      * @ORM\ManyToOne(targetEntity="KRG\CmsBundle\Entity\MenuInterface", inversedBy="children")
      * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * @Gedmo\TreeParent
@@ -174,19 +168,9 @@ class Menu implements MenuInterface
     /**
      * {@inheritdoc}
      */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl()
     {
-        return $this->url;
+        return $this->route['url'] ?? null;
     }
 
     /**

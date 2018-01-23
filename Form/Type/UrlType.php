@@ -1,0 +1,39 @@
+<?php
+
+namespace KRG\CmsBundle\Form\Type;
+
+use KRG\CmsBundle\Form\DataTransformer\UrlDataTransformer;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+
+class UrlType extends TextType
+{
+
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
+     * RouteType constructor.
+     *
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer(new UrlDataTransformer($this->router));
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
+    }
+}

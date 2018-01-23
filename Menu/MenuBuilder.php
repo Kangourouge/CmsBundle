@@ -229,6 +229,7 @@ class MenuBuilder implements MenuBuilderInterface
      */
     protected function _build(array $menus)
     {
+
         if (count($menus) === 0) {
             return [];
         }

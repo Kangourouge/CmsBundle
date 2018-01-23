@@ -62,15 +62,6 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
     public function getTitle();
 
     /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return Menu
-     */
-    public function setUrl($url);
-
-    /**
      * Get url
      *
      * @return string

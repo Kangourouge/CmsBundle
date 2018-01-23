@@ -96,18 +96,18 @@ class BlockExtension extends \Twig_Extension
             /* @var $block BlockInterface */
             foreach ($staticBlocks as $blockStatic) {
                 if (false === $this->hasBlockLoop($blockStatic)) {
-                    $content[] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $blockStatic->getKey(), $blockStatic->getContent(), $blockStatic->getKey());
+                    $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $blockStatic->getKey(), $blockStatic->getContent(), $blockStatic->getKey());
                 }
             }
 
             /* @var $filter FilterInterface */
             foreach ($formBlocks as $filter) {
-                $content[] = sprintf("{%% block %s %%}{{ render(controller('KRGCmsBundle:Block:form', {'filter': %d})) }}{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
+                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Block:form', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
             }
 
             /* @var $page PageInterface */
             foreach ($pages as $page) {
-                $content[] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
+                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">%s</div>{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
             }
 
             return (bool) file_put_contents($path, implode('', $content));
