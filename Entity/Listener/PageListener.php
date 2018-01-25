@@ -28,25 +28,23 @@ class PageListener implements EventSubscriber
     {
         if ($event->getEntity() instanceof PageInterface) {
             $this->prePersistOrUpdate($event, $event->getEntity());
+
+            $seo = $event->getEntity()->getSeo();
+            $uow = $event->getEntityManager()->getUnitOfWork();
+            $classMetadata = $event->getEntityManager()->getClassMetadata(SeoInterface::class);
+            $uow->computeChangeSet($classMetadata, $seo);
+            $uow->scheduleExtraUpdate($seo, $uow->getEntityChangeSet($seo));
         }
     }
 
-    public function prePersistOrUpdate(PreUpdateEventArgs $event, PageInterface $page)
+    public function prePersistOrUpdate(LifecycleEventArgs $event, PageInterface $page)
     {
         $seo = $page->getSeo();
-
         $seo->setRoute([
             'name'   => 'krg_page_show',
             'params' => ['key' => $page->getKey()],
         ]);
 
         $seo->setEnabled($page->getEnabled());
-
-        $uow = $event->getEntityManager()->getUnitOfWork();
-
-        $classMetadata = $event->getEntityManager()->getClassMetadata(SeoInterface::class);
-
-        $uow->computeChangeSet($classMetadata, $seo);
-        $uow->scheduleExtraUpdate($seo, $uow->getEntityChangeSet($seo));
     }
 }

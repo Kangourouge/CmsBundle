@@ -78,7 +78,7 @@ class Menu implements MenuInterface
     protected $roles;
 
     /**
-     * @ORM\Column(type="boolean", name="is_compound")
+     * @ORM\Column(type="boolean", name="is_compound", nullable=true)
      * @var boolean
      */
     protected $compound;

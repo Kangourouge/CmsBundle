@@ -23,5 +23,5 @@ easy_admin:
                     - parent
                     - title
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - url
+                    - route
                     - { property: 'roles', type: 'choice', type_options: { multiple: true, required: false, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN': 'ROLE_SUPER_ADMIN' } } }
