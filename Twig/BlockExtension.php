@@ -65,16 +65,22 @@ class BlockExtension extends \Twig_Extension
             return $this->template;
         }
 
-        $this->createFileTemplate();
-        $environment->setCache($this->cacheDir);
-        $environment->setLoader(new \Twig_Loader_Chain([
-            $environment->getLoader(), // Preserve old loader
-            new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
-        ]));
+        try {
+            $this->createFileTemplate();
+            $environment->setCache($this->cacheDir);
+            $environment->setLoader(new \Twig_Loader_Chain([
+                $environment->getLoader(), // Preserve old loader
+                new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
+            ]));
 
-        $this->template = $environment->load($this->cacheFileName); // Load template from cache
+            $this->template = $environment->load($this->cacheFileName); // Load template from cache
 
-        return $this->template;
+            return $this->template;
+        } catch (\Exception $exception) {
+            /* log and send error */
+        }
+
+        return null;
     }
 
     /**
@@ -130,7 +136,7 @@ class BlockExtension extends \Twig_Extension
         try {
             $template = $this->getTemplate($environment);
 
-            if ($template->hasBlock($key)) {
+            if ($template && $template->hasBlock($key)) {
                 return $template->renderBlock($key, $context);
             }
         } catch (\Exception $exception) {
@@ -156,7 +162,8 @@ class BlockExtension extends \Twig_Extension
      * @return \string[]
      */
     public function getBlocks(\Twig_Environment $environment){
-        return $this->getTemplate($environment)->getBlockNames();
+        $template = $this->getTemplate($environment);
+        return $template ? $template->getBlockNames() : [];
     }
 
     public function getFunctions()
