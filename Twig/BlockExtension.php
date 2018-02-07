@@ -127,10 +127,14 @@ class BlockExtension extends \Twig_Extension
      */
     public function render(\Twig_Environment $environment, $key, $context = array())
     {
-        $template = $this->getTemplate($environment);
+        try {
+            $template = $this->getTemplate($environment);
 
-        if ($template->hasBlock($key)) {
-            return $template->renderBlock($key, $context);
+            if ($template->hasBlock($key)) {
+                return $template->renderBlock($key, $context);
+            }
+        } catch (\Exception $exception) {
+            /* log and send error */
         }
 
         return null;
