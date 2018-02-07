@@ -49,6 +49,6 @@ class ClearCache
 
     public function warmupTwig()
     {
-        $this->filesystem->remove($this->cacheDir . '/krg');
+        $this->filesystem->remove($this->cacheDir);
     }
 }
