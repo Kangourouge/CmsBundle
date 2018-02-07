@@ -109,7 +109,7 @@ class MenuBuilder implements MenuBuilderInterface
      * @return null|Annotation
      */
     private function getAnnotation() {
-        if (!$this->request->get('_controller')) {
+        if ($this->request === null || !$this->request->get('_controller')) {
             return null;
         }
 
@@ -189,6 +189,10 @@ class MenuBuilder implements MenuBuilderInterface
      */
     public function isActive(array $node)
     {
+        if ($this->request === null) {
+            return false;
+        }
+
         $nodeRoute = $node['route'];
         $requestRoute = [
             'name' => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
