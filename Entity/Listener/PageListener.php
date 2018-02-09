@@ -11,10 +11,12 @@ use KRG\CmsBundle\Entity\SeoInterface;
 
 class PageListener implements EventSubscriber
 {
-
     public function getSubscribedEvents()
     {
-        return [Events::prePersist, Events::preUpdate];
+        return [
+            Events::prePersist,
+            Events::preUpdate
+        ];
     }
 
     public function prePersist(LifecycleEventArgs $event)

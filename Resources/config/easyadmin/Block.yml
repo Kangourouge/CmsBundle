@@ -13,3 +13,4 @@ easy_admin:
                     - name
                     - { property: 'content', type: 'ckeditor' }
                     - enabled
+

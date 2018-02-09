@@ -34,7 +34,6 @@ class CKEditorTypeExtension extends AbstractTypeExtension
         $builder->addModelTransformer(new CKEditorDataTransformer($this->webDir, $this->uploadDir));
     }
 
-
     public function getExtendedType()
     {
         return CKEditorType::class;

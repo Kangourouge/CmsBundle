@@ -9,15 +9,38 @@ AppKernel
 public function registerBundles()
 {
     $bundles = array(
-        // ...
         new KRG\CmsBundle\KRGCmsBundle()
-        // ...
     );
 }
 ```
 
-Configuration
--------------
+Routing
+-------
+
+```yaml
+# app/config/routing.yml
+
+krg_seo_route_loader:
+    resource: .
+    type: seo
+    
+seo:
+    resource: "@KRGCmsBundle/Controller/"
+    type:     annotation
+```
+
+
+Installation & configuration
+----------------------------
+
+Create 5 entities:
+
+class Seo extends \KRG\CmsBundle\Entity\Seo;
+class Page extends \KRG\CmsBundle\Entity\Page;
+class Menu extends \KRG\CmsBundle\Entity\Menu;
+class Block extends \KRG\CmsBundle\Entity\Block;
+class Filter extends \KRG\CmsBundle\Entity\Filter;
+
 
 ```yaml
 # app/config/config.yml
@@ -36,21 +59,50 @@ doctrine:
             KRG\CmsBundle\Entity\MenuInterface: AppBundle\Entity\Menu
             KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
             KRG\CmsBundle\Entity\FilterInterface: AppBundle\Entity\Filter
+            
+...
+
+twig:
+    form_themes:
+        - 'KRGCmsBundle:Form:route.html.twig'
+        - 'KRGCmsBundle:Form:form.html.twig'
+        - 'KRGCmsBundle:CKEditor:addblock_widget.html.twig'
 ```
 
-Routing
--------
+Admin
+-----
+
+EasyAdmin configuration:
 
 ```yaml
-# app/config/routing.yml
+# app/config/admin.yml
 
-krg_seo_route_loader:
-    resource: .
-    type: seo
-    
-seo:
-    resource: "@KRGCmsBundle/Controller/"
-    type:     annotation
+parameters:
+    krg_cms.seo.class: AppBundle\Entity\Seo
+    krg_cms.page.class: AppBundle\Entity\Page
+    krg_cms.menu.class: AppBundle\Entity\Menu
+    krg_cms.block.class: AppBundle\Entity\Block
+    krg_cms.filter.class: AppBundle\Entity\Filter
+
+imports:
+    - { resource: '@KRGCmsBundle/Resources/config/easyadmin/*.yml' }
+```
+
+Twig
+----
+
+```twig
+<html>
+<head>
+    ...
+    {{ seo_head() }}
+    ...
+</head>
+```
+
+Récupérer l'url d'une SeoPage depuis sa key :
+```twig
+{{ seo_url('cgu') }}
 ```
 
 Form tags
@@ -95,33 +147,26 @@ services:
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
 ```
 
-Entity
-------
+CKEditor Plugin
+---------------
 
-Create 5 entities:
+assets:install
 
-class Seo extends \KRG\CmsBundle\Entity\Seo;
-class Page extends \KRG\CmsBundle\Entity\Page;
-class Menu extends \KRG\CmsBundle\Entity\Menu;
-class Block extends \KRG\CmsBundle\Entity\Block;
-class Filter extends \KRG\CmsBundle\Entity\Filter;
-
-Twig
-----
-
-```twig
-<html>
-<head>
-    ...
-    {{ seo_head() }}
-    ...
-</head>
+```yaml
+ivory_ck_editor:
+    default_config: "default"
+    configs:
+        default:
+            filebrowserBrowseRoute: elfinder
+            filebrowserBrowseRouteParameters: []
+            toolbar:         "standard"
+            extraPlugins:    "addblock"
+            allowedContent:  true
+    toolbars:
+        items:
+            standard.insert: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'AddBlock']
+    plugins:
+        addblock:
+            path:     "/bundles/krgcms/ckeditor/plugins/addblock/"
+            filename: "plugin.js"
 ```
-
-Récupérer l'url d'une SeoPage depuis sa key :
-```twig
-{{ seo_url('cgu') }}
-```
-
-Améliorations possibles
------------------------

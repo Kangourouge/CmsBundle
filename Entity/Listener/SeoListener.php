@@ -29,7 +29,11 @@ class SeoListener implements EventSubscriber
 
     public function getSubscribedEvents()
     {
-        return [Events::prePersist, Events::preUpdate, Events::postFlush];
+        return [
+            Events::prePersist,
+            Events::preUpdate,
+            Events::postFlush
+        ];
     }
 
     public function prePersist(LifecycleEventArgs $event)

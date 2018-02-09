@@ -14,11 +14,11 @@ services:
 
     KRG\CmsBundle\Form\Extension\CKEditorTypeExtension:
         class: KRG\CmsBundle\Form\Extension\CKEditorTypeExtension
-        tags:
-            - {name: form.type_extension, extended_type: Ivory\CKEditorBundle\Form\Type\CKEditorType}
         arguments:
             $webDir: '%kernel.root_dir%/../web'
             $uploadDir: 'ckeditor/uploads'
+        tags:
+            - {name: form.type_extension, extended_type: Ivory\CKEditorBundle\Form\Type\CKEditorType}
 
     KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'

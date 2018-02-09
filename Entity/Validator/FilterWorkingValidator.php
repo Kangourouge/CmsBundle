@@ -41,7 +41,6 @@ class FilterWorkingValidator extends ConstraintValidator
 
     public function validate($filter, Constraint $constraint)
     {
-
         $config = $this->registry->get($filter->getFormType());
         $form = $this->formFactory->create($config['form'], null, ['csrf_protection' => false]);
 
