@@ -4,11 +4,13 @@ namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use KRG\CmsBundle\Entity\Validator\UniqueKey;
+use KRG\CmsBundle\Entity\Validator\ValidContent;
 
 /**
  * Block
  *
  * @ORM\MappedSuperclass()
+ * @ValidContent()
  * @UniqueKey()
  */
 class Block extends AbstractBlock implements BlockInterface, BlockContentInterface
@@ -23,7 +25,7 @@ class Block extends AbstractBlock implements BlockInterface, BlockContentInterfa
      */
     public function setContent($content)
     {
-        $this->content = $content;
+        $this->content = htmlspecialchars_decode($content, ENT_QUOTES);
 
         return $this;
     }

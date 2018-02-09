@@ -5,12 +5,10 @@ easy_admin:
             list:
                 fields:
                     - enabled
-                    - key
                     - name
                     - { property: seo.url, label: 'Url' }
             form:
                 fields:
-                    - key
                     - name
                     - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     - { property: 'content', type: 'ckeditor' }

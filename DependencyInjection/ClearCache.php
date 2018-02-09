@@ -26,7 +26,7 @@ class ClearCache
      */
     private $cacheDir;
 
-    public function __construct(RouterInterface $router, Filesystem $filesystem, $cacheDir)
+    public function __construct(RouterInterface $router, Filesystem $filesystem, string $cacheDir)
     {
         $this->router = $router;
         $this->filesystem = $filesystem;
@@ -47,8 +47,8 @@ class ClearCache
         $this->router->warmUp($this->cacheDir);
     }
 
-    public function warmupTwig()
+    public function warmupTwig($childDir = null)
     {
-        $this->filesystem->remove($this->cacheDir);
+        $this->filesystem->remove($this->cacheDir.$childDir);
     }
 }

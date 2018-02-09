@@ -3,6 +3,8 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use KRG\CmsBundle\Validator\Constraint\ValidTwig;
+use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractBlock implements BlockInterface
 {
@@ -20,6 +22,7 @@ abstract class AbstractBlock implements BlockInterface
     protected $name;
 
     /**
+     * @Assert\Regex("/^\w+$/", message="krg_cms.block.key.error")
      * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
      * @var string
      */

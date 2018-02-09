@@ -6,6 +6,7 @@ use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use KRG\CmsBundle\DependencyInjection\ClearCache;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\BlockInterface;
 
 class BlockListener implements EventSubscriber
@@ -37,21 +38,21 @@ class BlockListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig();
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
         }
     }
 
     public function postUpdate(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig();
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
         }
     }
 
     public function postRemove(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig();
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
         }
     }
 }

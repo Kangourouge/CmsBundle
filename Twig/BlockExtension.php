@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
@@ -49,8 +50,8 @@ class BlockExtension extends \Twig_Extension
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
-        $this->cacheDirKrg = $cacheDir . '/krg';
-        $this->cacheFileName = 'blocks.html.twig';
+        $this->cacheDirKrg = $cacheDir . KRGCmsExtension::KRG_CACHE_DIR;
+        $this->cacheFileName = KRGCmsExtension::KRG_BLOCKS_FILE;
     }
 
     /**
@@ -101,7 +102,7 @@ class BlockExtension extends \Twig_Extension
             $content = [];
             /* @var $block BlockInterface */
             foreach ($staticBlocks as $blockStatic) {
-                if (false === $this->hasBlockLoop($blockStatic)) {
+                if ($this->legalBlock($blockStatic)) {
                     $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $blockStatic->getKey(), $blockStatic->getContent(), $blockStatic->getKey());
                 }
             }
@@ -139,8 +140,9 @@ class BlockExtension extends \Twig_Extension
             if ($template && $template->hasBlock($key)) {
                 return $template->renderBlock($key, $context);
             }
+
+            throw new \Exception('KRG block template is null');
         } catch (\Exception $exception) {
-            /* log and send error */
         }
 
         return null;
@@ -158,11 +160,19 @@ class BlockExtension extends \Twig_Extension
         return (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
     }
 
+    protected function legalBlock(BlockInterface $block)
+    {
+        return false === $this->hasBlockLoop($block);
+    }
+
     /**
-     * @return \string[]
+     * @param \Twig_Environment $environment
+     * @return array|string[]
      */
-    public function getBlocks(\Twig_Environment $environment){
+    public function getBlocks(\Twig_Environment $environment)
+    {
         $template = $this->getTemplate($environment);
+
         return $template ? $template->getBlockNames() : [];
     }
 

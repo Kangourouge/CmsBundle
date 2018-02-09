@@ -1,0 +1,4 @@
+krg_cms:
+    block:
+        key:
+            error: "Clé invalide (ex : block_key_1)"

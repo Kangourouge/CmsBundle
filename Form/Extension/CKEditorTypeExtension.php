@@ -20,13 +20,14 @@ class CKEditorTypeExtension extends AbstractTypeExtension
     private $uploadDir;
 
     /**
-     * CKEditorDataTransformer constructor.
-     * @param $uploadDir
+     * CKEditorTypeExtension constructor.
+     * @param $webDir
+     * @param $ckUploadDir
      */
-    public function __construct($webDir, $uploadDir)
+    public function __construct($webDir, $ckUploadDir)
     {
         $this->webDir = $webDir;
-        $this->uploadDir = $uploadDir;
+        $this->uploadDir = $ckUploadDir;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

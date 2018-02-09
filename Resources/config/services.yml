@@ -3,6 +3,10 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+        bind:
+            $cacheDir: '%kernel.cache_dir%'
+            $webDir: '%kernel.root_dir%/../web'
+            $ckUploadDir: 'ckeditor/uploads'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
@@ -14,23 +18,12 @@ services:
 
     KRG\CmsBundle\Form\Extension\CKEditorTypeExtension:
         class: KRG\CmsBundle\Form\Extension\CKEditorTypeExtension
-        arguments:
-            $webDir: '%kernel.root_dir%/../web'
-            $uploadDir: 'ckeditor/uploads'
         tags:
             - {name: form.type_extension, extended_type: Ivory\CKEditorBundle\Form\Type\CKEditorType}
 
     KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'
         public: true
-
-    KRG\CmsBundle\Twig\BlockExtension:
-        arguments:
-            $cacheDir: '%kernel.cache_dir%'
-
-    KRG\CmsBundle\Menu\MenuBuilder:
-        arguments:
-            $cacheDir: '%kernel.cache_dir%'
 
     KRG\CmsBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]

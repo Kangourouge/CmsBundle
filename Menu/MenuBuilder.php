@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use KRG\CmsBundle\Annotation\Menu as Annotation;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -62,7 +63,7 @@ class MenuBuilder implements MenuBuilderInterface
         $this->request = $requestStack->getMasterRequest();
         $this->router = $router;
         $this->annotationReader = $annotationReader;
-        $this->cache = new FilesystemAdapter('menu', 0, sprintf('%s/krg', $cacheDir));
+        $this->cache = new FilesystemAdapter('menu', 0, sprintf('%s/%s', $cacheDir, KRGCmsExtension::KRG_CACHE_DIR));
         $this->annotation = $this->getAnnotation();
     }
 
