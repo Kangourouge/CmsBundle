@@ -5,7 +5,7 @@ easy_admin:
             list:
                 fields:
                     - enabled
-                    - working
+                    - { property: 'working', type: 'boolean' }
                     - key
                     - name
             form:

@@ -3,12 +3,9 @@
 namespace KRG\CmsBundle\Entity\Validator;
 
 use KRG\CmsBundle\Entity\BlockContentInterface;
-use KRG\CmsBundle\Entity\BlockInterface;
-use Symfony\Bridge\Twig\Command\LintCommand;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Twig\Error\Error;
-use Twig\Template;
 use Twig\Environment;
 
 class ValidContentValidator extends ConstraintValidator
@@ -38,7 +35,6 @@ class ValidContentValidator extends ConstraintValidator
                     ->atPath('content')
                     ->addViolation();
             }
-
         }
     }
 }

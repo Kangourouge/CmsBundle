@@ -16,14 +16,13 @@ class CmsCompilerPass implements CompilerPassInterface
 
         $definition = $container->findDefinition(FilterRegistry::class);
         $taggedServices = $container->findTaggedServiceIds('krg.cms.filter');
-
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall('add', [
                     $id,
-                    $attributes['alias'],
-                    $attributes['template'],
-                    new Reference($attributes['handler']),
+                    $attributes['alias'] ?? $id,
+                    $attributes['template'] ?? 'KRGCmsBundle:Block:framed_form.html.twig',
+                    isset($attributes['handler']) ? new Reference($attributes['handler']) : null,
                 ]);
             }
         }

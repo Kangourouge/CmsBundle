@@ -3,8 +3,6 @@
 namespace KRG\CmsBundle\Entity\Validator;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\Entity\FilterInterface;
-use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Form\FilterRegistry;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;

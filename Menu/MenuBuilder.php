@@ -52,10 +52,10 @@ class MenuBuilder implements MenuBuilderInterface
      * MenuBuilder constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param RequestStack $requestStack
-     * @param RouterInterface $router
-     * @param AnnotationReader $annotationReader
-     * @param $cacheDir
+     * @param RequestStack           $requestStack
+     * @param RouterInterface        $router
+     * @param AnnotationReader       $annotationReader
+     * @param                        $cacheDir
      */
     public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $cacheDir)
     {
@@ -70,7 +70,8 @@ class MenuBuilder implements MenuBuilderInterface
     /**
      * @return array
      */
-    public function getNodeTree($key) {
+    public function getNodeTree($key)
+    {
         $item = $this->cache->getItem($key ?: 'default');
         if ($item->isHit()) {
             return $item->get();
@@ -81,14 +82,12 @@ class MenuBuilder implements MenuBuilderInterface
 
         /* get root nodes ordered by position */
         $menu = $repository->findOneByKey($key);
-
         if ($menu === null) {
             return [];
         }
 
         /* Build nodes hierarchy */
         $nodes = $this->build($menu);
-
         $item->set($nodes);
         $this->cache->commit();
 
@@ -100,22 +99,26 @@ class MenuBuilder implements MenuBuilderInterface
      *
      * @return array
      */
-    public function getNodes($key) {
+    public function getNodes($key)
+    {
         $nodes = $this->getNodeTree($key);
         $this->activeNodes($nodes);
+
         return $nodes;
     }
 
     /**
      * @return null|Annotation
      */
-    private function getAnnotation() {
+    private function getAnnotation()
+    {
         if ($this->request === null || !$this->request->get('_controller')) {
             return null;
         }
 
         try {
-            $annotation = $this->annotationReader->getMethodAnnotation(new \ReflectionMethod($this->request->get('_controller')), Annotation::class);
+            $annotation = $this->annotationReader->getMethodAnnotation(new \ReflectionMethod($this->request->get('_controller')),
+                Annotation::class);
             if ($annotation) {
                 $propertyAccessor = PropertyAccess::createPropertyAccessor();
                 $attributes = $this->request->attributes->all();
@@ -130,7 +133,8 @@ class MenuBuilder implements MenuBuilderInterface
 
                 return $annotation;
             }
-        } catch(\ReflectionException $exception) {}
+        } catch (\ReflectionException $exception) {
+        }
 
         return null;
     }
@@ -140,22 +144,22 @@ class MenuBuilder implements MenuBuilderInterface
      *
      * @return array
      */
-    public function getActiveNodes($key) {
+    public function getActiveNodes($key)
+    {
         $nodes = $this->getNodeTree($key);
-
-
         $activeNodes = $this->activeNodes($nodes);
 
         if ($this->annotation) {
-            array_push($activeNodes, [
-                'name'     => $this->annotation->getName(),
-                'title'     => $this->annotation->getName(),
-                'url'       => null,
-                'route'     => null,
-                'children'  => [],
-                'roles'     => [],
-                'active'    => true
-            ]);
+            array_push($activeNodes,
+                [
+                    'name'     => $this->annotation->getName(),
+                    'title'    => $this->annotation->getName(),
+                    'url'      => null,
+                    'route'    => null,
+                    'children' => [],
+                    'roles'    => [],
+                    'active'   => true,
+                ]);
         }
 
         return $activeNodes;
@@ -166,7 +170,8 @@ class MenuBuilder implements MenuBuilderInterface
      *
      * @return array
      */
-    private function activeNodes(array &$nodes) {
+    private function activeNodes(array &$nodes)
+    {
         if (($key = key($nodes)) === null) {
             return [];
         }
@@ -177,6 +182,7 @@ class MenuBuilder implements MenuBuilderInterface
         $children = [];
         if ((isset($nodes[$key]['children']) && $children = $this->activeNodes($nodes[$key]['children'])) || $this->isActive($nodes[$key])) {
             $nodes[$key]['active'] = true;
+
             return array_merge([$nodes[$key]], $children);
         }
 
@@ -196,8 +202,8 @@ class MenuBuilder implements MenuBuilderInterface
 
         $nodeRoute = $node['route'];
         $requestRoute = [
-            'name' => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
-            'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params')
+            'name'   => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
+            'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params'),
         ];
 
         if ($requestRoute['name'] === 'krg_page_show' && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
@@ -234,7 +240,6 @@ class MenuBuilder implements MenuBuilderInterface
      */
     protected function _build(array $menus)
     {
-
         if (count($menus) === 0) {
             return [];
         }
@@ -255,31 +260,36 @@ class MenuBuilder implements MenuBuilderInterface
             }
         }
 
-        return array_merge([[
-            'url'       => $url,
-            'route'     => $menu->getRoute(),
-            'name'      => $menu->getName(),
-            'title'     => $menu->getTitle(),
-            'children'  => $this->_build($menu->getChildren()->toArray()),
-            'roles'     => $menu->getRoles(),
-            'active'    => false
-        ]], $this->_build($menus));
+        return array_merge([
+            [
+                'url'      => $url,
+                'route'    => $menu->getRoute(),
+                'name'     => $menu->getName(),
+                'title'    => $menu->getTitle(),
+                'children' => $this->_build($menu->getChildren()->toArray()),
+                'roles'    => $menu->getRoles(),
+                'active'   => false,
+            ],
+        ],
+            $this->_build($menus));
     }
 
     /**
      * @param PropertyAccessor $propertyAccessor
-     * @param array $attributes
-     * @param string $value
+     * @param array            $attributes
+     * @param string           $value
      *
      * @return string
      */
-    private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value) {
+    private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value)
+    {
         if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 $_value = $propertyAccessor->getValue($attributes, sprintf('[%s].%s', $match[2], $match[3]));
                 $value = preg_replace(sprintf('`%s`', preg_quote($match[0])), $_value, $value);
             }
         }
+
         return $value;
     }
 }

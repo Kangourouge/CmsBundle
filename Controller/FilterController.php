@@ -2,7 +2,6 @@
 
 namespace KRG\CmsBundle\Controller;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Form\FilterRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 
 /**
  * @Route("/cms/filter")
@@ -18,6 +18,11 @@ class FilterController extends AbstractController
 {
     /**
      * @Route("/admin", name="krg_cms_filter_admin")
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function adminAction(Request $request)
     {
@@ -35,7 +40,7 @@ class FilterController extends AbstractController
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
         $form->handleRequest($request);
 
-        return $this->render('KRGCmsBundle:Block:admin_form.html.twig', [
+        return $this->render('KRGCmsBundle:Block:framed_form.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -43,15 +48,17 @@ class FilterController extends AbstractController
     /**
      * @Route("/show/{key}", name="krg_cms_filter_show")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param FilterInterface $filter
-     *
      * @return Response
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showAction(Request $request, FilterInterface $filter)
     {
         $filterRegistry = $this->container->get(FilterRegistry::class);
         $config = $filterRegistry->get($filter->getFormType());
+
         if ($filter->isEnabled() && $filter->isWorking() && $config) {
             $form = $this->createForm($config['form'], null, ['csrf_protection' => false]);
 

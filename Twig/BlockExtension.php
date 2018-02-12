@@ -7,8 +7,6 @@ use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
-use Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode;
-use Twig\TwigFunction;
 
 /**
  * Class BlockExtension
@@ -109,7 +107,7 @@ class BlockExtension extends \Twig_Extension
 
             /* @var $filter FilterInterface */
             foreach ($formBlocks as $filter) {
-                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Block:form', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
+                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
             }
 
             /* @var $page PageInterface */
@@ -127,10 +125,10 @@ class BlockExtension extends \Twig_Extension
      * Render a block by it's key
      *
      * @param \Twig_Environment $environment
-     * @param $key
-     * @param array $context
-     *
+     * @param                   $key
+     * @param array             $context
      * @return null|string
+     * @throws \Throwable
      */
     public function render(\Twig_Environment $environment, $key, $context = array())
     {
@@ -155,14 +153,18 @@ class BlockExtension extends \Twig_Extension
      * @param BlockInterface $block
      * @return int
      */
-    protected function hasBlockLoop(BlockInterface $block)
+    protected function isSafe(BlockInterface $block)
     {
-        return (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
+        return false === (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
     }
 
+    /**
+     * @param BlockInterface $block
+     * @return bool
+     */
     protected function legalBlock(BlockInterface $block)
     {
-        return false === $this->hasBlockLoop($block);
+        return $block->isEnabled() && $block->isWorking() && $this->isSafe($block);
     }
 
     /**
@@ -176,6 +178,9 @@ class BlockExtension extends \Twig_Extension
         return $template ? $template->getBlockNames() : [];
     }
 
+    /**
+     * @return array|\Twig_Function[]
+     */
     public function getFunctions()
     {
         return [

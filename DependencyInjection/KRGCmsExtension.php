@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Loader;
 
 class KRGCmsExtension extends Extension
 {
-    const KRG_CACHE_DIR = '/krg';
+    const KRG_CACHE_DIR = DIRECTORY_SEPARATOR.'krg';
     const KRG_BLOCKS_FILE = 'blocks.html.twig';
 
     public function load(array $configs, ContainerBuilder $container)

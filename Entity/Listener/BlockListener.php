@@ -31,6 +31,7 @@ class BlockListener implements EventSubscriber
         return [
             Events::postPersist,
             Events::postUpdate,
+            Events::preUpdate,
             Events::postRemove
         ];
     }
@@ -39,6 +40,14 @@ class BlockListener implements EventSubscriber
     {
         if ($event->getObject() instanceof BlockInterface) {
             $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
+        }
+    }
+
+
+    public function preUpdate(LifecycleEventArgs $event)
+    {
+        if ($event->getObject() instanceof BlockInterface) {
+            $event->getObject()->setWorking(true);
         }
     }
 

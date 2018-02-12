@@ -3,8 +3,6 @@
 namespace KRG\CmsBundle\Controller;
 
 use KRG\CmsBundle\Entity\PageInterface;
-use KRG\CmsBundle\Entity\SeoPageInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

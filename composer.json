@@ -14,9 +14,10 @@
     }
   ],
   "require"    : {
-    "php"                     : ">=5.3.9",
+    "php"                     : "7.*",
     "symfony/framework-bundle": "~2.1|~3.0",
-    "doctrine/orm"            : "~2.3"
+    "doctrine/orm"            : "~2.3",
+    "egeloen/ckeditor-bundle" : "^6.0"
   },
   "autoload"   : {
     "psr-0": {

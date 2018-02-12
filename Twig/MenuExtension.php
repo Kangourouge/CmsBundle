@@ -42,9 +42,11 @@ class MenuExtension extends \Twig_Extension
      * Build blocks into a specific template
      *
      * @param \Twig_Environment $environment
-     * @param $theme
-     *
+     * @param                   $theme
      * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function getTemplate(\Twig_Environment $environment, $theme)
     {
@@ -58,15 +60,18 @@ class MenuExtension extends \Twig_Extension
 
     /**
      * @param \Twig_Environment $environment
-     * @param $key
-     * @param string $theme
-     * @param null $brand
-     *
+     * @param                   $key
+     * @param string            $theme
+     * @param null              $brand
      * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Menu:bootstrap.html.twig', $brand = null)
     {
         $template = $this->getTemplate($environment, $theme);
+
         return $template->renderBlock('menu', [
             'id'    => uniqid('krg_menu_'),
             'brand' => $brand,
@@ -79,7 +84,8 @@ class MenuExtension extends \Twig_Extension
      *
      * @return bool
      */
-    public function isGranted(array $roles) {
+    public function isGranted(array $roles)
+    {
         return count($roles) === 0 || $this->authorizationChecker->isGranted($roles);
     }
 

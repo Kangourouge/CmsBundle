@@ -16,8 +16,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('title')->end()
             ->scalarNode('default_title')->end()
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }

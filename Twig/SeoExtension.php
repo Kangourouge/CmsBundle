@@ -95,25 +95,6 @@ class SeoExtension extends \Twig_Extension
         return $environment->render('KRGCmsBundle:Seo:head.html.twig', $data);
     }
 
-    public function getSeoAdmin(\Twig_Environment $environment)
-    {
-        if ($this->request === null) {
-            return null;
-        }
-
-        if (false === $this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
-            false === $this->authorizationChecker->isGranted(KRGCmsBundle::ROLE_SEO)) {
-            return null;
-        }
-
-        /* @var $seo SeoInterface */
-        $seo = $this->request->get('_seo');
-
-        return $environment->render('KRGCmsBundle:Seo:front.html.twig', array(
-            'seo' => $seo,
-        ));
-    }
-
     public function getSeoUrl($key)
     {
         /* @var $page PageInterface */
@@ -133,10 +114,6 @@ class SeoExtension extends \Twig_Extension
     {
         return array(
             'seo_head' => new \Twig_SimpleFunction('seo_head', array($this, 'getSeoHead'), array(
-                'needs_environment' => true,
-                'is_safe'           => array('html'),
-            )),
-            'seo_admin' => new \Twig_SimpleFunction('seo_admin', array($this, 'getSeoAdmin'), array(
                 'needs_environment' => true,
                 'is_safe'           => array('html'),
             )),

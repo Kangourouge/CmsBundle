@@ -74,4 +74,9 @@ class RouteType extends AbstractType
 
         return $choices;
     }
+
+    public function getBlockPrefix()
+    {
+        return 'krg_cms_route';
+    }
 }

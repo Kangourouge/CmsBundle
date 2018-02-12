@@ -2,6 +2,10 @@
 
 namespace KRG\CmsBundle\Form;
 
+/**
+ * Class FilterRegistry
+ * @package KRG\CmsBundle\Form
+ */
 class FilterRegistry
 {
     /**
@@ -9,19 +13,28 @@ class FilterRegistry
      */
     private $forms;
 
+    /**
+     * FilterRegistry constructor.
+     */
     function __construct()
     {
-        $this->forms = array();
+        $this->forms = [];
     }
 
+    /**
+     * @param      $form
+     * @param      $alias
+     * @param      $template
+     * @param null $handler
+     */
     public function add($form, $alias, $template, $handler = null)
     {
-        $this->forms[$form] = array(
+        $this->forms[$form] = [
             'form'     => $form,
             'alias'    => $alias,
             'template' => $template,
             'handler'  => $handler,
-        );
+        ];
     }
 
     /**
@@ -55,7 +68,4 @@ class FilterRegistry
     {
         return isset($this->forms[$id]);
     }
-
-
-
 }

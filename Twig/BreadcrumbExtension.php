@@ -34,9 +34,11 @@ class BreadcrumbExtension extends \Twig_Extension
      * Build blocks into a specific template
      *
      * @param \Twig_Environment $environment
-     * @param $theme
-     *
+     * @param                   $theme
      * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function getTemplate(\Twig_Environment $environment, $theme)
     {
@@ -50,9 +52,12 @@ class BreadcrumbExtension extends \Twig_Extension
 
     /**
      * @param \Twig_Environment $environment
-     * @param string $theme
-     *
+     * @param                   $key
+     * @param string            $theme
      * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
     {
@@ -61,11 +66,11 @@ class BreadcrumbExtension extends \Twig_Extension
 
         if (!($first = reset($nodes)) || $first['url'] !== '/') {
             array_unshift($nodes, [
-                'route' => null,
-                'name' => 'Home',
-                'url'  => '/',
-                'roles' => [],
-                'active' => false
+                'route'  => null,
+                'name'   => 'Home',
+                'url'    => '/',
+                'roles'  => [],
+                'active' => false,
             ]);
         }
 

@@ -14,24 +14,9 @@ public function registerBundles()
 }
 ```
 
-Routing
--------
 
-```yaml
-# app/config/routing.yml
-
-krg_seo_route_loader:
-    resource: .
-    type: seo
-    
-seo:
-    resource: "@KRGCmsBundle/Controller/"
-    type:     annotation
-```
-
-
-Installation & configuration
-----------------------------
+Configuration
+-------------
 
 Create 5 entities:
 
@@ -65,9 +50,25 @@ doctrine:
 twig:
     form_themes:
         - 'KRGCmsBundle:Form:route.html.twig'
-        - 'KRGCmsBundle:Form:form.html.twig'
+        - 'KRGCmsBundle:Form:filter.html.twig'
         - 'KRGCmsBundle:CKEditor:addblock_widget.html.twig'
 ```
+
+Routing
+-------
+
+```yaml
+# app/config/routing.yml
+
+krg_seo_route_loader:
+    resource: .
+    type: seo
+    
+seo:
+    resource: "@KRGCmsBundle/Controller/"
+    type:     annotation
+```
+
 
 Admin
 -----
@@ -105,37 +106,6 @@ Récupérer l'url d'une SeoPage depuis sa key :
 {{ seo_url('cgu') }}
 ```
 
-Form tags
----------
-
-In order to be able to create a custom form, you need to tag your form:
-
-```yaml
-services:
-    AppBundle\Form\ExampleType:
-        tags:
-            - { name: 'form.type', alias: 'form_alias' }
-            - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
-```
-
-```php
-<?php
-
-namespace AppBundle\Form\Handler;
-
-class TestHandler implements FormHandlerInterface
-{
-    public function handle(Request $request, FormInterface $form)
-    {
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $form->handleRequest($request);
-        }
-
-        return null;
-    }
-}
-
-```
 
 Override service Menu Builder
 -----------------------------
@@ -169,4 +139,24 @@ ivory_ck_editor:
         addblock:
             path:     "/bundles/krgcms/ckeditor/plugins/addblock/"
             filename: "plugin.js"
+```
+
+
+# Blocks
+## Filters
+
+Form tags
+---------
+
+In order to be able to create a custom form, you need to tag your form like this:
+
+- handler (optional): usefull if you have special form processing. Extends KRG\CmsBundle\Form\Handler\AbstractFormHandler
+- template (optional): twig rendered file
+- alias (optional): displayed name in admin
+
+```yaml
+services:
+    AppBundle\Form\ExampleType:
+        tags:
+            - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
 ```
