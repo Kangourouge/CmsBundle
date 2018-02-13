@@ -39,10 +39,9 @@ class BlockListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR); // TODO: trouver solution prod
         }
     }
-
 
     public function preUpdate(LifecycleEventArgs $event)
     {
@@ -54,14 +53,14 @@ class BlockListener implements EventSubscriber
     public function postUpdate(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR); // TODO: trouver solution prod
         }
     }
 
     public function postRemove(LifecycleEventArgs $event)
     {
         if ($event->getObject() instanceof BlockInterface) {
-            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
+            $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR); // TODO: trouver solution prod
         }
     }
 }

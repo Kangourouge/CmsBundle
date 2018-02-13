@@ -6,11 +6,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Yaml\Yaml;
 
 class KRGCmsExtension extends Extension
 {
-    const KRG_CACHE_DIR = DIRECTORY_SEPARATOR.'krg';
+    const KRG_CACHE_DIR = '/krg';
     const KRG_BLOCKS_FILE = 'blocks.html.twig';
+    const KRG_STATIC_FILE_BLOCKS_PATH = __DIR__.'/../Resources/blocks';
 
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -20,8 +22,32 @@ class KRGCmsExtension extends Extension
         $this->injectParameter('title', $container, $config);
         $this->injectParameter('default_title', $container, $config);
 
+        if (isset($config['blocks'])) {
+            $this->loadBlocks($config['blocks'], $container);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+    }
+
+    /**
+     * Load Block File configuration as parameter
+     *
+     * @param $config
+     * @param $container
+     */
+    private function loadBlocks($config, $container)
+    {
+        $blocks = [];
+        foreach ($config as $file) {
+            foreach (Yaml::parseFile($file) as $key => $blockYml) {
+                if (isset($blockYml['template'])) {
+                    $blocks[$key] = $blockYml;
+                }
+            }
+        }
+
+        $container->setParameter('krg_cms.blocks', $blocks);
     }
 
     /**

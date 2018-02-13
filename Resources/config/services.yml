@@ -7,6 +7,7 @@ services:
             $cacheDir: '%kernel.cache_dir%'
             $webDir: '%kernel.root_dir%/../web'
             $ckUploadDir: 'ckeditor/uploads'
+            $blocks: '%krg_cms.blocks%'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
@@ -32,6 +33,10 @@ services:
         tags: [routing.loader]
 
     KRG\CmsBundle\Form\FilterRegistry:
+        public: true
+
+    KRG\CmsBundle\Util\:
+        resource: '../../Util/*'
         public: true
 
     KRG\CmsBundle\Entity\Listener\:

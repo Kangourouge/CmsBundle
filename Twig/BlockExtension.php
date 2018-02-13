@@ -7,6 +7,9 @@ use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
+use Symfony\Component\Templating\TemplateNameParserInterface;
 
 /**
  * Class BlockExtension
@@ -18,6 +21,11 @@ class BlockExtension extends \Twig_Extension
      * @var EntityManagerInterface
      */
     private $entityManager;
+
+    /**
+     * @var array
+     */
+    private $blocks;
 
     /**
      * @var string
@@ -40,16 +48,24 @@ class BlockExtension extends \Twig_Extension
     private $template;
 
     /**
-     * BlockExtension constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param $cacheDir
+     * @var TemplateNameParser
      */
-    public function __construct(EntityManagerInterface $entityManager, $cacheDir)
+    private $nameParser;
+
+    /**
+     * @var TemplateLocator
+     */
+    private $locator;
+
+    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, $blocks, $cacheDir)
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
         $this->cacheDirKrg = $cacheDir . KRGCmsExtension::KRG_CACHE_DIR;
         $this->cacheFileName = KRGCmsExtension::KRG_BLOCKS_FILE;
+        $this->blocks = $blocks;
+        $this->nameParser = $nameParser;
+        $this->locator = $locator;
     }
 
     /**
@@ -92,33 +108,72 @@ class BlockExtension extends \Twig_Extension
         }
 
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
-        if (!file_exists($path)) {
-            $staticBlocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
-            $formBlocks = $this->entityManager->getRepository(FilterInterface::class)->findAll();
-            $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
-
-            $content = [];
-            /* @var $block BlockInterface */
-            foreach ($staticBlocks as $blockStatic) {
-                if ($this->legalBlock($blockStatic)) {
-                    $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $blockStatic->getKey(), $blockStatic->getContent(), $blockStatic->getKey());
-                }
-            }
-
-            /* @var $filter FilterInterface */
-            foreach ($formBlocks as $filter) {
-                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $filter->getKey(), $filter->getId(), $filter->getKey());
-            }
-
-            /* @var $page PageInterface */
-            foreach ($pages as $page) {
-                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">%s</div>{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
-            }
+//        if (!file_exists($path)) {
+            $content = array_merge(
+                $this->loadStaticBlocks(),
+                $this->loadFilterBlocks(),
+                $this->loadFileBlocks(),
+                $this->loadPages()
+            );
 
             return (bool) file_put_contents($path, implode('', $content));
-        }
+//        }
 
         return false;
+    }
+
+    protected function loadFileBlocks()
+    {
+        $content = [];
+        foreach ($this->blocks as $key => $block) {
+            $path = $this->locator->locate($this->nameParser->parse($block['template']));
+            if ($fileContent = @file_get_contents($path)) {
+                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $key, $fileContent, $key);
+            }
+        }
+
+        return $content;
+    }
+
+    protected function loadPages()
+    {
+        $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
+        $content = [];
+
+        /* @var $page PageInterface */
+        foreach ($pages as $page) {
+            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">%s</div>{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
+        }
+
+        return $content;
+    }
+
+    protected function loadFilterBlocks()
+    {
+        $blocks = $this->entityManager->getRepository(FilterInterface::class)->findAll();
+        $content = [];
+
+        /* @var $filter FilterInterface */
+        foreach ($blocks as $block) {
+            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $block->getKey(), $block->getId(), $block->getKey());
+        }
+
+        return $content;
+    }
+
+    protected function loadStaticBlocks()
+    {
+        $blocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
+        $content = [];
+
+        /* @var $block BlockInterface */
+        foreach ($blocks as $block) {
+            if ($this->isValidBlock($block)) {
+                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
+            }
+        }
+
+        return $content;
     }
 
     /**
@@ -147,7 +202,6 @@ class BlockExtension extends \Twig_Extension
     }
 
     /**
-     * TODO: deport on block validator constraint
      * Simple block loop detect, can be improved
      *
      * @param BlockInterface $block
@@ -162,7 +216,7 @@ class BlockExtension extends \Twig_Extension
      * @param BlockInterface $block
      * @return bool
      */
-    protected function legalBlock(BlockInterface $block)
+    protected function isValidBlock(BlockInterface $block)
     {
         return $block->isEnabled() && $block->isWorking() && $this->isSafe($block);
     }
@@ -173,9 +227,19 @@ class BlockExtension extends \Twig_Extension
      */
     public function getBlocks(\Twig_Environment $environment)
     {
-        $template = $this->getTemplate($environment);
+        if (null === ($template = $this->getTemplate($environment))) {
+            return [];
+        }
 
-        return $template ? $template->getBlockNames() : [];
+        $blocks = [];
+        foreach ($template->getBlockNames() as $name) {
+            $blocks[] = [
+                'name'   => $name,
+                'fields' => isset($this->blocks[$name]) ? $this->blocks[$name]['fields'] : []
+            ];
+        }
+
+        return $blocks;
     }
 
     /**

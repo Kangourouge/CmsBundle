@@ -120,7 +120,8 @@ services:
 CKEditor Plugin
 ---------------
 
-assets:install
+bin/console assets:install
+bin/console ckeditor:install  
 
 ```yaml
 ivory_ck_editor:

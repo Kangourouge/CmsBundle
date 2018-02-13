@@ -11,7 +11,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UrlDataTransformer implements DataTransformerInterface
 {
-
     /**
      * @var RouterInterface
      */
@@ -26,10 +25,8 @@ class UrlDataTransformer implements DataTransformerInterface
         $this->router = $router;
     }
 
-
     public function transform($value)
     {
-
         if ($value === null) {
             return null;
         }
@@ -44,9 +41,9 @@ class UrlDataTransformer implements DataTransformerInterface
         }
 
         $route = [
-            'url' => $value,
-            'name' => null,
-            'params' => []
+            'url'    => $value,
+            'name'   => null,
+            'params' => [],
         ];
 
         try {
@@ -61,6 +58,4 @@ class UrlDataTransformer implements DataTransformerInterface
 
         return $route;
     }
-
-
 }
