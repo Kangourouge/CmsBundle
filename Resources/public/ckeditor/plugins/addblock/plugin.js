@@ -1,33 +1,36 @@
 (function () {
     var items = CKEDITOR.addblockIds;
 
-    if (CKEDITOR.addblockIds instanceof Array) {
-        CKEDITOR.plugins.add('addblock', {
-            requires: ['richcombo', 'dialog'],
-            icons: 'plus',
-            init: function (editor) {
-                editor.ui.addRichCombo('AddBlock', {
-                    multiSelect: false,
-                    label: 'Add Block',
-                    command: 'addblock',
-                    toolbar: 'insert',
-                    init: function () {
-                        for (var i = 0; i < items.length; i++) {
-                            this.add(i, items[i].name, 'Insert ' + items[i].name + ' block');
+    CKEDITOR.config.contentsCss = CKEDITOR.plugins.getPath('addblock') + 'css/style.css';
+
+    if (items instanceof Array) {
+        CKEDITOR.plugins.add('addblock',
+            {
+                init: function (editor) {
+                    CKEDITOR.dialog.add('blockChoice', this.path + 'dialogs/addblock.js');
+
+                    editor.ui.addButton('AddBlock', {
+                        label: 'Add Block',
+                        command: 'AddBlock',
+                        icon: CKEDITOR.plugins.getPath('addblock') + 'icons/puzzle.png'
+                    });
+
+                    editor.addCommand('AddBlock', {
+                        exec: function (editor) {
+                            editor.openDialog('blockChoice'); // voir addblock.js
+                        },
+                    });
+
+                    // gestion de l'edition
+                    editor.on('doubleclick', function (event) {
+                        var element = event.data.element;
+
+                        if (element.is('div')) {
+                            event.data.dialog = 'blockChoice'; // Marche pas
                         }
-                    },
-                    onClick: function (idx) {
-                        var item = items[idx];
-                        var params = JSON.stringify(item.fields);
-
-                        console.log(item, params);
-
-                        var value = '<pre block="' + item.name + '" contenteditable = "false" >{% with ' + params + ' %}\{\{ block("' + item.name + '") \}\}{% endwith %}</pre>';
-
-                        editor.insertHtml(value);
-                    },
-                });
-            }
-        });
+                    });
+                },
+            });
     }
 })();
+

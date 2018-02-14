@@ -235,7 +235,7 @@ class BlockExtension extends \Twig_Extension
         foreach ($template->getBlockNames() as $name) {
             $blocks[] = [
                 'name'   => $name,
-                'fields' => isset($this->blocks[$name]) ? $this->blocks[$name]['fields'] : []
+                'fields' => isset($this->blocks[$name]['fields']) ? $this->blocks[$name]['fields'] : []
             ];
         }
 

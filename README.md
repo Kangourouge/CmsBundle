@@ -142,7 +142,6 @@ ivory_ck_editor:
             filename: "plugin.js"
 ```
 
-
 # Blocks
 ## Filters
 
@@ -160,4 +159,22 @@ services:
     AppBundle\Form\ExampleType:
         tags:
             - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
+```
+
+```yaml
+# config.yml
+
+krg_cms:
+    blocks:
+        - '%kernel.project_dir%/app/config/cms/blocks/block1.yml'
+```
+
+```yaml
+# block1.yml
+
+block1:
+    template: 'KRGCmsBundle:Sample:block1.html.twig'
+    fields:
+        - { property: 'title', type: 'text' }
+        - { property: 'textarea', type: 'textarea' }
 ```
