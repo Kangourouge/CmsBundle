@@ -3,6 +3,7 @@ easy_admin:
         Menu:
             class: '%krg_cms.menu.class%'
             list:
+                title: '<i class="fa fa-bars"></i> Menu'
                 fields:
                     - name
                     - parent

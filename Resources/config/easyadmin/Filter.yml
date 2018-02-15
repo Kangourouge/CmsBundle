@@ -3,6 +3,7 @@ easy_admin:
         Filter:
             class: '%krg_cms.filter.class%'
             list:
+                title: '<i class="fa fa-filter"></i> Filters'
                 fields:
                     - enabled
                     - { property: 'working', type: 'boolean' }

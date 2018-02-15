@@ -3,6 +3,7 @@ easy_admin:
         Page:
             class: '%krg_cms.page.class%'
             list:
+                title: '<i class="fa fa-file"></i> Page'
                 fields:
                     - enabled
                     - name

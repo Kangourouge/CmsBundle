@@ -3,6 +3,7 @@ easy_admin:
         Block:
             class: '%krg_cms.block.class%'
             list:
+                title:  '<i class="fa fa-cubes"></i> Block CMS'
                 fields:
                     - enabled
                     - key

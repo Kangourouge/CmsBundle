@@ -3,6 +3,7 @@ easy_admin:
         Seo:
             class: '%krg_cms.seo.class%'
             list:
+                title: '<i class="fa fa-wrench"></i> Seo'
                 fields:
                     - enabled
                     - url
