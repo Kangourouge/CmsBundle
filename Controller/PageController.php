@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Controller;
 
 use KRG\CmsBundle\Entity\PageInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,6 +19,17 @@ class PageController extends AbstractController
     public function showAction(Request $request, PageInterface $page)
     {
         return $this->render('KRGCmsBundle:Page:show.html.twig', [
+            'page' => $page
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{key}", name="krg_page_edit")
+     * @Security("has_role('ROLE_SUPER_ADMIN')"))
+     */
+    public function editAction(Request $request, PageInterface $page)
+    {
+        return $this->render('KRGCmsBundle:Page:edit.html.twig', [
             'page' => $page
         ]);
     }

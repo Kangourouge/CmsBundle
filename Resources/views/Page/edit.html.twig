@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% block container %}
+    <div data-editable data-name="page">
+        {{ page.content|raw }}
+
+        <div id="krg_cms_add_block">
+            <button id="krg_cms_add_block_button">+</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/krgcms/contenttools/content-tools.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/krgcms/contenttools/style.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/krgcms/contenttools/content-tools.js') }}"></script>
+    <script type="text/javascript">
+        var editor, header, footer, btnAddBlock = null;
+
+        ContentTools.DEFAULT_TOOLS = [
+            [
+                'bold',
+                'italic',
+                'link',
+                'align-left',
+                'align-center',
+                'align-right'
+            ], [
+                'unordered-list',
+                'ordered-list',
+                'image',
+            ], [
+                'undo',
+                'redo',
+            ]
+        ];
+
+        window.addEventListener('load', function (event) {
+            editor = ContentTools.EditorApp.get();
+            header = document.querySelector('header');
+            footer = document.querySelector('footer');
+            btnAddBlock = document.getElementById('krg_cms_add_block_button');
+
+            editor.init('[data-editable]', 'data-name');
+
+            var links = document.getElementsByTagName('a');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', function(event) {
+                    event.preventDefault();
+                });
+            }
+        });
+    </script>
+{% endblock %}
+

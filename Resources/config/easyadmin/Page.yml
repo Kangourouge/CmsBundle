@@ -12,5 +12,5 @@ easy_admin:
                 fields:
                     - name
                     - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
-                    - { property: 'content', type: 'ckeditor' }
+                    - { property: 'content', type: KRG\CmsBundle\Form\Type\ContentType }
                     - enabled

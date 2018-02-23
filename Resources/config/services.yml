@@ -17,6 +17,10 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
+
+    KRG\CmsBundle\Form\DataTransformer\:
+        resource: '../../Form/DataTransformer/*'
+
     KRG\CmsBundle\Form\Extension\CKEditorTypeExtension:
         class: KRG\CmsBundle\Form\Extension\CKEditorTypeExtension
         tags:

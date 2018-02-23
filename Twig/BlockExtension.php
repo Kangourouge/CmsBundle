@@ -142,7 +142,10 @@ class BlockExtension extends \Twig_Extension
 
         /* @var $page PageInterface */
         foreach ($pages as $page) {
-            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">%s</div>{%% endblock %s %%}\n", $page->getKey(), $page->getContent(), $page->getKey());
+            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">
+            {%% set krg_key = \"%s\" %%}
+            %s</div>
+            {%% endblock %s %%}\n", $page->getKey(), $page->getKey(), $page->getContent(), $page->getKey());
         }
 
         return $content;

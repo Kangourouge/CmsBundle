@@ -1,0 +1,146 @@
+{% form_theme form with easyadmin_config('design.form_theme') %}
+
+{% block content_widget %}
+    <div style="display: none">
+        {{ form_widget(form) }}
+    </div>
+
+    <div id="{{ form.vars.id }}_content_tools" class="cms-content-tools">
+        <header>
+            <div class="pull-left">
+                <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">Update</button>
+                <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">Cancel</button>
+            </div>
+
+            <div class="pull-right">
+                <div class="pull-left" style="margin-right: 30px;">
+                    <div class="checkbox">
+                        <label><input id="{{ form.vars.id }}_toggler_display_hf"  type="checkbox" value="" checked>Header / footer</label>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div id="{{ form.vars.id }}_toggler_display" class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="options" autocomplete="off" value="100%" checked> Destkop
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" value="1024px" autocomplete="off"> Tablet
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" value="480px" autocomplete="off"> Mobile
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" srcdoc="{{ form.vars.value }}" frameborder="0"></iframe>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var textarea = document.getElementById('{{ form.vars.id }}');
+            var iframe = document.getElementById('{{ form.vars.id }}_iframe');
+            var div = document.getElementById('{{ form.vars.id }}_content_tools');
+            var btnEdit = document.getElementById('{{ form.vars.id }}_btn_edit');
+            var btnUpdate = document.getElementById('{{ form.vars.id }}_btn_update');
+            var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
+            var togglerResponsive = document.getElementById('{{ form.vars.id }}_toggler_display');
+            var togglerDisplayHf = document.getElementById('{{ form.vars.id }}_toggler_display_hf');
+            var iframeHeader, iframeFooter, btnAddBlock;
+
+            iframe.addEventListener('load', function (event) {
+                editor = iframe.contentWindow.editor;
+                iframeHeader = iframe.contentWindow.header;
+                iframeFooter = iframe.contentWindow.footer;
+                btnAddBlock = iframe.contentWindow.btnAddBlock;
+
+                btnEdit.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    startEditing();
+                });
+
+                btnUpdate.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    exitEditing(true);
+                });
+
+                btnCancel.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    exitEditing(false);
+                });
+
+                btnAddBlock.addEventListener('click', function(event) {
+                });
+
+                var responsiveInputs = togglerResponsive.querySelectorAll('label');
+                for (var i = 0; i < responsiveInputs.length; i++) {
+                    responsiveInputs[i].addEventListener('click', function(event) {
+                        setIframeWidth(event.target.querySelector('input').value);
+                    });
+                }
+
+                togglerDisplayHf.addEventListener('change', function(event) {
+                    toggleHeaderFooterDisplay(event.target.checked === true ? '' : 'none');
+                });
+            });
+
+            function startEditing() {
+                div.classList.add('fullscreen');
+                editor.start();
+            }
+
+            function exitEditing(save) {
+                save = typeof save !== 'undefined' ? save : false;
+
+                div.classList.remove('fullscreen');
+                editor.stop(save);
+
+                if (save) {
+                    var nodes = iframe.contentDocument.querySelectorAll('[data-editable]');
+
+                    if (nodes|length > 0) {
+                        textarea.value = nodes[0].innerHTML;
+                    }
+                }
+            }
+
+            function toggleHeaderFooterDisplay(display) {
+                iframeHeader.style.display = display;
+                iframeFooter.style.display = display;
+            }
+
+            function setIframeWidth(width) {
+                iframe.style.width = width;
+            }
+        })();
+    </script>
+{% endblock %}
+
+{% block content_label %}
+    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
+
+    {% if label is not same as(false) -%}
+        {% set label = name|humanize %}
+        <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</{{ element|default('label') }}>
+    {%- endif -%}
+{% endblock %}
+
+{% block content_row %}
+    <div class="form-group row{% if (not compound or force_error|default(false)) and not valid %} is-invalid{% endif %}">
+        <div class="col-sm-2">
+            <div class="text-right">
+                {{- form_label(form) -}}<br>
+                <button id="{{ form.vars.id }}_btn_edit" class="btn btn-primary">Edition mode</button>
+            </div>
+        </div>
+
+        <div class="{{ block('form_group_class') }}">
+            {{- form_widget(form) -}}
+            {{- form_errors(form) -}}
+        </div>
+    </div>
+{% endblock %}
+
+
