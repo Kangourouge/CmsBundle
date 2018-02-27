@@ -44,14 +44,19 @@
     display: none;
 }
 
-#krg_cms_add_block {
+.ct-krg-widget {
+    display: none;
     width: 100%;
     position: relative;
     border-bottom: 1px dashed #ccc;
     margin-top: 50px;
 }
 
-#krg_cms_add_block button {
+.ct-krg-widget.open {
+    display: block;
+}
+
+.ct-krg-widget button {
     padding: 2px 16px 5px;
     background-color: #007AFC;
     color: #fff;
@@ -67,8 +72,6 @@
     transition: all 100ms linear;
 }
 
-#krg_cms_add_block button:hover {
-    background-color: #f9f9f9;
-    border: 1px solid #ececec;
-    color: #007AFC;
+.ct-krg-widget button:hover {
+    background-color: #0b62fc;
 }

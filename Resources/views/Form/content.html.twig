@@ -35,6 +35,33 @@
             </div>
         </header>
 
+        <section id="{{ form.vars.id }}_modal_blocks" class="krg-modal">
+            <div class="krg-modal-body">
+                <header class="krg-modal-title">
+                    <h3>Insert a block</h3>
+                </header>
+
+                <section class="krg-modal-main">
+                    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                        <div id="{{ form.vars.id }}_blocks" class="row">
+                            {% for block in krg_block_list() %}
+                                <div class="col-sm-6 col-md-4">
+                                    <a href="#" class="thumbnail" data-render="{% if block.render is defined %}{{ block.render }}{% endif %}">
+                                        <img src="{{ asset(block.thumbnail) }}" alt="">
+                                        <div class="text-center">
+                                            <h3>{{ block.name }}</h3>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+
+                <div style="clear:both"></div>
+            </div>
+        </section>
+
         <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" srcdoc="{{ form.vars.value }}" frameborder="0"></iframe>
     </div>
 
@@ -48,30 +75,46 @@
             var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
             var togglerResponsive = document.getElementById('{{ form.vars.id }}_toggler_display');
             var togglerDisplayHf = document.getElementById('{{ form.vars.id }}_toggler_display_hf');
-            var iframeHeader, iframeFooter, btnAddBlock;
+            var modalBlocks = document.getElementById('{{ form.vars.id }}_modal_blocks');
+            var blockContainer = document.getElementById('{{ form.vars.id }}_blocks');
+            var editor, btnAdd = null;
 
             iframe.addEventListener('load', function (event) {
                 editor = iframe.contentWindow.editor;
-                iframeHeader = iframe.contentWindow.header;
-                iframeFooter = iframe.contentWindow.footer;
-                btnAddBlock = iframe.contentWindow.btnAddBlock;
+                btnAdd = iframe.contentWindow.btnAdd;
+                krgWidget = iframe.contentWindow.krgWidget;
+                wrapper = iframe.contentWindow.wrapper;
 
+                editor.addEventListener('start', function(event) {
+                    div.classList.add('fullscreen');
+                    krgWidget.classList.add('open');
+                });
+
+                editor.addEventListener('stop', function(event) {
+                    div.classList.remove('fullscreen');
+                    krgWidget.classList.remove('open');
+                });
+
+                editor.addEventListener('saved', function(event) {
+                    div.classList.remove('fullscreen');
+                    krgWidget.classList.remove('open');
+                    textarea.value = iframe.contentDocument.body.innerHTML;
+                });
+
+                // Toolbar
                 btnEdit.addEventListener('click', function(event) {
                     event.preventDefault();
-                    startEditing();
+                    editor.start();
                 });
 
                 btnUpdate.addEventListener('click', function(event) {
                     event.preventDefault();
-                    exitEditing(true);
+                    editor.stop(true);
                 });
 
                 btnCancel.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    exitEditing(false);
-                });
-
-                btnAddBlock.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    editor.stop();
                 });
 
                 var responsiveInputs = togglerResponsive.querySelectorAll('label');
@@ -84,31 +127,44 @@
                 togglerDisplayHf.addEventListener('change', function(event) {
                     toggleHeaderFooterDisplay(event.target.checked === true ? '' : 'none');
                 });
+
+                // Blocks
+                btnAdd.addEventListener('click', function(event) {
+                    document.body.classList.add('krg-modal-opened');
+                    window.addEventListener('click', watchModal);
+                });
+
+                var blocks = blockContainer.querySelectorAll('[data-render]');
+                for (var i = 0; i < blocks.length; i++) {
+                    blocks[i].addEventListener('click', insertBlock, false);
+                }
             });
 
-            function startEditing() {
-                div.classList.add('fullscreen');
-                editor.start();
+            function insertBlock(event) {
+                event.preventDefault();
+                var render = event.currentTarget.getAttribute('data-render');
+                var wrap = document.createElement('div');
+
+                wrap.classList.add('block-cms');
+                wrap.innerHTML = render;
+                wrapper.appendChild(wrap);
+                editor.syncRegions();
+                document.body.classList.remove('krg-modal-opened');
             }
 
-            function exitEditing(save) {
-                save = typeof save !== 'undefined' ? save : false;
-
-                div.classList.remove('fullscreen');
-                editor.stop(save);
-
-                if (save) {
-                    var nodes = iframe.contentDocument.querySelectorAll('[data-editable]');
-
-                    if (nodes|length > 0) {
-                        textarea.value = nodes[0].innerHTML;
+            function watchModal(event)
+            {
+                if (document.body.classList.contains('krg-modal-opened')) {
+                    if (modalBlocks.querySelector('.krg-modal-content').contains(event.target) === false) {
+                        document.body.classList.remove('krg-modal-opened');
+                        window.removeEventListener('click', watchModal);
                     }
                 }
             }
 
             function toggleHeaderFooterDisplay(display) {
-                iframeHeader.style.display = display;
-                iframeFooter.style.display = display;
+                iframe.contentWindow.header.style.display = display;
+                iframe.contentWindow.footer.style.display = display;
             }
 
             function setIframeWidth(width) {

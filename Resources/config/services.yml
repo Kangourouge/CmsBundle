@@ -7,7 +7,7 @@ services:
             $cacheDir: '%kernel.cache_dir%'
             $webDir: '%kernel.root_dir%/../web'
             $ckUploadDir: 'ckeditor/uploads'
-            $blocks: '%krg_cms.blocks%'
+            $fileBlocks: '%krg_cms.blocks%'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'

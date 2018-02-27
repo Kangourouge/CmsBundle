@@ -25,7 +25,12 @@ class BlockExtension extends \Twig_Extension
     /**
      * @var array
      */
-    private $blocks;
+    private $fileBlocks;
+
+    /**
+     * @var array
+     */
+    private $content;
 
     /**
      * @var string
@@ -57,15 +62,16 @@ class BlockExtension extends \Twig_Extension
      */
     private $locator;
 
-    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, $blocks, $cacheDir)
+    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, $fileBlocks, $cacheDir)
     {
         $this->entityManager = $entityManager;
         $this->cacheDir = $cacheDir;
         $this->cacheDirKrg = $cacheDir . KRGCmsExtension::KRG_CACHE_DIR;
         $this->cacheFileName = KRGCmsExtension::KRG_BLOCKS_FILE;
-        $this->blocks = $blocks;
+        $this->fileBlocks = $fileBlocks;
         $this->nameParser = $nameParser;
         $this->locator = $locator;
+        $this->content = [];
     }
 
     /**
@@ -109,26 +115,33 @@ class BlockExtension extends \Twig_Extension
 
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
 //        if (!file_exists($path)) {
-            $content = array_merge(
-                $this->loadStaticBlocks(),
-                $this->loadFilterBlocks(),
-                $this->loadFileBlocks(),
-                $this->loadPages()
-            );
-
-            return (bool) file_put_contents($path, implode('', $content));
+            return (bool) file_put_contents($path, implode('', $this->loadBlocks()));
 //        }
 
         return false;
     }
 
+    private function loadBlocks()
+    {
+        if (empty($this->content)) {
+            $this->content = array_merge(
+                $this->loadStaticBlocks(),
+                $this->loadFilterBlocks(),
+                $this->loadFileBlocks(),
+                $this->loadPages()
+            );
+        }
+
+        return $this->content;
+    }
+
     protected function loadFileBlocks()
     {
         $content = [];
-        foreach ($this->blocks as $key => $block) {
+        foreach ($this->fileBlocks as $key => $block) {
             $path = $this->locator->locate($this->nameParser->parse($block['template']));
             if ($fileContent = @file_get_contents($path)) {
-                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $key, $fileContent, $key);
+                $content[$key] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $key, $fileContent, $key);
             }
         }
 
@@ -142,7 +155,7 @@ class BlockExtension extends \Twig_Extension
 
         /* @var $page PageInterface */
         foreach ($pages as $page) {
-            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">
+            $content[$page->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">
             {%% set krg_key = \"%s\" %%}
             %s</div>
             {%% endblock %s %%}\n", $page->getKey(), $page->getKey(), $page->getContent(), $page->getKey());
@@ -158,7 +171,7 @@ class BlockExtension extends \Twig_Extension
 
         /* @var $filter FilterInterface */
         foreach ($blocks as $block) {
-            $content[] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $block->getKey(), $block->getId(), $block->getKey());
+            $content[$block->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $block->getKey(), $block->getId(), $block->getKey());
         }
 
         return $content;
@@ -172,7 +185,7 @@ class BlockExtension extends \Twig_Extension
         /* @var $block BlockInterface */
         foreach ($blocks as $block) {
             if ($this->isValidBlock($block)) {
-                $content[] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
+                $content[$block->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
             }
         }
 
@@ -226,7 +239,8 @@ class BlockExtension extends \Twig_Extension
 
     /**
      * @param \Twig_Environment $environment
-     * @return array|string[]
+     * @return array
+     * @throws \Throwable
      */
     public function getBlocks(\Twig_Environment $environment)
     {
@@ -236,10 +250,13 @@ class BlockExtension extends \Twig_Extension
 
         $blocks = [];
         foreach ($template->getBlockNames() as $name) {
-            $blocks[] = [
-                'name'   => $name,
-                'fields' => isset($this->blocks[$name]['fields']) ? $this->blocks[$name]['fields'] : []
-            ];
+            if (false === strstr($name, 'krg_page_')) {
+                $blocks[] = [
+                    'name'      => $name,
+                    'render'    => $this->render($environment, $name),
+                    'thumbnail' => isset($this->fileBlocks[$name]['thumbnail']) ? $this->fileBlocks[$name]['thumbnail'] : null
+                ];
+            }
         }
 
         return $blocks;

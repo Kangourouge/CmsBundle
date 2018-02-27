@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Form\DataTransformer;
 
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -27,6 +28,13 @@ class ContentTransformer implements DataTransformerInterface
 
     public function reverseTransform($value)
     {
-        return trim($value);
+        $crawler = new Crawler($value);
+        $content = $crawler->filter('div#krg_cms_wrapper');
+
+        if ($content->getNode(0)) {
+            return trim($content->html());
+        }
+
+        return $value;
     }
 }

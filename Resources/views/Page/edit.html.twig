@@ -1,12 +1,12 @@
 {% extends '::base.html.twig' %}
 
 {% block container %}
-    <div data-editable data-name="page">
+    <div id="krg_cms_wrapper">
         {{ page.content|raw }}
+    </div>
 
-        <div id="krg_cms_add_block">
-            <button id="krg_cms_add_block_button">+</button>
-        </div>
+    <div class="ct-krg-widget">
+        <button>+</button>
     </div>
 {% endblock %}
 
@@ -20,7 +20,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/krgcms/contenttools/content-tools.js') }}"></script>
     <script type="text/javascript">
-        var editor, header, footer, btnAddBlock = null;
+        var editor, header, footer, btnAdd, krgWidget, wrapper = null;
 
         ContentTools.DEFAULT_TOOLS = [
             [
@@ -44,9 +44,11 @@
             editor = ContentTools.EditorApp.get();
             header = document.querySelector('header');
             footer = document.querySelector('footer');
-            btnAddBlock = document.getElementById('krg_cms_add_block_button');
+            krgWidget = document.querySelector('.ct-krg-widget');
+            btnAdd = krgWidget.querySelector('.ct-krg-widget button');
+            wrapper = document.querySelector('#krg_cms_wrapper');
 
-            editor.init('[data-editable]', 'data-name');
+            editor.init('[data-editable], [data-fixture]', 'data-name');
 
             var links = document.getElementsByTagName('a');
             for (var i = 0; i < links.length; i++) {
@@ -55,6 +57,16 @@
                 });
             }
         });
+
+        function createElement(content)
+        {
+            return new ContentEdit.Text('div', {}, content);
+        }
+
+        function createRegion(element)
+        {
+            return  new ContentEdit.Region(element);
+        }
     </script>
 {% endblock %}
 
