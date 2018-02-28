@@ -35,17 +35,27 @@ class RouteType extends AbstractType
         $this->regexp = $regexp ?: '`^(_|admin|easyadmin|liip).*`';
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', ChoiceType::class, [
+                'label'       => 'Route',
+                'placeholder' => '',
                 'choices'     => $this->getChoices(),
                 'choice_attr' => function ($key) {
-                    $route = $this->routes->get($key);
-                    $compiledRoute = $route->compile();
-                    $parameters = array_flip($compiledRoute->getPathVariables());
+                    if ($key) {
+                        $route = $this->routes->get($key);
+                        $compiledRoute = $route->compile();
+                        $parameters = array_flip($compiledRoute->getPathVariables());
 
-                    return ['data-params' => json_encode($parameters)];
+                        return ['data-params' => json_encode($parameters)];
+                    }
+
+                    return $key;
                 },
             ])
             ->add('params', CollectionType::class, [
@@ -54,6 +64,11 @@ class RouteType extends AbstractType
             ]);
     }
 
+    /**
+     * @param FormView      $view
+     * @param FormInterface $form
+     * @param array         $options
+     */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         parent::finishView($view, $form, $options);
@@ -69,7 +84,7 @@ class RouteType extends AbstractType
             if (preg_match($this->regexp, $name)) {
                 continue;
             }
-            $choices[sprintf('%s (%s)', $name, $route->getPath())] = $name;
+            $choices[$route->getPath()] = $name;
         }
 
         return $choices;

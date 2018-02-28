@@ -1,31 +1,84 @@
-{% block krg_cms_route_widget %}
-    {{ form_widget(form) }}
+{% block krg_cms_route_row %}
+    <div class="form-group field-text">
+        <div class="col-sm-2 control-label required">
+            <label for="{{ form.vars.id }}_url">Source url</label><br>
+        </div>
+
+        <div class="col-sm-10">
+            <input type="text" id="{{ form.vars.id }}_url" class="form-control" />
+        </div>
+    </div>
+
+    <hr>
+
+    {{ form_row(form.name) }}
+    {{ form_widget(form.params) }}
 
     <script type="text/javascript">
         (function(){
             var select = document.getElementById('{{ form.name.vars.id }}');
             var params = document.getElementById('{{ form.params.vars.id }}');
+            var url = document.getElementById('{{ form.vars.id }}_url');
             var prototype = params.dataset.prototype;
 
-            select.addEventListener('change', onChange);
+            // Load
+            select.addEventListener('change', routeChange);
+            url.addEventListener('paste', getRouteFromUrl);
 
-            function onChange() {
+            bindRouteText();
+
+            function getRouteFromUrl(event) {
+                setTimeout(function () { {# Paste timeout #}
+                    var xmlhttp = new XMLHttpRequest();
+
+                    xmlhttp.onreadystatechange = function () {
+                        if (xmlhttp.readyState === 4) {
+                            if (xmlhttp.status === 200) {
+                                var routeData = JSON.parse(xmlhttp.responseText);
+
+                                for (var i = 0; i < select.options.length; i++) {
+                                    if (select.options[i].value === routeData._route) {
+                                        select.selectedIndex = i;
+                                        routeChange(routeData);
+                                        break;
+                                    }
+                                }
+                            } else if (xmlhttp.status === 500) {
+                                alert('This url doesn\'t have any related route. Please paste another one.');
+                                bindRouteText();
+                            }
+                        }
+                    };
+
+                    xmlhttp.open("GET", "{{ path('krg_cms_route_from_url') }}" + "?url=" + url.value, true);
+                    xmlhttp.send();
+                }, 100);
+            }
+
+            function routeChange(routeData) {
                 var selectedOption = select.options[select.selectedIndex];
                 var _params = JSON.parse(selectedOption.dataset.params);
 
                 params.innerHTML = '';
                 for(var key in _params) {
-                    addParam(key, _params[key]);
+                    addParam(key, routeData[key]);
                 }
 
-                params.parentNode.parentNode.style.display = _params.length === 0 ? 'none' : 'block';
+                params.style.display = _params.length === 0 ? 'none' : 'block';
+
+                bindRouteText();
+            }
+
+            function bindRouteText() {
+                url.value = '';
+                url.setAttribute('placeholder', select.value ? 'Match route: ' + select.value + ' (click here to change)' : 'Paste an url here');
             }
 
             function addParam(name, value) {
                 var param = prototype
-                    .replace(/\>__name__label__\</g, '>' + name + '<')
+                    .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
-                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']');
+                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + '" value="' + value);
 
                 params.innerHTML += param;
             }

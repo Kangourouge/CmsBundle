@@ -24,6 +24,10 @@ class UrlType extends TextType
         $this->router = $router;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new UrlDataTransformer($this->router));

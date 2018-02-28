@@ -8,6 +8,8 @@ easy_admin:
                     - enabled
                     - name
                     - { property: seo.url, label: 'Url' }
+                actions:
+                    - { name: 'krg_page_admin_show', type: 'route', label: '', icon: 'eye' }
             form:
                 fields:
                     - name
