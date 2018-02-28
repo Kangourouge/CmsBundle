@@ -12,7 +12,7 @@
     <hr>
 
     {{ form_row(form.name) }}
-    {{ form_widget(form.params) }}
+    {{ form_widget(form.params, {'attr': {'style': 'border-left: 3px solid #ccc; margin-left: 16.666667%'}}) }}
 
     <script type="text/javascript">
         (function(){
@@ -75,10 +75,11 @@
             }
 
             function addParam(name, value) {
+                var attrValue = typeof value === 'undefined' ? '' : '" value="' + value;
                 var param = prototype
                     .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
-                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + '" value="' + value);
+                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + attrValue);
 
                 params.innerHTML += param;
             }
