@@ -12,5 +12,5 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - { property: 'content', type: 'ckeditor' }
+                    - { property: 'content',type: KRG\CmsBundle\Form\Type\ContentToolsType }
                     - enabled

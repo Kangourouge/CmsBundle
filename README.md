@@ -51,6 +51,7 @@ twig:
     form_themes:
         - 'KRGCmsBundle:Form:route.html.twig'
         - 'KRGCmsBundle:Form:filter.html.twig'
+        - 'KRGCmsBundle:Form:content_tools.html.twig'
         - 'KRGCmsBundle:CKEditor:addblock_widget.html.twig'
 ```
 

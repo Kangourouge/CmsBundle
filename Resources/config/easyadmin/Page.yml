@@ -14,5 +14,13 @@ easy_admin:
                 fields:
                     - name
                     - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
-                    - { property: 'content', type: KRG\CmsBundle\Form\Type\ContentType }
+                    -
+                        property: 'content'
+                        type: KRG\CmsBundle\Form\Type\ContentToolsType
+                        type_options:
+                            responsive:
+                                - { name: 'Destkop', width: '100%' }
+                                - { name: 'Tablet', width: '1024px' }
+                                - { name: 'Mobile', width: '480px' }
+                            toggler_hf: true
                     - enabled

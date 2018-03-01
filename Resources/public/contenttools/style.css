@@ -44,7 +44,7 @@
     display: none;
 }
 
-.ct-krg-widget {
+.krg-widgets {
     display: none;
     width: 100%;
     position: relative;
@@ -52,11 +52,11 @@
     margin-top: 50px;
 }
 
-.ct-krg-widget.open {
+.krg-widgets.open {
     display: block;
 }
 
-.ct-krg-widget button {
+.krg-widgets button {
     padding: 2px 16px 5px;
     background-color: #007AFC;
     color: #fff;
@@ -72,6 +72,6 @@
     transition: all 100ms linear;
 }
 
-.ct-krg-widget button:hover {
+.krg-widgets button:hover {
     background-color: #0b62fc;
 }

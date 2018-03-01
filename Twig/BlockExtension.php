@@ -9,7 +9,6 @@ use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
-use Symfony\Component\Templating\TemplateNameParserInterface;
 
 /**
  * Class BlockExtension
@@ -185,7 +184,7 @@ class BlockExtension extends \Twig_Extension
         /* @var $block BlockInterface */
         foreach ($blocks as $block) {
             if ($this->isValidBlock($block)) {
-                $content[$block->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block\">%s</div>{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
+                $content[$block->getKey()] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
             }
         }
 
@@ -253,6 +252,7 @@ class BlockExtension extends \Twig_Extension
             if (false === strstr($name, 'krg_page_')) {
                 $blocks[] = [
                     'name'      => $name,
+                    'type'      => isset($this->fileBlocks[$name]) ? 'file' : 'db',
                     'render'    => $this->render($environment, $name),
                     'thumbnail' => isset($this->fileBlocks[$name]['thumbnail']) ? $this->fileBlocks[$name]['thumbnail'] : null
                 ];

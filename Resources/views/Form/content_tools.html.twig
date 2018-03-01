@@ -1,0 +1,289 @@
+{% form_theme form with easyadmin_config('design.form_theme') %}
+
+{% block content_tools_widget %}
+    <div style="display: none">
+        {{ form_widget(form) }}
+    </div>
+
+    <div id="{{ form.vars.id }}_source" class="cms-source" style="display: none;" >
+        <textarea id="{{ form.vars.id }}_source_pre"></textarea>
+    </div>
+
+    <div id="{{ form.vars.id }}_content_tools" class="cms-content-tools">
+        <header>
+            <div class="pull-left">
+                <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">Update</button>
+                <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">Cancel</button>
+            </div>
+
+            <div class="pull-right">
+                <div class="pull-left" style="margin-right: 30px;">
+                    {% if form.vars.toggler_hf %}
+                        <div class="checkbox">
+                            <label><input id="{{ form.vars.id }}_toggler_display_hf"  type="checkbox" value="" checked>Header / footer</label>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="pull-right">
+                    {% if form.vars.responsive is not empty %}
+                        <div id="{{ form.vars.id }}_toggler_display" class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% for responsive in form.vars.responsive %}
+                                <label class="btn btn-secondary{% if loop.first	%} active{% endif %}">
+                                    <input type="radio" autocomplete="off" value="{{ responsive.width }}" checked> {{ responsive.name }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        <section id="{{ form.vars.id }}_modal" class="krg-modal">
+            <div class="krg-modal-body">
+                <header class="krg-modal-title">
+                    <h3>Insert a block</h3>
+                </header>
+
+                <section class="krg-modal-main">
+                    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                        <div id="{{ form.vars.id }}_blocks" class="row">
+                            {% for block in krg_block_list() %}
+                                <div class="col-sm-6 col-md-4">
+                                    <a href="#" class="thumbnail" data-render="{% if block.render is defined %}{{ block.render }}{% endif %}">
+                                        <img src="{{ asset(block.thumbnail) }}" alt="">
+                                        <div class="text-center">
+                                            <h3>{{ block.name }}</h3>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+
+                <div style="clear:both"></div>
+            </div>
+        </section>
+
+        <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" srcdoc="{{ form.vars.value }}" frameborder="0"></iframe>
+    </div>
+
+    <script src="{{ asset('bundles/krgcms/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        (function () {
+            var textarea = document.getElementById('{{ form.vars.id }}');
+            var iframe = document.getElementById('{{ form.vars.id }}_iframe');
+            var contentToolsView = document.getElementById('{{ form.vars.id }}_content_tools');
+            var sourceView = document.getElementById('{{ form.vars.id }}_source');
+            var btnEdition = document.getElementById('{{ form.vars.id }}_btn_edition');
+            var btnSource = document.getElementById('{{ form.vars.id }}_btn_source');
+            var btnUpdate = document.getElementById('{{ form.vars.id }}_btn_update');
+            var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
+            var modal = document.getElementById('{{ form.vars.id }}_modal');
+            var editor, aceEditor = null;
+            {% if form.vars.responsive is not empty %}
+            var togglerResponsive = document.getElementById('{{ form.vars.id }}_toggler_display');
+            {% endif %}
+            {% if form.vars.toggler_hf %}
+            var togglerDisplayHf = document.getElementById('{{ form.vars.id }}_toggler_display_hf');
+            {% endif %}
+
+            btnSource.addEventListener('click', toggleRenderSource);
+
+            iframe.addEventListener('load', function () {
+                editor = iframe.contentWindow.editor;
+                btnAddBlock = iframe.contentWindow.btnAddBlock;
+                krgWidget = iframe.contentWindow.krgWidget;
+                krgWrapper = iframe.contentWindow.krgWrapper;
+
+                {# ContentTools iframe #}
+                editor.addEventListener('start', function() {
+                    openEdition();
+                });
+
+                editor.addEventListener('saved', function() {
+                    saveEdition();
+                    closeEdition();
+                });
+
+                editor.addEventListener('stop', function() {
+                    closeEdition();
+                });
+
+                btnAddBlock.addEventListener('click', function(event) {
+                    window.addEventListener('click', watchModal);
+                    openModal();
+                });
+
+                {# Toolbar #}
+                btnEdition.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    editor.start();
+                });
+
+                btnUpdate.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    editor.stop(true);
+                    iframe.contentWindow.createFlashUI('ok');
+                });
+
+                btnCancel.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    editor.stop();
+                    revert();
+                });
+
+                var blocks = document.getElementById('{{ form.vars.id }}_blocks').querySelectorAll('[data-render]');
+                for (var i = 0; i < blocks.length; i++) {
+                    blocks[i].addEventListener('click', insertBlock, false);
+                }
+
+                {% if form.vars.responsive is not empty %}
+                var responsiveInputs = togglerResponsive.querySelectorAll('label');
+                for (var i = 0; i < responsiveInputs.length; i++) {
+                    responsiveInputs[i].addEventListener('click', function(event) {
+                        setIframeWidth(event.target.querySelector('input').value);
+                    });
+                }
+                {% endif %}
+
+                {% if form.vars.toggler_hf %}
+                togglerDisplayHf.addEventListener('change', function(event) {
+                    toggleHeaderFooterDisplay(event.target.checked === true ? '' : 'none');
+                });
+                {% endif %}
+            });
+
+            /**
+             *  Insert HTML block and resync ContentTools
+             */
+            function insertBlock(event) {
+                event.preventDefault();
+                var html = event.currentTarget.getAttribute('data-render');
+                var div = document.createElement('div');
+
+                div.classList.add('cms-block');
+                div.innerHTML = html;
+                krgWrapper.appendChild(div);
+                editor.syncRegions();
+                closeModal();
+            }
+
+            /**
+             * Close modal when a click is detected outside
+             */
+            function watchModal(event) {
+                if (document.body.classList.contains('krg-modal-opened')) {
+                    var body = modal.querySelector('.krg-modal-body');
+
+                    if (body && body.contains(event.target) === false) {
+                        closeModal();
+                        window.removeEventListener('click', watchModal);
+                    }
+                }
+            }
+
+            function toggleHeaderFooterDisplay(display) {
+                if (iframe.contentWindow.header && iframe.contentWindow.footer) {
+                    iframe.contentWindow.header.style.display = display;
+                    iframe.contentWindow.footer.style.display = display;
+                }
+            }
+
+            function revert() {
+                iframe.srcdoc = textarea.value;
+            }
+
+            function openEdition() {
+                contentToolsView.classList.add('fullscreen');
+                krgWidget.classList.add('open');
+            }
+
+            function closeEdition() {
+                contentToolsView.classList.remove('fullscreen');
+                krgWidget.classList.remove('open');
+            }
+
+            /**
+             * Get iframe content and paste it in textarea
+             */
+            function saveEdition() {
+                textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
+            }
+
+            function openModal() {
+                document.body.classList.add('krg-modal-opened');
+            }
+
+            function closeModal() {
+                document.body.classList.remove('krg-modal-opened');
+            }
+
+            function setIframeWidth(width) {
+                iframe.style.width = width;
+            }
+
+            /**
+             *  Manage render view / source view toggle
+             */
+            function toggleRenderSource(event) {
+                event.preventDefault();
+
+                loadAceEditor();
+
+                if (aceEditor) {
+                    if (contentToolsView.style.display !== 'none') { {# Source view #}
+                        aceEditor.getSession().setValue(iframe.contentDocument.querySelector('#krg_cms_wrapper').innerHTML);
+                        aceEditor.resize(true);
+                        contentToolsView.style.display = 'none';
+                        sourceView.style.display = '';
+                        btnSource.innerText = 'Save & back to render';
+                    } else { {# Render view #}
+                        contentToolsView.style.display = '';
+                        sourceView.style.display = 'none';
+                        btnSource.innerText = 'View source';
+                        persistAce(event);
+                    }
+                }
+            }
+
+            function loadAceEditor() {
+                if (null === aceEditor) {
+                    aceEditor = ace.edit('{{ form.vars.id }}_source_pre');
+                    aceEditor.setOptions({
+                        lang: 'html',
+                    });
+                }
+            }
+
+            /**
+             * Get aceEditor value and save it into the source textarea and iframe
+             */
+            function persistAce(event) {
+                event.preventDefault();
+                iframe.contentDocument.querySelector('#krg_cms_wrapper').innerHTML = aceEditor.getSession().getValue();
+                textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
+                iframe.contentWindow.createFlashUI('ok');
+            }
+        })();
+    </script>
+{% endblock %}
+
+{% block content_tools_row %}
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <div class="text-right">
+                <button id="{{ form.vars.id }}_btn_edition" class="btn btn-primary mb-5">Edition mode</button>
+                <button id="{{ form.vars.id }}_btn_source" class="btn btn-primary mb-5">View source</button>
+            </div>
+        </div>
+
+        <div class="{{ block('form_group_class') }}">
+            {{- form_widget(form) -}}
+            {{- form_errors(form) -}}
+        </div>
+    </div>
+{% endblock %}
+
+

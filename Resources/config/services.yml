@@ -17,7 +17,6 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-
     KRG\CmsBundle\Form\DataTransformer\:
         resource: '../../Form/DataTransformer/*'
 

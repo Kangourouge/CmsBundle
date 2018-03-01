@@ -6,9 +6,12 @@ use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Templating\EngineInterface;
 
-class ContentType extends AbstractType
+class ContentToolsType extends AbstractType
 {
     /**
      * @var EngineInterface
@@ -23,6 +26,10 @@ class ContentType extends AbstractType
         $this->templating = $templating;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -33,5 +40,24 @@ class ContentType extends AbstractType
     public function getParent()
     {
         return TextareaType::class;
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars['responsive'] = $options['responsive'];
+        $view->vars['toggler_hf'] = $options['toggler_hf'];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setDefaults([
+                'responsive' => [],
+                'toggler_hf' => false
+            ]);
     }
 }

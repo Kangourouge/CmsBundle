@@ -1,12 +1,18 @@
 {% extends '::base.html.twig' %}
 
+{% block messages %}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block seo_header %}{% endblock %}
+{% block seo_footer %}{% endblock %}
+{% block nav %}{% endblock %}
+
 {% block container %}
     <div id="krg_cms_wrapper">
         {{ page.content|raw }}
     </div>
 
-    <div class="ct-krg-widget">
-        <button>+</button>
+    <div class="krg-widgets">
+        <button class="add">+</button>
     </div>
 {% endblock %}
 
@@ -20,7 +26,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/krgcms/contenttools/content-tools.js') }}"></script>
     <script type="text/javascript">
-        var editor, header, footer, btnAdd, krgWidget, wrapper = null;
+        var editor, header, footer, btnAddBlock, krgWidget, krgWrapper = null;
 
         ContentTools.DEFAULT_TOOLS = [
             [
@@ -40,16 +46,17 @@
             ]
         ];
 
-        window.addEventListener('load', function (event) {
+        window.addEventListener('load', function () {
             editor = ContentTools.EditorApp.get();
             header = document.querySelector('header');
             footer = document.querySelector('footer');
-            krgWidget = document.querySelector('.ct-krg-widget');
-            btnAdd = krgWidget.querySelector('.ct-krg-widget button');
-            wrapper = document.querySelector('#krg_cms_wrapper');
+            krgWidget = document.querySelector('.krg-widgets');
+            btnAddBlock = document.querySelector('.krg-widgets button.add');
+            krgWrapper = document.getElementById('krg_cms_wrapper');
 
-            editor.init('[data-editable], [data-fixture]', 'data-name');
+            editor.init('*[data-editable], *[data-fixture]');
 
+            // Disable all links
             var links = document.getElementsByTagName('a');
             for (var i = 0; i < links.length; i++) {
                 links[i].addEventListener('click', function(event) {
@@ -58,14 +65,18 @@
             }
         });
 
-        function createElement(content)
-        {
+        function createElement(content) {
             return new ContentEdit.Text('div', {}, content);
         }
 
         function createRegion(element)
         {
-            return  new ContentEdit.Region(element);
+            return new ContentEdit.Region(element);
+        }
+
+        function createFlashUI(txt)
+        {
+            new ContentTools.FlashUI(txt);
         }
     </script>
 {% endblock %}
