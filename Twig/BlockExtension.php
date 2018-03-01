@@ -67,7 +67,7 @@ class BlockExtension extends \Twig_Extension
 
         try {
             $this->createFileTemplate();
-            $environment->setCache($this->cacheDir);
+            $environment->setCache($this->cacheDirKrg);
             $environment->setLoader(new \Twig_Loader_Chain([
                 $environment->getLoader(), // Preserve old loader
                 new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
