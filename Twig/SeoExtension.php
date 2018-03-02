@@ -5,9 +5,7 @@ namespace KRG\CmsBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
-use KRG\CmsBundle\Entity\SeoPageInterface;
 use Doctrine\ORM\EntityManager;
-use KRG\CmsBundle\KRGCmsBundle;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +51,14 @@ class SeoExtension extends \Twig_Extension
         $this->request = $requestStack->getMasterRequest();
     }
 
+    /**
+     * @param \Twig_Environment $environment
+     * @return null|string
+     * @throws \Throwable
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function getSeoHead(\Twig_Environment $environment)
     {
         if ($this->request === null) {

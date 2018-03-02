@@ -146,7 +146,7 @@ class Menu implements MenuInterface
     {
         return $this->key;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -237,7 +237,7 @@ class Menu implements MenuInterface
      *
      * @param array $roles
      *
-     * @return User
+     * @return MenuInterface
      */
     public function setRoles(array $roles)
     {

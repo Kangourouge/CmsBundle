@@ -7,12 +7,12 @@
 {% block nav %}{% endblock %}
 
 {% block container %}
-    <div id="krg_cms_wrapper">
+    <div id="krg_cms_page_wrapper">
         {{ page.content|raw }}
     </div>
 
-    <div class="krg-widgets">
-        <button class="add">+</button>
+    <div id="krg_cms_widgets_add_block">
+        <button>+</button>
     </div>
 {% endblock %}
 
@@ -25,8 +25,46 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/krgcms/contenttools/content-tools.js') }}"></script>
+    <script src="{{ asset('bundles/krgcms/sortable/sortable.js') }}"></script>
     <script type="text/javascript">
-        var editor, header, footer, btnAddBlock, krgWidget, krgWrapper = null;
+        var ImageUploader = (function(dialog) {
+            var xhr, xhrComplete, xhrProgress;
+
+            dialog.addEventListener('imageuploader.cancelupload', function () {
+                if (xhr) {
+                    xhr.upload.removeEventListener('progress', xhrProgress);
+                    xhr.removeEventListener('readystatechange', xhrComplete);
+                    xhr.abort();
+                }
+                dialog.state('empty');
+            });
+
+            dialog.addEventListener('imageuploader.fileready', function (event) {
+                var file = event.detail().file;
+                var xhr = new XMLHttpRequest();
+                var formData = new FormData();
+
+                dialog.state('uploading');
+                xhr.addEventListener('readystatechange', function (event) {
+                    var response;
+
+                    if (event.target.readyState !== 4) {
+                        return;
+                    }
+
+                    if (event.target.status === 200) {
+                        response = JSON.parse(event.target.responseText);
+                        dialog.save(response.url, response.size);
+                    }
+                });
+                xhr.open('POST', '{{ path('krg_cms_upload_image') }}', true);
+                formData.append('image', file);
+                xhr.send(formData);
+            });
+        });
+
+        var editor, sortable = null;
+        var elements = [];
 
         ContentTools.DEFAULT_TOOLS = [
             [
@@ -39,45 +77,63 @@
             ], [
                 'unordered-list',
                 'ordered-list',
-                'image',
+                'image'
             ], [
                 'undo',
-                'redo',
+                'redo'
             ]
         ];
+        ContentTools.IMAGE_UPLOADER = ImageUploader;
 
-        window.addEventListener('load', function () {
+        function init() {
             editor = ContentTools.EditorApp.get();
-            header = document.querySelector('header');
-            footer = document.querySelector('footer');
-            krgWidget = document.querySelector('.krg-widgets');
-            btnAddBlock = document.querySelector('.krg-widgets button.add');
-            krgWrapper = document.getElementById('krg_cms_wrapper');
+            elements['header'] = document.querySelector('header');
+            elements['footer'] = document.querySelector('footer');
+            elements['btn_add_block'] = document.querySelector('#krg_cms_widgets_add_block');
+            elements['wrapper'] = document.getElementById('krg_cms_page_wrapper');
 
             editor.init('*[data-editable], *[data-fixture]');
+        }
 
-            // Disable all links
+        function hideBtnAddBlock() {
+            elements['btn_add_block'].style.display = 'none';
+        }
+
+        function showBtnAddBlock() {
+            elements['btn_add_block'].style.display = '';
+        }
+
+        function disableAllLinks() {
             var links = document.getElementsByTagName('a');
+
             for (var i = 0; i < links.length; i++) {
                 links[i].addEventListener('click', function(event) {
                     event.preventDefault();
                 });
             }
-        });
-
-        function createElement(content) {
-            return new ContentEdit.Text('div', {}, content);
         }
 
-        function createRegion(element)
-        {
-            return new ContentEdit.Region(element);
+        function initSortable(reload) {
+            sortable = Sortable.create(elements['wrapper'], {
+                draggable: '.cms-block',
+                ghostClass: 'ghost',
+                animation: 150
+            });
         }
 
-        function createFlashUI(txt)
-        {
-            new ContentTools.FlashUI(txt);
+        function disableSortable() {
+            if (sortable) {
+                sortable.destroy();
+                sortable = null;
+            }
         }
+
+        function createFlashUI(text) {
+            new ContentTools.FlashUI(text);
+        }
+
+        window.addEventListener('load', init());
+        document.addEventListener('load', disableAllLinks());
     </script>
 {% endblock %}
 

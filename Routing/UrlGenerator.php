@@ -6,6 +6,8 @@ use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -28,10 +30,9 @@ class UrlGenerator extends BaseUrlGenerator
 
     /**
      * UrlGenerator constructor.
-     *
-     * @param RouteCollection $routes
-     * @param RequestContext $context
-     * @param string|null $logger
+     * @param RouteCollection     $routes
+     * @param RequestContext      $context
+     * @param null                $logger
      * @param SerializerInterface $serializer
      */
     public function __construct(RouteCollection $routes, RequestContext $context, $logger = null, SerializerInterface $serializer)

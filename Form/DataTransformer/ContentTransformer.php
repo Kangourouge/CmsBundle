@@ -29,7 +29,7 @@ class ContentTransformer implements DataTransformerInterface
     public function reverseTransform($value)
     {
         $crawler = new Crawler($value);
-        $content = $crawler->filter('div#krg_cms_wrapper');
+        $content = $crawler->filter('div#krg_cms_page_wrapper');
 
         if ($content->getNode(0)) {
             return trim($content->html());

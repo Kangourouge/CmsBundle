@@ -8828,7 +8828,6 @@
           delete this._regions[name];
         }
       }
-
       this._domRegions = domRegions;
       if (restoreEditable) {
         if (ContentEdit.Root.get().focused()) {
@@ -8949,8 +8948,10 @@
           return;
         }
       }
-      this.history.stopWatching();
-      this.history = null;
+      if (this.history && this.history !== void 0) {
+        this.history.stopWatching();
+        this.history = null;
+      }
       this._toolbox.hide();
       this._inspector.hide();
       this._regions = {};

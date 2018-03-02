@@ -3,7 +3,6 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KRG\CmsBundle\Validator\Constraint\ValidTwig;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractBlock implements BlockInterface

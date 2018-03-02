@@ -5,11 +5,11 @@
         {{ form_widget(form) }}
     </div>
 
-    <div id="{{ form.vars.id }}_source" class="cms-source" style="display: none;" >
-        <textarea id="{{ form.vars.id }}_source_pre"></textarea>
-    </div>
+    <section id="{{ form.vars.id }}_part_source" class="cms-source" style="display: none;" >
+        <pre></pre>
+    </section>
 
-    <div id="{{ form.vars.id }}_content_tools" class="cms-content-tools">
+    <section id="{{ form.vars.id }}_part_content_tools" class="cms-content-tools">
         <header>
             <div class="pull-left">
                 <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">Update</button>
@@ -18,9 +18,12 @@
 
             <div class="pull-right">
                 <div class="pull-left" style="margin-right: 30px;">
+                    <div class="checkbox">
+                        <label><input id="{{ form.vars.id }}_toggler_draggable" type="checkbox" value="">Draggable</label>
+                    </div>
                     {% if form.vars.toggler_hf %}
                         <div class="checkbox">
-                            <label><input id="{{ form.vars.id }}_toggler_display_hf"  type="checkbox" value="" checked>Header / footer</label>
+                            <label><input id="{{ form.vars.id }}_toggler_header_footer" type="checkbox" value="" checked>Header / footer</label>
                         </div>
                     {% endif %}
                 </div>
@@ -67,142 +70,115 @@
         </section>
 
         <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" srcdoc="{{ form.vars.value }}" frameborder="0"></iframe>
-    </div>
+    </section>
 
     <script src="{{ asset('bundles/krgcms/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
         (function () {
             var textarea = document.getElementById('{{ form.vars.id }}');
             var iframe = document.getElementById('{{ form.vars.id }}_iframe');
-            var contentToolsView = document.getElementById('{{ form.vars.id }}_content_tools');
-            var sourceView = document.getElementById('{{ form.vars.id }}_source');
+            var contentToolsView = document.getElementById('{{ form.vars.id }}_part_content_tools');
+            var sourceView = document.getElementById('{{ form.vars.id }}_part_source');
             var btnEdition = document.getElementById('{{ form.vars.id }}_btn_edition');
             var btnSource = document.getElementById('{{ form.vars.id }}_btn_source');
+            var btnSourceCancel = document.getElementById('{{ form.vars.id }}_btn_source_cancel');
             var btnUpdate = document.getElementById('{{ form.vars.id }}_btn_update');
             var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
             var modal = document.getElementById('{{ form.vars.id }}_modal');
-            var editor, aceEditor = null;
-            {% if form.vars.responsive is not empty %}
-            var togglerResponsive = document.getElementById('{{ form.vars.id }}_toggler_display');
-            {% endif %}
+            var editor, aceEditor, btnAddBlock = null;
+
+            initIframe();
+            initBlock();
+            initAce();
+
             {% if form.vars.toggler_hf %}
-            var togglerDisplayHf = document.getElementById('{{ form.vars.id }}_toggler_display_hf');
+            initToolbarTogglerHeaderFooter();
             {% endif %}
 
-            btnSource.addEventListener('click', toggleRenderSource);
+            {% if form.vars.responsive is not empty %}
+            initToolbarResponsive();
+            {% endif %}
 
-            iframe.addEventListener('load', function () {
-                editor = iframe.contentWindow.editor;
-                btnAddBlock = iframe.contentWindow.btnAddBlock;
-                krgWidget = iframe.contentWindow.krgWidget;
-                krgWrapper = iframe.contentWindow.krgWrapper;
-
-                {# ContentTools iframe #}
-                editor.addEventListener('start', function() {
-                    openEdition();
-                });
-
-                editor.addEventListener('saved', function() {
-                    saveEdition();
-                    closeEdition();
-                });
-
-                editor.addEventListener('stop', function() {
-                    closeEdition();
-                });
-
-                btnAddBlock.addEventListener('click', function(event) {
-                    window.addEventListener('click', watchModal);
-                    openModal();
-                });
-
-                {# Toolbar #}
-                btnEdition.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    editor.start();
-                });
-
-                btnUpdate.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    editor.stop(true);
-                    iframe.contentWindow.createFlashUI('ok');
-                });
-
-                btnCancel.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    editor.stop();
-                    revert();
-                });
-
-                var blocks = document.getElementById('{{ form.vars.id }}_blocks').querySelectorAll('[data-render]');
-                for (var i = 0; i < blocks.length; i++) {
-                    blocks[i].addEventListener('click', insertBlock, false);
+            document.getElementById('{{ form.vars.id }}_toggler_draggable').addEventListener('change', function(event) {
+                if (event.target.checked) {
+                    iframe.contentWindow.initSortable();
+                    iframe.contentWindow.hideBtnAddBlock();
+                } else {
+                    iframe.contentWindow.disableSortable();
+                    iframe.contentWindow.showBtnAddBlock();
                 }
-
-                {% if form.vars.responsive is not empty %}
-                var responsiveInputs = togglerResponsive.querySelectorAll('label');
-                for (var i = 0; i < responsiveInputs.length; i++) {
-                    responsiveInputs[i].addEventListener('click', function(event) {
-                        setIframeWidth(event.target.querySelector('input').value);
-                    });
-                }
-                {% endif %}
-
-                {% if form.vars.toggler_hf %}
-                togglerDisplayHf.addEventListener('change', function(event) {
-                    toggleHeaderFooterDisplay(event.target.checked === true ? '' : 'none');
-                });
-                {% endif %}
             });
 
-            /**
-             *  Insert HTML block and resync ContentTools
-             */
-            function insertBlock(event) {
-                event.preventDefault();
-                var html = event.currentTarget.getAttribute('data-render');
-                var div = document.createElement('div');
+            {#
+             # LIVE VIEW - CONTENTTOOLS
+             #}
 
-                div.classList.add('cms-block');
-                div.innerHTML = html;
-                krgWrapper.appendChild(div);
-                editor.syncRegions();
-                closeModal();
+            function initIframe() {
+                iframe.addEventListener('load', function() {
+                    editor = iframe.contentWindow.editor;
+                    btnAddBlock = iframe.contentWindow.elements['btn_add_block'];
+
+                    editor.addEventListener('start', function() {
+                        openEdition();
+                    });
+
+                    editor.addEventListener('saved', function() {
+                        saveEdition();
+                        closeEdition();
+                    });
+
+                    editor.addEventListener('stop', function() {
+                        closeEdition();
+                        iframe.contentWindow.disableSortable();
+                    });
+
+                    btnAddBlock.addEventListener('click', function(event) {
+                        window.addEventListener('click', watchDismissModal);
+                        openModal();
+                    });
+
+                    btnEdition.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        editor.start();
+                    });
+
+                    btnUpdate.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        editor.stop(true);
+                        iframe.contentWindow.createFlashUI('ok');
+                    });
+
+                    btnCancel.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        editor.stop();
+                        revertEdition();
+                    });
+                });
             }
 
-            /**
-             * Close modal when a click is detected outside
-             */
-            function watchModal(event) {
-                if (document.body.classList.contains('krg-modal-opened')) {
-                    var body = modal.querySelector('.krg-modal-body');
+            function initBlock() {
+                iframe.addEventListener('load', function() {
+                    var blocks = document.getElementById('{{ form.vars.id }}_blocks').querySelectorAll('[data-render]');
 
-                    if (body && body.contains(event.target) === false) {
-                        closeModal();
-                        window.removeEventListener('click', watchModal);
+                    for (var i = 0; i < blocks.length; i++) {
+                        blocks[i].addEventListener('click', insertBlock);
                     }
-                }
+                });
             }
 
-            function toggleHeaderFooterDisplay(display) {
-                if (iframe.contentWindow.header && iframe.contentWindow.footer) {
-                    iframe.contentWindow.header.style.display = display;
-                    iframe.contentWindow.footer.style.display = display;
-                }
-            }
-
-            function revert() {
+            function revertEdition() {
                 iframe.srcdoc = textarea.value;
+                refreshSource();
             }
 
             function openEdition() {
                 contentToolsView.classList.add('fullscreen');
-                krgWidget.classList.add('open');
+                btnAddBlock.classList.add('open');
             }
 
             function closeEdition() {
                 contentToolsView.classList.remove('fullscreen');
-                krgWidget.classList.remove('open');
+                btnAddBlock.classList.remove('open');
             }
 
             /**
@@ -210,6 +186,17 @@
              */
             function saveEdition() {
                 textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
+            }
+
+            function insertBlock(event) {
+                event.preventDefault();
+                var div = document.createElement('div');
+
+                div.classList.add('cms-block');
+                div.innerHTML = event.currentTarget.getAttribute('data-render');
+                iframe.contentWindow.elements['wrapper'].appendChild(div);
+                editor.syncRegions();
+                closeModal();
             }
 
             function openModal() {
@@ -220,51 +207,94 @@
                 document.body.classList.remove('krg-modal-opened');
             }
 
-            function setIframeWidth(width) {
-                iframe.style.width = width;
-            }
-
             /**
-             *  Manage render view / source view toggle
+             * Close modal when a click is detected outside
              */
-            function toggleRenderSource(event) {
-                event.preventDefault();
+            function watchDismissModal(event) {
+                if (document.body.classList.contains('krg-modal-opened')) {
+                    var body = modal.querySelector('.krg-modal-body');
 
-                loadAceEditor();
-
-                if (aceEditor) {
-                    if (contentToolsView.style.display !== 'none') { {# Source view #}
-                        aceEditor.getSession().setValue(iframe.contentDocument.querySelector('#krg_cms_wrapper').innerHTML);
-                        aceEditor.resize(true);
-                        contentToolsView.style.display = 'none';
-                        sourceView.style.display = '';
-                        btnSource.innerText = 'Save & back to render';
-                    } else { {# Render view #}
-                        contentToolsView.style.display = '';
-                        sourceView.style.display = 'none';
-                        btnSource.innerText = 'View source';
-                        persistAce(event);
+                    if (body && body.contains(event.target) === false) {
+                        window.removeEventListener('click', watchDismissModal);
+                        closeModal();
                     }
                 }
             }
 
-            function loadAceEditor() {
-                if (null === aceEditor) {
-                    aceEditor = ace.edit('{{ form.vars.id }}_source_pre');
-                    aceEditor.setOptions({
-                        lang: 'html',
+            function initToolbarTogglerHeaderFooter() {
+                document.getElementById('{{ form.vars.id }}_toggler_header_footer').addEventListener('change', function(event) {
+                    iframe.contentWindow.elements['header'].style.display = display;
+                    iframe.contentWindow.elements['footer'].style.display = display;
+                });
+            }
+
+            function initToolbarResponsive() {
+                var responsiveInputs = document.getElementById('{{ form.vars.id }}_toggler_display').querySelectorAll('label');
+
+                for (var i = 0; i < responsiveInputs.length; i++) {
+                    responsiveInputs[i].addEventListener('click', function(event) {
+                        iframe.style.width = event.target.querySelector('input').value;
                     });
                 }
+            }
+
+            {#
+             # SOURCE VIEW - ACE EDITOR
+             #}
+
+            btnSource.addEventListener('click', function(event) {
+                event.preventDefault();
+                contentToolsView.style.display !== 'none' ? showSource() : hideSource(true);
+            });
+
+            btnSourceCancel.addEventListener('click', function (event) {
+                event.preventDefault();
+                hideSource(false);
+            });
+
+            function hideSource(save) {
+                contentToolsView.style.display = '';
+                sourceView.style.display = 'none';
+                btnSource.innerText = 'View source';
+                btnSourceCancel.style.display = 'none';
+                btnEdition.style.display = '';
+
+                if (true === save) {
+                    persistSourceAce();
+                }
+            }
+
+            function showSource() {
+                refreshSource();
+                contentToolsView.style.display = 'none';
+                sourceView.style.display = '';
+                btnSource.innerText = 'Update';
+                btnSourceCancel.style.display = '';
+                btnEdition.style.display = 'none';
+            }
+
+            function refreshSource() {
+                aceEditor.getSession().setValue(iframe.contentWindow.document.getElementById('krg_cms_page_wrapper').innerHTML);
+                aceEditor.resize(true);
+            }
+
+            function initAce() {
+                var target = document.querySelector('#{{ form.vars.id }}_part_source pre');
+
+                aceEditor = ace.edit(target, {
+                    lang: 'html',
+                });
+                aceEditor.session.setMode('ace/mode/html');
+                aceEditor.session.setUseWorker(false);
             }
 
             /**
              * Get aceEditor value and save it into the source textarea and iframe
              */
-            function persistAce(event) {
-                event.preventDefault();
-                iframe.contentDocument.querySelector('#krg_cms_wrapper').innerHTML = aceEditor.getSession().getValue();
-                textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
+            function persistSourceAce() {
+                iframe.contentWindow.elements['wrapper'].innerHTML = aceEditor.getSession().getValue();
                 iframe.contentWindow.createFlashUI('ok');
+                saveEdition();
             }
         })();
     </script>
@@ -274,8 +304,9 @@
     <div class="form-group row">
         <div class="col-sm-2">
             <div class="text-right">
-                <button id="{{ form.vars.id }}_btn_edition" class="btn btn-primary mb-5">Edition mode</button>
-                <button id="{{ form.vars.id }}_btn_source" class="btn btn-primary mb-5">View source</button>
+                <button id="{{ form.vars.id }}_btn_edition" class="btn btn-primary mb-5" onclick="return false;">Edition mode</button>
+                <button id="{{ form.vars.id }}_btn_source" class="btn btn-primary mb-5" onclick="return false;">View source</button>
+                <button id="{{ form.vars.id }}_btn_source_cancel" class="btn btn-danger mb-5" style="display: none;" onclick="return false;">Cancel</button>
             </div>
         </div>
 

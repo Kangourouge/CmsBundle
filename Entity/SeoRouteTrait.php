@@ -37,21 +37,24 @@ trait SeoRouteTrait
     /**
      * @return string|null
      */
-    public function getRouteName() {
+    public function getRouteName()
+    {
         return $this->route['name'] ?? null;
     }
 
     /**
      * @return string|null
      */
-    public function getRoutePath() {
+    public function getRoutePath()
+    {
         return $this->route['path'] ?? null;
     }
 
     /**
      * @return array
      */
-    public function getRouteParams() {
+    public function getRouteParams()
+    {
         return $this->route['params'] ?? [];
     }
 }

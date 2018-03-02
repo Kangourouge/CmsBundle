@@ -50,7 +50,8 @@ class SeoRepository extends EntityRepository
 
     /**
      * @param $key
-     * @return null|SeoInterface
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBySeoPageKey($key)
     {

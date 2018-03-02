@@ -113,9 +113,9 @@ class BlockExtension extends \Twig_Extension
         }
 
         $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
-//        if (!file_exists($path)) {
+        if (!file_exists($path)) {
             return (bool) file_put_contents($path, implode('', $this->loadBlocks()));
-//        }
+        }
 
         return false;
     }

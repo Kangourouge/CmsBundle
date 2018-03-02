@@ -5,8 +5,8 @@ namespace KRG\CmsBundle\Entity\Validator;
 use KRG\CmsBundle\Entity\BlockContentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Twig\Error\Error;
 use Twig\Environment;
+use Twig\Error\Error;
 
 class ValidContentValidator extends ConstraintValidator
 {
@@ -24,6 +24,11 @@ class ValidContentValidator extends ConstraintValidator
         $this->twig = $twig;
     }
 
+    /**
+     * @param mixed      $entity
+     * @param Constraint $constraint
+     * @throws \Twig_Error_Syntax
+     */
     public function validate($entity, Constraint $constraint)
     {
         if ($entity instanceof BlockContentInterface) {
