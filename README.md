@@ -52,7 +52,6 @@ twig:
         - 'KRGCmsBundle:Form:route.html.twig'
         - 'KRGCmsBundle:Form:filter.html.twig'
         - 'KRGCmsBundle:Form:content_tools.html.twig'
-        - 'KRGCmsBundle:CKEditor:addblock_widget.html.twig'
 ```
 
 Routing
@@ -132,15 +131,10 @@ ivory_ck_editor:
             filebrowserBrowseRoute: elfinder
             filebrowserBrowseRouteParameters: []
             toolbar:         "standard"
-            extraPlugins:    "addblock"
             allowedContent:  true
     toolbars:
         items:
             standard.insert: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'AddBlock']
-    plugins:
-        addblock:
-            path:     "/bundles/krgcms/ckeditor/plugins/addblock/"
-            filename: "plugin.js"
 ```
 
 # Blocks
