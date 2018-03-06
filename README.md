@@ -87,6 +87,12 @@ parameters:
 
 imports:
     - { resource: '@KRGCmsBundle/Resources/config/easyadmin/*.yml' }
+    
+easy_admin:
+    design:
+        css:
+            - '/bundles/krgcms/easyadmin/style.css'
+
 ```
 
 Twig
@@ -169,7 +175,4 @@ krg_cms:
 
 block1:
     template: 'KRGCmsBundle:Sample:block1.html.twig'
-    fields:
-        - { property: 'title', type: 'text' }
-        - { property: 'textarea', type: 'textarea' }
 ```
