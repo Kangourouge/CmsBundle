@@ -113,3 +113,7 @@
     height: auto;
     display: inline;
 }
+
+div[data-editable] {
+    height: 100%;
+}
