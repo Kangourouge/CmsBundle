@@ -13,7 +13,6 @@ easy_admin:
             form:
                 fields:
                     - name
-                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     -
                         property: 'content'
                         type: KRG\CmsBundle\Form\Type\ContentToolsType
@@ -23,4 +22,5 @@ easy_admin:
                                 - { name: 'Tablet', width: '1024px' }
                                 - { name: 'Mobile', width: '480px' }
                             toggler_hf: true
+                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     - enabled

@@ -21,12 +21,14 @@
                     <div class="checkbox">
                         <label><input id="{{ form.vars.id }}_toggler_draggable" type="checkbox" value="">Draggable</label>
                     </div>
-                    {% if form.vars.toggler_hf %}
-                        <div class="checkbox">
-                            <label><input id="{{ form.vars.id }}_toggler_header_footer" type="checkbox" value="" checked>Header / footer</label>
-                        </div>
-                    {% endif %}
                 </div>
+                {% if form.vars.toggler_hf %}
+                <div class="pull-left" style="margin-right: 30px;">
+                    <div class="checkbox">
+                        <label><input id="{{ form.vars.id }}_toggler_header_footer" type="checkbox" value="" checked>Header / footer</label>
+                    </div>
+                </div>
+                {% endif %}
 
                 <div class="pull-right">
                     {% if form.vars.responsive is not empty %}
@@ -196,6 +198,7 @@
                 div.innerHTML = event.currentTarget.getAttribute('data-render');
                 iframe.contentWindow.elements['wrapper'].appendChild(div);
                 editor.syncRegions();
+                iframe.contentWindow.disableAllLinks();
                 closeModal();
             }
 
@@ -223,8 +226,8 @@
 
             function initToolbarTogglerHeaderFooter() {
                 document.getElementById('{{ form.vars.id }}_toggler_header_footer').addEventListener('change', function(event) {
-                    iframe.contentWindow.elements['header'].style.display = display;
-                    iframe.contentWindow.elements['footer'].style.display = display;
+                    iframe.contentWindow.elements['header'].style.display = iframe.contentWindow.elements['header'].style.display === 'none' ? '' : 'none';
+                    iframe.contentWindow.elements['footer'].style.display = iframe.contentWindow.elements['footer'].style.display === 'none' ? '' : 'none';
                 });
             }
 

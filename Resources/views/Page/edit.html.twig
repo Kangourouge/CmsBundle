@@ -6,13 +6,15 @@
 {% block seo_footer %}{% endblock %}
 {% block nav %}{% endblock %}
 
-{% block container %}
+{% block page %}
     <div id="krg_cms_page_wrapper">
         {{ page.content|raw }}
     </div>
 
-    <div id="krg_cms_widgets_add_block">
-        <button>+</button>
+    <div class="container">
+        <div id="krg_cms_widgets_add_block">
+            <button>+</button>
+        </div>
     </div>
 {% endblock %}
 
@@ -77,12 +79,15 @@
             ], [
                 'unordered-list',
                 'ordered-list',
-                'image'
+            ],[
+                'image',
+                'video',
             ], [
                 'undo',
                 'redo'
             ]
         ];
+
         ContentTools.IMAGE_UPLOADER = ImageUploader;
 
         function init() {
@@ -108,7 +113,7 @@
 
             for (var i = 0; i < links.length; i++) {
                 links[i].addEventListener('click', function(event) {
-                    event.preventDefault();
+                    return false;
                 });
             }
         }
