@@ -55,11 +55,11 @@
                         <div id="{{ form.vars.id }}_blocks" class="row">
                             {% for block in krg_block_list() %}
                                 <div class="col-sm-6 col-md-4">
-                                    <a href="#" class="thumbnail" data-render="{% if block.render is defined %}{{ block.render }}{% endif %}">
-                                        <img src="{{ asset(block.thumbnail) }}" alt="">
-                                        <div class="text-center">
-                                            <h3>{{ block.name }}</h3>
-                                        </div>
+                                    <a href="#" class="thumbnail text-center" data-render="{{ block.render }}">
+                                        {% if block.thumbnail is not null %}
+                                            <img src="{{ asset(block.thumbnail) }}" alt="">
+                                        {% endif %}
+                                        <h3>{{ block.name }}</h3>
                                     </a>
                                 </div>
                             {% endfor %}

@@ -251,10 +251,10 @@ class BlockExtension extends \Twig_Extension
         foreach ($template->getBlockNames() as $name) {
             if (false === strstr($name, 'krg_page_')) {
                 $blocks[] = [
-                    'name'      => $name,
+                    'name'      => $this->fileBlocks[$name]['label'] ?? $name,
                     'type'      => isset($this->fileBlocks[$name]) ? 'file' : 'db',
                     'render'    => $this->render($environment, $name),
-                    'thumbnail' => isset($this->fileBlocks[$name]['thumbnail']) ? $this->fileBlocks[$name]['thumbnail'] : null
+                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? null
                 ];
             }
         }
