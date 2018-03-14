@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Form\Type;
 
 use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
+use KRG\CmsBundle\Service\FileBase64Uploader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Templating\EngineInterface;
 
-class ContentToolsType extends AbstractType
+class ContentType extends AbstractType
 {
     /**
      * @var EngineInterface
@@ -19,11 +20,19 @@ class ContentToolsType extends AbstractType
     protected $templating;
 
     /**
-     * @param EngineInterface $templating
+     * @var FileBase64Uploader
      */
-    public function __construct(EngineInterface $templating)
+    protected $fileUploader;
+
+    /**
+     * ContentType constructor.
+     * @param EngineInterface    $templating
+     * @param FileBase64Uploader $fileUploader
+     */
+    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader)
     {
         $this->templating = $templating;
+        $this->fileUploader = $fileUploader;
     }
 
     /**
@@ -34,7 +43,7 @@ class ContentToolsType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        $builder->addModelTransformer(new ContentTransformer($this->templating));
+        $builder->addModelTransformer(new ContentTransformer($this->templating, $this->fileUploader));
     }
 
     public function getParent()
@@ -56,7 +65,11 @@ class ContentToolsType extends AbstractType
 
         $resolver
             ->setDefaults([
-                'responsive' => [],
+                'responsive' => [
+                    ['label' => 'Destkop', 'width' => '100%'],
+                    ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
+                    ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
+                ],
                 'toggler_hf' => false
             ]);
     }

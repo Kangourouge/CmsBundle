@@ -1,0 +1,8 @@
+{% spaceless %}
+    {% for snippet in krg_snippet_list() %}
+        <div data-num="{{ loop.index }}"
+             data-thumb="{% if snippet.thumbnail is not null %}{{ snippet.thumbnail }}{% else %}http://fakeimg.pl/250x90/344050/fff/?text={{ snippet.label }}{% endif %}">
+            {{ snippet.html|raw }}
+        </div>
+    {% endfor %}
+{% endspaceless %}

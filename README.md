@@ -123,25 +123,11 @@ services:
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
 ```
 
-CKEditor Plugin
----------------
+Assets
+------
 
 bin/console assets:install
-bin/console ckeditor:install  
 
-```yaml
-ivory_ck_editor:
-    default_config: "default"
-    configs:
-        default:
-            filebrowserBrowseRoute: elfinder
-            filebrowserBrowseRouteParameters: []
-            toolbar:         "standard"
-            allowedContent:  true
-    toolbars:
-        items:
-            standard.insert: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'AddBlock']
-```
 
 # Blocks
 ## Filters

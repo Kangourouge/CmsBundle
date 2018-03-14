@@ -33,4 +33,13 @@ class PageController extends AbstractController
             'page' => $page
         ]);
     }
+
+    /**
+     * @Route("/snippets.html", name="krg_page_snippets")
+     * @Security("has_role('ROLE_ADMIN')"))
+     */
+    public function snippetsAction(Request $request)
+    {
+        return $this->render('@KRGCms/Page/snippets.html.twig');
+    }
 }

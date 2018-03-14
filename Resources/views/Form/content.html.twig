@@ -1,0 +1,210 @@
+{% form_theme form with easyadmin_config('design.form_theme') %}
+
+
+{% block content_widget %}
+    <div class="row">
+        <div class="col-xs-12">
+            <section id="{{ form.vars.id }}_content" class="cms-content-tools">
+                <header>
+                    <div class="pull-left">
+                        <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">Update</button>
+                        <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">Cancel</button>
+                        <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="Render">Source</button>
+                    </div>
+
+                    <div id="{{ form.vars.id }}_iframe_toolbar" class="pull-right">
+                        {% if form.vars.toggler_hf %}
+                            <div class="pull-left" style="margin-right: 30px;">
+                                <div class="checkbox">
+                                    <label><input id="{{ form.vars.id }}_toggler_header_footer" type="checkbox" value="" checked>Header / footer</label>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="pull-right">
+                            {% if form.vars.responsive is not empty %}
+                                <div id="{{ form.vars.id }}_toggler_display" class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    {% for responsive in form.vars.responsive %}
+                                        <label class="btn btn-secondary{% if loop.first	%} active{% endif %}">
+                                            <input type="radio" autocomplete="off" value="{{ responsive.width }}*{{ responsive.height is defined ? responsive.height : '100%' }}" checked> {{ responsive.label }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </header>
+
+                <div style="height: 100%;">
+                    <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" srcdoc="{{ form.vars.value }}" frameborder="0"></iframe>
+                    <div id="{{ form.vars.id }}_source" class="cms-content-source" style="display: none;"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div style="display: none">
+        {{ form_widget(form) }}
+    </div>
+
+    {{- form_errors(form) -}}
+
+    <script src="{{ asset('bundles/krgcms/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        (function () {
+            var textarea = document.getElementById('{{ form.vars.id }}');
+            var iframe = document.getElementById('{{ form.vars.id }}_iframe');
+            var source = document.getElementById('{{ form.vars.id }}_source');
+            var contentView = document.getElementById('{{ form.vars.id }}_content');
+            var iframeToolbar = document.getElementById('{{ form.vars.id }}_iframe_toolbar');
+            var btnEdit = document.getElementById('{{ form.vars.id }}_btn_edit');
+            var btnSave = document.getElementById('{{ form.vars.id }}_btn_update');
+            var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
+            var btnSource = document.getElementById('{{ form.vars.id }}_btn_source');
+
+            {% if form.vars.toggler_hf %}
+            toolbarTogglerHeaderFooter();
+            {% endif %}
+
+            {% if form.vars.responsive is not empty %}
+            toolbarResponsive();
+            {% endif %}
+
+            iframe.addEventListener('load', function() {
+                btnEdit.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    openEdition();
+                });
+
+                btnSave.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    closeEdition();
+                    saveEdition();
+                });
+
+                btnCancel.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    closeEdition();
+                    revertEdition();
+                });
+            });
+
+            function revertEdition() {
+                iframe.srcdoc = textarea.value;
+            }
+
+            function openEdition() {
+                iframe.contentWindow.start();
+                contentView.classList.add('fullscreen');
+            }
+
+            function closeEdition() {
+                if (iframe.style.display === 'none' && source.style.display !== 'none') {
+                    toggleSource();
+                }
+
+                iframe.contentWindow.stop();
+                contentView.classList.remove('fullscreen');
+            }
+
+            function saveEdition() {
+                if (iframe.style.display === 'none' && source.style.display !== 'none') {
+                    persistSource();
+                }
+
+                textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
+            }
+
+            function toolbarTogglerHeaderFooter() {
+                document.getElementById('{{ form.vars.id }}_toggler_header_footer').addEventListener('change', function(event) {
+                    iframe.contentWindow.toggleHeaderFooter();
+                });
+            }
+
+            function toolbarResponsive() {
+                var responsiveInputs = document.getElementById('{{ form.vars.id }}_toggler_display').querySelectorAll('label');
+
+                for (var i = 0; i < responsiveInputs.length; i++) {
+                    responsiveInputs[i].addEventListener('click', function(event) {
+                        var dimensions = event.target.querySelector('input').value.split("*");
+
+                        iframe.style.width = dimensions[0];
+                        iframe.style.height = dimensions[1];
+                        if (dimensions[1] !== '100%' && parseInt(dimensions[1]) < screen.height - contentView.getElementsByTagName('header')[0].clientHeight) {
+                            iframe.style.top = '50%';
+                            iframe.style.marginTop = '-' + (parseInt(dimensions[1]) / 2) + 'px';
+                        } else {
+                            iframe.style.top = '';
+                            iframe.style.marginTop = '';
+                        }
+                    });
+                }
+            }
+
+            var aceEditor = null;
+
+            btnSource.addEventListener('click', function(event) {
+                event.preventDefault();
+                var display = source.style.display;
+
+                if (display === 'none') {
+                    iframe.contentWindow.stop();
+                    initAce();
+                    toggleSource();
+                    refreshSource();
+                } else {
+                    iframe.contentWindow.start();
+                    toggleSource();
+                    persistSource();
+                }
+            });
+
+            function toggleSource() {
+                var altText = btnSource.dataset.alttext;
+
+                source.style.display = source.style.display === 'none' ? '' : 'none';
+                iframe.style.display = iframe.style.display === 'none' ? '' : 'none';
+                iframeToolbar.style.display = iframeToolbar.style.display === 'none' ? '' : 'none';
+                btnSource.dataset.alttext = btnSource.innerText;
+                btnSource.innerText = altText;
+            }
+
+            function initAce() {
+                if (aceEditor === null) {
+                    aceEditor = ace.edit(source, {
+                        autoScrollEditorIntoView: true,
+                    });
+                    aceEditor.session.setMode('ace/mode/html');
+                    aceEditor.session.setUseWorker(false);
+                }
+
+                refreshSource();
+            }
+
+            function refreshSource() {
+                aceEditor.getSession().setValue(iframe.contentWindow.document.getElementById('krg_cms_page_wrapper').innerHTML);
+                aceEditor.resize(true);
+            }
+
+            function persistSource() {
+                iframe.contentWindow.document.getElementById('krg_cms_page_wrapper').innerHTML = aceEditor.getSession().getValue();
+            }
+        })();
+    </script>
+{% endblock %}
+
+{% block content_row %}
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <div class="text-right">
+                <label class="control-label" for="{{ form.vars.id }}">{{ form.vars.name|capitalize }}</label><br>
+                <button id="{{ form.vars.id }}_btn_edit" class="btn btn-primary">Edit</button>
+            </div>
+        </div>
+
+        <div class="{{ block('form_group_class') }}">
+            {{- form_widget(form) -}}
+            {{- form_errors(form) -}}
+        </div>
+    </div>
+{% endblock %}

@@ -241,7 +241,7 @@ class BlockExtension extends \Twig_Extension
      * @return array
      * @throws \Throwable
      */
-    public function getBlocks(\Twig_Environment $environment)
+    public function getSnippets(\Twig_Environment $environment)
     {
         if (null === ($template = $this->getTemplate($environment))) {
             return [];
@@ -251,10 +251,9 @@ class BlockExtension extends \Twig_Extension
         foreach ($template->getBlockNames() as $name) {
             if (false === strstr($name, 'krg_page_')) {
                 $blocks[] = [
-                    'name'      => $this->fileBlocks[$name]['label'] ?? $name,
-                    'type'      => isset($this->fileBlocks[$name]) ? 'file' : 'db',
-                    'render'    => $this->render($environment, $name),
-                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? null
+                    'html'      => $this->render($environment, $name),
+                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? null,
+                    'label'     => $this->fileBlocks[$name]['label'] ?? $name
                 ];
             }
         }
@@ -272,7 +271,7 @@ class BlockExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            'krg_block_list' => new \Twig_SimpleFunction('krg_block_list', array($this, 'getBlocks'), [
+            'krg_snippet_list' => new \Twig_SimpleFunction('krg_snippet_list', array($this, 'getSnippets'), [
                 'needs_environment' => true
             ]),
         ];

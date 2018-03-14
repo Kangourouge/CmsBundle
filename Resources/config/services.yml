@@ -5,10 +5,8 @@ services:
         public: false
         bind:
             $cacheDir: '%kernel.cache_dir%'
-            $webDir: '%kernel.root_dir%/../web'
-            $ckUploadDir: 'ckeditor/uploads'
             $fileBlocks: '%krg_cms.blocks%'
-            $targetDirectory: '%kernel.root_dir%/../web/uploads'
+            $rootDir: '%kernel.root_dir%'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
@@ -18,20 +16,12 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-    KRG\CmsBundle\Form\DataTransformer\:
-        resource: '../../Form/DataTransformer/*'
-
-    KRG\CmsBundle\Form\Extension\CKEditorTypeExtension:
-        class: KRG\CmsBundle\Form\Extension\CKEditorTypeExtension
-        tags:
-            - {name: form.type_extension, extended_type: Ivory\CKEditorBundle\Form\Type\CKEditorType}
+    KRG\CmsBundle\Service\:
+        resource: '../../Service/*'
+        public: true
 
     KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'
-        public: true
-
-    KRG\CmsBundle\Service\:
-        resource: '../../Service/*'
         public: true
 
     KRG\CmsBundle\Routing\SeoListener:
