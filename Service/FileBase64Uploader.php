@@ -26,7 +26,7 @@ class FileBase64Uploader
         $filename = sprintf('%s.%s', md5(uniqid()), $extension);
         $path = sprintf('%s/%s', $this->getUploadDirectory(), $filename);
 
-        if (!file_exists($this->getUploadDirectory())) {
+        if (!is_dir($this->getUploadDirectory())) {
             mkdir($this->getUploadDirectory(), 0755, true);
         }
 

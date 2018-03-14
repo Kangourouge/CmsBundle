@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Seo
@@ -32,6 +33,7 @@ class Seo implements SeoInterface
     protected $uid;
 
     /**
+     * @Assert\NotNull()
      * @ORM\Column(type="string", nullable=false)
      */
     protected $url;

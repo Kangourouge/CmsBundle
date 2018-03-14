@@ -78,13 +78,12 @@
 
                 btnSave.addEventListener('click', function(event) {
                     event.preventDefault();
-                    closeEdition();
-                    saveEdition();
+                    closeEdition(true);
                 });
 
                 btnCancel.addEventListener('click', function(event) {
                     event.preventDefault();
-                    closeEdition();
+                    closeEdition(false);
                     revertEdition();
                 });
             });
@@ -98,20 +97,22 @@
                 contentView.classList.add('fullscreen');
             }
 
-            function closeEdition() {
+            function closeEdition(save) {
                 if (iframe.style.display === 'none' && source.style.display !== 'none') {
                     toggleSource();
+                    persistSource();
                 }
 
                 iframe.contentWindow.stop();
+
+                if (save) {
+                    saveEdition();
+                }
+
                 contentView.classList.remove('fullscreen');
             }
 
             function saveEdition() {
-                if (iframe.style.display === 'none' && source.style.display !== 'none') {
-                    persistSource();
-                }
-
                 textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
             }
 

@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class SeoType extends AbstractType
 {
@@ -30,7 +31,9 @@ class SeoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('url')
+            ->add('url', null, [
+                'constraints' => new NotNull()
+            ])
             ->add('metaTitle')
             ->add('metaDescription')
             ->add('metaRobots')
