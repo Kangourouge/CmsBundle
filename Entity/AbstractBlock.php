@@ -22,7 +22,7 @@ abstract class AbstractBlock implements BlockInterface
 
     /**
      * @Assert\Regex("/^\w+$/", message="krg_cms.block.key.error")
-     * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
+     * @ORM\Column(name="`key`", type="string", unique=true, nullable=false)
      * @var string
      */
     protected $key;

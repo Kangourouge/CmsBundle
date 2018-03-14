@@ -56,7 +56,8 @@ class ContentType extends AbstractType
         parent::buildView($view, $form, $options);
 
         $view->vars['responsive'] = $options['responsive'];
-        $view->vars['toggler_hf'] = $options['toggler_hf'];
+        $view->vars['switch_header_footer'] = $options['switch_header_footer'];
+        $view->vars['hide_header_footer'] = $options['hide_header_footer'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -70,7 +71,8 @@ class ContentType extends AbstractType
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],
-                'toggler_hf' => false
+                'switch_header_footer' => false,
+                'hide_header_footer'   => false,
             ]);
     }
 }

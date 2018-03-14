@@ -1,6 +1,5 @@
 {% form_theme form with easyadmin_config('design.form_theme') %}
 
-
 {% block content_widget %}
     <div class="row">
         <div class="col-xs-12">
@@ -13,7 +12,7 @@
                     </div>
 
                     <div id="{{ form.vars.id }}_iframe_toolbar" class="pull-right">
-                        {% if form.vars.toggler_hf %}
+                        {% if form.vars.switch_header_footer %}
                             <div class="pull-left" style="margin-right: 30px;">
                                 <div class="checkbox">
                                     <label><input id="{{ form.vars.id }}_toggler_header_footer" type="checkbox" value="" checked>Header / footer</label>
@@ -62,7 +61,7 @@
             var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
             var btnSource = document.getElementById('{{ form.vars.id }}_btn_source');
 
-            {% if form.vars.toggler_hf %}
+            {% if form.vars.switch_header_footer %}
             toolbarTogglerHeaderFooter();
             {% endif %}
 
@@ -71,6 +70,10 @@
             {% endif %}
 
             iframe.addEventListener('load', function() {
+                {% if form.vars.hide_header_footer %}
+                    iframe.contentWindow.toggleHeaderFooter();
+                {% endif %}
+
                 btnEdit.addEventListener('click', function(event) {
                     event.preventDefault();
                     openEdition();
@@ -104,6 +107,7 @@
                 }
 
                 iframe.contentWindow.stop();
+
 
                 if (save) {
                     saveEdition();

@@ -12,5 +12,10 @@ easy_admin:
                 fields:
                     - key
                     - name
-                    - { property: 'content',type: KRG\CmsBundle\Form\Type\ContentType }
+                    -
+                        property: 'content'
+                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type_options:
+                            switch_header_footer: false
+                            hide_header_footer: true
                     - enabled

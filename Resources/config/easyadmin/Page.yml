@@ -17,6 +17,6 @@ easy_admin:
                         property: 'content'
                         type: KRG\CmsBundle\Form\Type\ContentType
                         type_options:
-                            toggler_hf: true
+                            switch_header_footer: true
                     - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     - enabled
