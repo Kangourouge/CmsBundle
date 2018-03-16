@@ -148,17 +148,19 @@ services:
             - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
 ```
 
+## Files
 ```yaml
 # config.yml
 
 krg_cms:
-    blocks:
-        - '%kernel.project_dir%/app/config/cms/blocks/block1.yml'
+    blocks_path:
+        - '%kernel.project_dir%/app/config/cms/blocks/'
+        - '%kernel.project_dir%/app/config/cms/h2.yml'
 ```
 
 ```yaml
-# block1.yml
-
-block1:
-    template: 'KRGCmsBundle:Sample:block1.html.twig'
+h2:
+    label: Title H2
+    template: 'blocks/h2.html.twig'
+    thumbnail: '/blocks/thumb_h2.png'
 ```

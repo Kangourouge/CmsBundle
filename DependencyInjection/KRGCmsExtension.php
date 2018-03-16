@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
@@ -21,33 +22,42 @@ class KRGCmsExtension extends Extension
 
         $this->injectParameter('title', $container, $config);
         $this->injectParameter('default_title', $container, $config);
-
-        if (isset($config['blocks'])) {
-            $this->loadBlocks($config['blocks'], $container);
-        }
+        $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
 
-    /**
-     * Load Block File configuration as parameter
-     *
-     * @param $config
-     * @param $container
-     */
-    private function loadBlocks($config, $container)
+    private function loadBlocks($config)
     {
         $blocks = [];
-        foreach ($config as $file) {
-            foreach (Yaml::parseFile($file) as $key => $blockYml) {
-                if (isset($blockYml['template'])) {
-                    $blocks[$key] = $blockYml;
+
+        if (isset($config['blocks_path'])) {
+            $finder = new Finder();
+            foreach ($config['blocks_path'] as $path) {
+                if (is_dir($path)) {
+                    $finder->files()->in($path)->name('*.yml');
+                    foreach ($finder as $file) {
+                        $this->loadBlockConfig($file, $blocks);
+                    }
+                } else {
+                    $this->loadBlockConfig($path, $blocks);
                 }
             }
         }
 
-        $container->setParameter('krg_cms.blocks', $blocks);
+        return $blocks;
+    }
+
+    private function loadBlockConfig($file, &$blocks = [])
+    {
+        foreach (Yaml::parseFile($file) as $key => $yml) {
+            if (isset($yml['template'])) {
+                $blocks[$key] = $yml;
+            }
+        }
+
+        return $blocks;
     }
 
     /**

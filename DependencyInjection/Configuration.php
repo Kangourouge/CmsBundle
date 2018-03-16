@@ -16,7 +16,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('title')->end()
                 ->scalarNode('default_title')->end()
-                ->arrayNode('blocks')
+                ->arrayNode('blocks_path')
                     ->prototype('scalar')->end()
                 ->end()
             ->end();
