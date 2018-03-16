@@ -5,24 +5,16 @@ easy_admin:
             list:
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - name
-                    - parent
-                    - title
-                    - url
-                    - roles
-                    - compound
                     - enabled
+                    - name
+                    - url
                 sort: ['position', 'ASC']
                 actions:
                     - { name: 'sortable', field: 'position', label: '' }
             form:
                 fields:
                     - enabled
-                    - compound
-                    - name
                     - { property: key, help: 'Unique identifier' }
+                    - name
+                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'Url' }
                     - parent
-                    - title
-                    - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - route
-                    - { property: 'roles', type: 'choice', type_options: { multiple: true, required: false, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN': 'ROLE_SUPER_ADMIN' } } }
