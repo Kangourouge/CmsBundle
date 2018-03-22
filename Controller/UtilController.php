@@ -55,7 +55,8 @@ class UtilController extends AbstractController
     public function pageRedirectorAction(Request $request)
     {
         $page = $this->getDoctrine()->getRepository(PageInterface::class)->find($request->get('id'));
+        $url = $page->getSeo()->getUrl();
 
-        return $this->redirect('/'.$page->getSeo()->getUrl());
+        return $this->redirect(sprintf('%s%s', $url[0] === '/' ? '' : '/', $url));
     }
 }
