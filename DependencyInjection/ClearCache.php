@@ -26,15 +26,22 @@ class ClearCache
      */
     private $cacheDir;
 
-    public function __construct(RouterInterface $router, Filesystem $filesystem, $cacheDir)
+    /**
+     * @var string
+     */
+    private $cacheDirKrg;
+
+    public function __construct(RouterInterface $router, Filesystem $filesystem, $cacheDir, $cacheDirKrg)
     {
         $this->router = $router;
         $this->filesystem = $filesystem;
         $this->cacheDir = $cacheDir;
+        $this->cacheDirKrg = $cacheDirKrg;
     }
 
     public function warmupRouting()
     {
+
         foreach (array('matcher_cache_class', 'generator_cache_class') as $option) {
             $className = $this->router->getOption($option);
             $cacheFile = $this->cacheDir . DIRECTORY_SEPARATOR . $className . '.php';
@@ -44,11 +51,11 @@ class ClearCache
         $cache = new FilesystemAdapter('seo');
         $cache->clear();
 
-        $this->router->warmUp($this->cacheDir);
+        $this->router->warmUp($this->cacheDirKrg);
     }
 
     public function warmupTwig()
     {
-        $this->filesystem->remove($this->cacheDir);
+        $this->filesystem->remove($this->cacheDirKrg);
     }
 }
