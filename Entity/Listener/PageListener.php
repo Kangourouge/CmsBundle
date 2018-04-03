@@ -42,7 +42,7 @@ class PageListener implements EventSubscriber
     public function prePersistOrUpdate(LifecycleEventArgs $event, PageInterface $page)
     {
         $seo = $page->getSeo();
-        $page->setKey($seo->getUid());
+        $page->setKey($seo->getUid() ?? 'krg_seo_'.uniqid());
         $seo->setRoute([
             'name'   => 'krg_page_show',
             'params' => ['key' => $page->getKey()],
