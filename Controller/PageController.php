@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/cms/page")
+ * @Route(name="krg_page_")
  */
 class PageController extends AbstractController
 {
     /**
-     * @Route("/show/{key}", name="krg_page_show")
+     * @Route("/cms/page/show/{key}", name="show")
      */
     public function showAction(Request $request, PageInterface $page)
     {
@@ -24,8 +24,8 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{key}", name="krg_page_edit")
-     * @Security("has_role('ROLE_SUPER_ADMIN')"))
+     * @Route("/admin/cms/page/edit/{key}", name="edit")
+     * @Security("has_role('ROLE_ADMIN')"))
      */
     public function editAction(Request $request, PageInterface $page)
     {
@@ -35,7 +35,7 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/snippets.html", name="krg_page_snippets")
+     * @Route("/admin/cms/page/snippets.html", name="snippets")
      * @Security("has_role('ROLE_ADMIN')"))
      */
     public function snippetsAction(Request $request)

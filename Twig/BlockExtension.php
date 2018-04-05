@@ -139,7 +139,12 @@ class BlockExtension extends \Twig_Extension
     {
         $content = [];
         foreach ($this->fileBlocks as $key => $block) {
-            $path = $this->locator->locate($this->nameParser->parse($block['template']));
+            try {
+                $path = $this->locator->locate($this->nameParser->parse($block['template']));
+            } catch (\InvalidArgumentException $exception) {
+                continue;
+            }
+
             if ($fileContent = @file_get_contents($path)) {
                 $content[$key] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $key, $fileContent, $key);
             }
@@ -263,6 +268,7 @@ class BlockExtension extends \Twig_Extension
 
         return $blocks;
     }
+
 
     /**
      * @return array|\Twig_Function[]

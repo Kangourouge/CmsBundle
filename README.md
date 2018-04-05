@@ -51,7 +51,7 @@ twig:
     form_themes:
         - 'KRGCmsBundle:Form:route.html.twig'
         - 'KRGCmsBundle:Form:filter.html.twig'
-        - 'KRGCmsBundle:Form:content_tools.html.twig'
+        - 'KRGCmsBundle:Form:content.html.twig'
 ```
 
 Routing
@@ -149,6 +149,7 @@ services:
 ```
 
 ## Files
+
 ```yaml
 # config.yml
 
@@ -163,4 +164,9 @@ h2:
     label: Title H2
     template: 'blocks/h2.html.twig'
     thumbnail: '/blocks/thumb_h2.png'
+```
+
+h2.html.twig
+```twig 
+    <h2>Title</h2>
 ```
