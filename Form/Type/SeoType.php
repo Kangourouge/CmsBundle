@@ -13,16 +13,9 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class SeoType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * SeoPageSeoType constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -32,14 +25,11 @@ class SeoType extends AbstractType
     {
         $builder
             ->add('url', null, [
-                'constraints' => new NotNull()
+                'constraints' => new NotNull(),
+                'required'    => true
             ])
             ->add('metaTitle')
             ->add('metaDescription')
-            ->add('metaRobots')
-            ->add('ogTitle')
-            ->add('ogDescription')
-            ->add('ogImage')
             ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
     }
 

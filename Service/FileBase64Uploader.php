@@ -5,6 +5,7 @@ namespace KRG\CmsBundle\Service;
 class FileBase64Uploader
 {
     private $rootDir;
+
     private $uploadDir;
 
     public function __construct($rootDir)

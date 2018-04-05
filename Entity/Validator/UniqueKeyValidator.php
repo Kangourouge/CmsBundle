@@ -11,15 +11,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueKeyValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * UniqueKey constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -27,8 +21,6 @@ class UniqueKeyValidator extends ConstraintValidator
 
     /**
      * Check all blocks if some has the same key
-     * @param mixed $entity
-     * @param Constraint $constraint
      */
     public function validate($entity, Constraint $constraint)
     {
@@ -54,10 +46,6 @@ class UniqueKeyValidator extends ConstraintValidator
 
     /**
      * Remove current block
-     *
-     * @param $blocks
-     * @param $currentBlock
-     * @return array
      */
     private function filterBlocks($blocks, $currentBlock)
     {

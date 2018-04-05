@@ -34,8 +34,6 @@ class FilterListener implements EventSubscriber
 
     /**
      * Can't be there if it is not working
-     *
-     * @param FilterInterface $filter
      */
     public function prePersistOrUpdate(FilterInterface $filter)
     {

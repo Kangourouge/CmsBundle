@@ -60,11 +60,6 @@ class KRGCmsExtension extends Extension
         return $blocks;
     }
 
-    /**
-     * @param $name
-     * @param ContainerBuilder $container
-     * @param $config
-     */
     private function injectParameter($name, ContainerBuilder $container, $config)
     {
         $container->setParameter(sprintf('krg_cms.%s', $name), isset($config[$name]) ? $config[$name] : null);

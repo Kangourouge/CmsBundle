@@ -17,29 +17,19 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class SeoExtension extends \Twig_Extension
 {
-    /**
-     * @var $entityManager EntityManager
-     */
+    /** @var $entityManager EntityManager */
     private $entityManager;
 
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
-    /**
-     * @var TokenStorage
-     */
+    /** @var TokenStorage */
     private $tokenStorage;
 
-    /**
-     * @var AuthorizationChecker
-     */
+    /** @var AuthorizationChecker */
     private $authorizationChecker;
 
-    /**
-     * @var FormFactory
-     */
+    /** @var FormFactory */
     private $formFactory;
 
     public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, RequestStack $requestStack)
@@ -51,14 +41,6 @@ class SeoExtension extends \Twig_Extension
         $this->request = $requestStack->getMasterRequest();
     }
 
-    /**
-     * @param \Twig_Environment $environment
-     * @return null|string
-     * @throws \Throwable
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
     public function getSeoHead(\Twig_Environment $environment)
     {
         if ($this->request === null) {
@@ -75,9 +57,7 @@ class SeoExtension extends \Twig_Extension
         $params = array_filter($this->request->attributes->all(), function ($key) {
             return substr($key, 0, 1) !== '_';
         }, ARRAY_FILTER_USE_KEY);
-
         $twig = new \Twig_Environment(new \Twig_Loader_Array([]));
-
         $data = [
             'metaTitle'       => null,
             'metaDescription' => null,

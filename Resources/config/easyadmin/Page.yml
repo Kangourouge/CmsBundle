@@ -7,16 +7,17 @@ easy_admin:
                 fields:
                     - enabled
                     - name
+                    - { property: seo.metaTitle, label: 'Title' }
                     - { property: seo.url, label: 'Url' }
                 actions:
                     - { name: 'krg_page_admin_show', type: 'route', label: '', icon: 'eye' }
             form:
                 fields:
                     - name
+                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType, label: null }
                     -
                         property: 'content'
                         type: KRG\CmsBundle\Form\Type\ContentType
                         type_options:
                             switch_header_footer: true
-                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType }
                     - enabled

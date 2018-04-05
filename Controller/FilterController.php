@@ -18,11 +18,6 @@ class FilterController extends AbstractController
 {
     /**
      * @Route("/admin", name="krg_cms_filter_admin")
-     *
-     * @param Request $request
-     * @return Response
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function adminAction(Request $request)
     {
@@ -47,12 +42,6 @@ class FilterController extends AbstractController
 
     /**
      * @Route("/show/{key}", name="krg_cms_filter_show")
-     *
-     * @param Request         $request
-     * @param FilterInterface $filter
-     * @return Response
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showAction(Request $request, FilterInterface $filter)
     {

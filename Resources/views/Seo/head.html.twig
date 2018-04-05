@@ -5,16 +5,4 @@
     {% if metaDescription is defined and metaDescription %}
         <meta name="description" content="{{ metaDescription }}"/>
     {% endif %}
-    {% if metaRobots is defined and metaRobots %}
-        <meta name="robots" content="{{ metaRobots }}"/>
-    {% endif %}
-    {% if ogTitle is defined and ogTitle %}
-        <meta name="og:title" content="{{ ogTitle }}"/>
-    {% endif %}
-    {% if ogDescription is defined and ogDescription %}
-        <meta name="og:description" content="{{ ogDescription }}"/>
-    {% endif %}
-    {% if ogImage is defined and ogImage %}
-        <meta name="og:image" content="{{ ogImage }}"/>
-    {% endif %}
 {% endspaceless %}

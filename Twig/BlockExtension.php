@@ -4,81 +4,52 @@ namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
-use KRG\CmsBundle\Entity\Block;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 
-/**
- * Class BlockExtension
- * @package KRG\CmsBundle\Twig
- */
 class BlockExtension extends \Twig_Extension
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * @var array
-     */
-    private $fileBlocks;
-
-    /**
-     * @var array
-     */
-    private $content;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var string
-     */
-    private $cacheDirKrg;
-
-    /**
-     * @var string
-     */
-    private $cacheFileName;
-
-    /**
-     * @var \Twig_TemplateWrapper
-     */
-    private $template;
-
-    /**
-     * @var TemplateNameParser
-     */
+    /** @var TemplateNameParser */
     private $nameParser;
 
-    /**
-     * @var TemplateLocator
-     */
+    /** @var TemplateLocator */
     private $locator;
 
-    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, $fileBlocks, $cacheDir)
+    /** @var LoggerInterface */
+    private $logger;
+
+    /** @var array */
+    private $fileBlocks;
+
+    /** @var string */
+    private $cacheDir;
+
+    /** @var array */
+    private $content;
+
+    /** @var \Twig_TemplateWrapper */
+    private $template;
+
+    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $cacheDir)
     {
         $this->entityManager = $entityManager;
-        $this->cacheDir = $cacheDir;
-        $this->cacheDirKrg = $cacheDir . KRGCmsExtension::KRG_CACHE_DIR;
-        $this->cacheFileName = KRGCmsExtension::KRG_BLOCKS_FILE;
-        $this->fileBlocks = $fileBlocks;
         $this->nameParser = $nameParser;
         $this->locator = $locator;
+        $this->logger = $logger;
+        $this->fileBlocks = $fileBlocks;
+        $this->cacheDir = $cacheDir;
         $this->content = [];
     }
 
     /**
      * Build blocks into a specific template
-     *
-     * @param \Twig_Environment $environment
-     * @return \Twig_TemplateWrapper
      */
     private function getTemplate(\Twig_Environment $environment)
     {
@@ -88,32 +59,32 @@ class BlockExtension extends \Twig_Extension
 
         try {
             $this->createFileTemplate();
-            $environment->setCache($this->cacheDirKrg);
+            $environment->setCache($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
             $environment->setLoader(new \Twig_Loader_Chain([
                 $environment->getLoader(), // Preserve old loader
-                new \Twig_Loader_Filesystem([$this->cacheDirKrg]) // Add KRG cache dir
+                new \Twig_Loader_Filesystem([$this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR]) // Add KRG cache dir
             ]));
 
-            $this->template = $environment->load($this->cacheFileName); // Load template from cache
+            $this->template = $environment->load(KRGCmsExtension::KRG_BLOCKS_FILE); // Load template from cache
 
             return $this->template;
         } catch (\Exception $exception) {
-            /* log and send error */
+            $this->logger->error(sprintf('[KRGCmsBundle] %s', $exception->getMessage()));
         }
 
         return null;
     }
 
     /**
-     * Generate $this->cacheFileName twig template composed of each blocks
+     * Generate KRGCmsExtension::KRG_BLOCKS_FILE twig template composed of each blocks
      */
     public function createFileTemplate()
     {
-        if (!is_dir($this->cacheDirKrg)) {
-            mkdir($this->cacheDirKrg);
+        if (!is_dir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR)) {
+            mkdir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
         }
 
-        $path = sprintf('%s/%s', $this->cacheDirKrg, $this->cacheFileName);
+        $path = sprintf('%s/%s', $this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR, KRGCmsExtension::KRG_BLOCKS_FILE);
         if (!file_exists($path)) {
             return (bool) file_put_contents($path, implode('', $this->loadBlocks()));
         }
@@ -199,12 +170,6 @@ class BlockExtension extends \Twig_Extension
 
     /**
      * Render a block by it's key
-     *
-     * @param \Twig_Environment $environment
-     * @param                   $key
-     * @param array             $context
-     * @return null|string
-     * @throws \Throwable
      */
     public function render(\Twig_Environment $environment, $key, $context = array())
     {
@@ -217,6 +182,7 @@ class BlockExtension extends \Twig_Extension
 
             throw new \Exception('KRG block template is null');
         } catch (\Exception $exception) {
+            $this->logger->error(sprintf('[KRGCmsBundle] Render exception, %s', $exception->getMessage()));
         }
 
         return null;
@@ -224,29 +190,17 @@ class BlockExtension extends \Twig_Extension
 
     /**
      * Simple block loop detect, can be improved
-     *
-     * @param BlockInterface $block
-     * @return int
      */
     protected function isSafe(BlockInterface $block)
     {
         return false === (bool)strpos($block->getContent(), sprintf("block('%s')", $block->getKey()));
     }
 
-    /**
-     * @param BlockInterface $block
-     * @return bool
-     */
     protected function isValidBlock(BlockInterface $block)
     {
         return $block->isEnabled() && $block->isWorking() && $this->isSafe($block);
     }
 
-    /**
-     * @param \Twig_Environment $environment
-     * @return array
-     * @throws \Throwable
-     */
     public function getSnippets(\Twig_Environment $environment)
     {
         if (null === ($template = $this->getTemplate($environment))) {
@@ -269,10 +223,6 @@ class BlockExtension extends \Twig_Extension
         return $blocks;
     }
 
-
-    /**
-     * @return array|\Twig_Function[]
-     */
     public function getFunctions()
     {
         return [

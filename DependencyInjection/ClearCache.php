@@ -9,19 +9,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ClearCache
 {
-    /**
-     * @var Router
-     */
+    /** @var Router */
     private $router;
 
-    /**
-     * @var Filesystem
-     */
+    /** @var Filesystem */
     private $filesystem;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $cacheDir;
 
     public function __construct(RouterInterface $router, Filesystem $filesystem, string $cacheDir)

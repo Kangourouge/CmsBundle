@@ -11,15 +11,9 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UrlDataTransformer implements DataTransformerInterface
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * RouteDataTransformer constructor.
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;

@@ -11,25 +11,15 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class FilterWorkingValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /** @var FormFactoryInterface */
     protected $formFactory;
 
-    /**
-     * @var FilterRegistry
-     */
+    /** @var FilterRegistry */
     protected $registry;
 
-    /**
-     * UniqueKey constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, FilterRegistry $registry)
     {
         $this->entityManager = $entityManager;
@@ -50,7 +40,8 @@ class FilterWorkingValidator extends ConstraintValidator
                 $config['handler']->perform($request, $form);
             }
         } catch (\Exception $exception) {
-            $this->context->buildViolation($constraint->message)
+            $this->context
+                ->buildViolation($constraint->message)
                 ->atPath('form')
                 ->setParameter('{{ string }}', $filter->getId())
                 ->addViolation();

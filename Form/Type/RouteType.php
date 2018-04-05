@@ -13,32 +13,18 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RouteType extends AbstractType
 {
-    /**
-     * @var RouteCollection
-     */
+    /** @var RouteCollection */
     private $routes;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $regexp;
 
-    /**
-     * RouteType constructor.
-     *
-     * @param RouterInterface $router
-     * @param string $regexp
-     */
     public function __construct(RouterInterface $router, $regexp = null)
     {
         $this->routes = $router->getRouteCollection();
         $this->regexp = $regexp ?: '`^(_|admin|easyadmin|liip).*`';
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -64,11 +50,6 @@ class RouteType extends AbstractType
             ]);
     }
 
-    /**
-     * @param FormView      $view
-     * @param FormInterface $form
-     * @param array         $options
-     */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         parent::finishView($view, $form, $options);

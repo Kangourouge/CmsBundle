@@ -11,16 +11,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class FilterType extends AbstractType
 {
-    /**
-     * @var FilterRegistry
-     */
+    /** @var FilterRegistry */
     private $registry;
 
-    /**
-     * SeoFormType constructor.
-     *
-     * @param FilterRegistry $registry
-     */
     public function __construct(FilterRegistry $registry)
     {
         $this->registry = $registry;

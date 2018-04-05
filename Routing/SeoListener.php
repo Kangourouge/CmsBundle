@@ -10,14 +10,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 class SeoListener
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     public function __construct(RouterInterface $router, EntityManagerInterface $entityManager)
@@ -27,10 +23,7 @@ class SeoListener
     }
 
     /**
-     * Update current request if URI match with one of SEOBUNDLE urls
-     *
-     * @param GetResponseEvent $event
-     * @return null|void
+     * Update current request if URI match with one of SEOBUNDLE url
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -57,7 +50,6 @@ class SeoListener
 
         // Update request to keep url intact
         $route = $this->router->getRouteCollection()->get($seo->getRouteName());
-
         $params = array_merge($request->attributes->get('_route_params'), $seo->getRouteParams());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
         $request->attributes->set('_route', $seo->getRouteName());

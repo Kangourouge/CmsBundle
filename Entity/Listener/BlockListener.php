@@ -11,16 +11,9 @@ use KRG\CmsBundle\Entity\BlockInterface;
 
 class BlockListener implements EventSubscriber
 {
-    /**
-     * @var ClearCache
-     */
+    /** @var ClearCache */
     private $clearCache;
 
-    /**
-     * SeoListener constructor.
-     *
-     * @param ClearCache $clearCache
-     */
     public function __construct(ClearCache $clearCache)
     {
         $this->clearCache = $clearCache;

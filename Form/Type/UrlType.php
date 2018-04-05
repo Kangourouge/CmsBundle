@@ -9,25 +9,14 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UrlType extends TextType
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * RouteType constructor.
-     *
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new UrlDataTransformer($this->router));

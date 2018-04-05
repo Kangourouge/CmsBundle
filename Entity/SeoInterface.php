@@ -99,54 +99,6 @@ interface SeoInterface extends SeoRouteInterface
     public function getMetaDescription();
 
     /**
-     * Set ogTitle
-     *
-     * @param string $ogTitle
-     *
-     * @return SeoInterface
-     */
-    public function setOgTitle($ogTitle);
-
-    /**
-     * Get ogTitle
-     *
-     * @return string
-     */
-    public function getOgTitle();
-
-    /**
-     * Set ogDescription
-     *
-     * @param string $ogDescription
-     *
-     * @return SeoInterface
-     */
-    public function setOgDescription($ogDescription);
-
-    /**
-     * Get ogDescription
-     *
-     * @return string
-     */
-    public function getOgDescription();
-
-    /**
-     * Set ogImage
-     *
-     * @param string $ogImage
-     *
-     * @return SeoInterface
-     */
-    public function setOgImage($ogImage);
-
-    /**
-     * Get ogImage
-     *
-     * @return string
-     */
-    public function getOgImage();
-
-    /**
      * @param array $parameters
      * @return int
      */

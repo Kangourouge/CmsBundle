@@ -16,24 +16,16 @@ use Symfony\Component\Serializer\Serializer;
  */
 class SeoLoader extends Loader
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $loaded = false;
 
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
 
-    /**
-     * @var EncoderInterface
-     */
+    /** @var EncoderInterface */
     private $encoder;
 
-    /**
-     * @var ObjectNormalizer
-     */
+    /** @var ObjectNormalizer */
     private $normalizer;
 
     public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer)

@@ -13,16 +13,9 @@ use KRG\CmsBundle\Entity\SeoInterface;
 
 class PageListener implements EventSubscriber
 {
-    /**
-     * @var ClearCache
-     */
+    /** @var ClearCache */
     private $clearCache;
 
-    /**
-     * SeoListener constructor.
-     *
-     * @param ClearCache $clearCache
-     */
     public function __construct(ClearCache $clearCache)
     {
         $this->clearCache = $clearCache;
@@ -55,7 +48,6 @@ class PageListener implements EventSubscriber
     {
         if ($event->getEntity() instanceof PageInterface) {
             $this->prePersistOrUpdate($event, $event->getEntity());
-
             $seo = $event->getEntity()->getSeo();
             $uow = $event->getEntityManager()->getUnitOfWork();
             $classMetadata = $event->getEntityManager()->getClassMetadata(SeoInterface::class);

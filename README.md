@@ -128,7 +128,6 @@ Assets
 
 bin/console assets:install
 
-
 # Blocks
 ## Filters
 

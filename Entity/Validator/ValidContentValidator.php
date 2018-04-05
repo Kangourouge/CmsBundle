@@ -10,25 +10,14 @@ use Twig\Error\Error;
 
 class ValidContentValidator extends ConstraintValidator
 {
-    /**
-     * @var Environment
-     */
+    /** @var Environment */
     private $twig;
 
-    /**
-     * ValidContentValidator constructor.
-     * @param Environment $twig
-     */
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;
     }
 
-    /**
-     * @param mixed      $entity
-     * @param Constraint $constraint
-     * @throws \Twig_Error_Syntax
-     */
     public function validate($entity, Constraint $constraint)
     {
         if ($entity instanceof BlockContentInterface) {

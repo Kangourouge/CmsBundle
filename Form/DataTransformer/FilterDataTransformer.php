@@ -6,10 +6,6 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class FilterDataTransformer implements DataTransformerInterface
 {
-    /**
-     * @param mixed $value
-     * @return array
-     */
     public function transform($value)
     {
         if (!is_array($value)) {
@@ -22,10 +18,6 @@ class FilterDataTransformer implements DataTransformerInterface
         ];
     }
 
-    /**
-     * @param mixed $value
-     * @return array
-     */
     public function reverseTransform($value)
     {
         $data = [

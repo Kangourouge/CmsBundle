@@ -14,31 +14,18 @@ use Symfony\Component\Templating\EngineInterface;
 
 class ContentType extends AbstractType
 {
-    /**
-     * @var EngineInterface
-     */
+    /** @var EngineInterface */
     protected $templating;
 
-    /**
-     * @var FileBase64Uploader
-     */
+    /** @var FileBase64Uploader */
     protected $fileUploader;
 
-    /**
-     * ContentType constructor.
-     * @param EngineInterface    $templating
-     * @param FileBase64Uploader $fileUploader
-     */
     public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader)
     {
         $this->templating = $templating;
         $this->fileUploader = $fileUploader;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);

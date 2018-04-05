@@ -13,28 +13,15 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class UrlGenerator extends BaseUrlGenerator
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $seoRoutes;
 
-    /**
-     * @var Serializer
-     */
+    /** @var Serializer */
     private $serializer;
 
-    /**
-     * @var FilesystemAdapter
-     */
+    /** @var FilesystemAdapter */
     private $cache;
 
-    /**
-     * UrlGenerator constructor.
-     * @param RouteCollection     $routes
-     * @param RequestContext      $context
-     * @param null                $logger
-     * @param SerializerInterface $serializer
-     */
     public function __construct(RouteCollection $routes, RequestContext $context, $logger = null, SerializerInterface $serializer)
     {
         parent::__construct($routes, $context, $logger);
@@ -42,19 +29,6 @@ class UrlGenerator extends BaseUrlGenerator
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param $variables
-     * @param $defaults
-     * @param $requirements
-     * @param $tokens
-     * @param $parameters
-     * @param $name
-     * @param $referenceType
-     * @param $hostTokens
-     * @param array $requiredSchemes
-     *
-     * @return string
-     */
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (!preg_match("/^krg_seo_.+/", $name)) {
@@ -96,12 +70,6 @@ class UrlGenerator extends BaseUrlGenerator
         );
     }
 
-    /**
-     * @param string $name
-     * @param array $parameters
-     *
-     * @return mixed|null
-     */
     private function resolve($name, array $parameters)
     {
         if (!$this->cache) {
@@ -157,9 +125,6 @@ class UrlGenerator extends BaseUrlGenerator
         return $route;
     }
 
-    /**
-     * @param array $routes
-     */
     public function setSeoRoutes(array $routes)
     {
         $this->seoRoutes = $routes;

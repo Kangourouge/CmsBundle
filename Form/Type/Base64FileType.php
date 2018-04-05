@@ -13,24 +13,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Base64FileType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * Base64Type constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -47,7 +37,6 @@ class Base64FileType extends AbstractType
     {
         parent::buildView($view, $form, $options);
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {

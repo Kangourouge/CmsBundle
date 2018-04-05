@@ -9,12 +9,6 @@ class Redirector
 {
     /**
      * Generate easyadmin EasyAdmin working URL
-     *
-     * @param $basePath /admin
-     * @param $entityName
-     * @param $action
-     * @param null $id
-     * @return string
      */
     public static function getEasyAdminUrl($basePath, $entityName, $action, $id = null)
     {
@@ -30,13 +24,6 @@ class Redirector
 
     /**
      * Update GenericEvent request with EasyAdmin working URL
-     *
-     * @param GenericEvent $event
-     * @param $basePath
-     * @param $entityName
-     * @param $action
-     * @param null $id
-     * @return Request
      */
     public static function redirector(GenericEvent $event, $basePath, $entityName, $action, $id = null)
     {

@@ -4,26 +4,14 @@ namespace KRG\CmsBundle\Twig;
 
 use KRG\CmsBundle\Menu\MenuBuilderInterface;
 
-/**
- * Class BreadcrumbExtension
- * @package KRG\CmsBundle\Twig
- */
 class BreadcrumbExtension extends \Twig_Extension
 {
-    /**
-     * @var MenuBuilderInterface
-     */
+    /** @var MenuBuilderInterface */
     private $menuBuilder;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $templates;
 
-    /**
-     * BreadcrumbExtension constructor.
-     * @param MenuBuilderInterface $menuBuilder
-     */
     public function __construct(MenuBuilderInterface $menuBuilder)
     {
         $this->menuBuilder = $menuBuilder;
@@ -32,13 +20,6 @@ class BreadcrumbExtension extends \Twig_Extension
 
     /**
      * Build blocks into a specific template
-     *
-     * @param \Twig_Environment $environment
-     * @param                   $theme
-     * @return mixed
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     private function getTemplate(\Twig_Environment $environment, $theme)
     {
@@ -50,15 +31,6 @@ class BreadcrumbExtension extends \Twig_Extension
         return $this->templates[$theme];
     }
 
-    /**
-     * @param \Twig_Environment $environment
-     * @param                   $key
-     * @param string            $theme
-     * @return mixed
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
     public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
     {
         $template = $this->getTemplate($environment, $theme);
@@ -80,9 +52,6 @@ class BreadcrumbExtension extends \Twig_Extension
         ]);
     }
 
-    /**
-     * @return array
-     */
     public function getFunctions()
     {
         return [

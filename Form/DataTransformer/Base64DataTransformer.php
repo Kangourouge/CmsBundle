@@ -10,34 +10,23 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class Base64DataTransformer implements DataTransformerInterface
 {
-
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * Base64Type constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transform($value)
     {
         if ($value === null || !($value instanceof FileInterface)) {
            return null;
         }
+
         return $value;
     }
-    /**
-     * {@inheritdoc}
-     */
+
     public function reverseTransform($value)
     {
         if ($value === null || strlen($value) === 0) {
@@ -48,17 +37,12 @@ class Base64DataTransformer implements DataTransformerInterface
             return File::createFromBase64($value);
         }
 
-        /**
-         * search file from repository
-         */
-
         $repository = $this->entityManager->getRepository(FileInterface::class);
         $image = $repository->findOneBy(['path' => '.'.$value]);
-        if($image)
+        if ($image) {
             return $image;
+        }
 
         throw new TransformationFailedException();
-
     }
-
 }

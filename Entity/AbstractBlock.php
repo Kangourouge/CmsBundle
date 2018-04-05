@@ -169,8 +169,7 @@ abstract class AbstractBlock implements BlockInterface
     public function setThumbnail(FileInterface $thumbnail = null)
     {
         $this->thumbnail = $thumbnail;
+
         return $this;
     }
-
-
 }

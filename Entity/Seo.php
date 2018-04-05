@@ -53,21 +53,6 @@ class Seo implements SeoInterface
      */
     protected $metaRobots;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $ogTitle;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $ogDescription;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $ogImage;
-
     public function __construct()
     {
         $this->enabled = false;
@@ -193,102 +178,6 @@ class Seo implements SeoInterface
     public function getMetaDescription()
     {
         return $this->metaDescription;
-    }
-
-    /**
-     * Set metaRobots
-     *
-     * @param string $metaRobots
-     *
-     * @return SeoInterface
-     */
-    public function setMetaRobots($metaRobots)
-    {
-        $this->metaRobots = $metaRobots;
-
-        return $this;
-    }
-
-    /**
-     * Get metaRobots
-     *
-     * @return string
-     */
-    public function getMetaRobots()
-    {
-        return $this->metaRobots;
-    }
-
-    /**
-     * Set ogTitle
-     *
-     * @param string $ogTitle
-     *
-     * @return SeoInterface
-     */
-    public function setOgTitle($ogTitle)
-    {
-        $this->ogTitle = $ogTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get ogTitle
-     *
-     * @return string
-     */
-    public function getOgTitle()
-    {
-        return $this->ogTitle;
-    }
-
-    /**
-     * Set ogDescription
-     *
-     * @param string $ogDescription
-     *
-     * @return SeoInterface
-     */
-    public function setOgDescription($ogDescription)
-    {
-        $this->ogDescription = $ogDescription;
-
-        return $this;
-    }
-
-    /**
-     * Get ogDescription
-     *
-     * @return string
-     */
-    public function getOgDescription()
-    {
-        return $this->ogDescription;
-    }
-
-    /**
-     * Set ogImage
-     *
-     * @param string $ogImage
-     *
-     * @return SeoInterface
-     */
-    public function setOgImage($ogImage)
-    {
-        $this->ogImage = $ogImage;
-
-        return $this;
-    }
-
-    /**
-     * Get ogImage
-     *
-     * @return string
-     */
-    public function getOgImage()
-    {
-        return $this->ogImage;
     }
 
     /**
