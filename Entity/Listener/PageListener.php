@@ -6,11 +6,28 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
+use KRG\CmsBundle\DependencyInjection\ClearCache;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 
 class PageListener implements EventSubscriber
 {
+    /**
+     * @var ClearCache
+     */
+    private $clearCache;
+
+    /**
+     * SeoListener constructor.
+     *
+     * @param ClearCache $clearCache
+     */
+    public function __construct(ClearCache $clearCache)
+    {
+        $this->clearCache = $clearCache;
+    }
+
     public function getSubscribedEvents()
     {
         return [
@@ -51,5 +68,6 @@ class PageListener implements EventSubscriber
     {
         $seo = $page->getSeo();
         $seo->setEnabled($page->getEnabled());
+        $this->clearCache->warmupTwig();
     }
 }

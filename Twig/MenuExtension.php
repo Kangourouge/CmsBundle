@@ -95,11 +95,11 @@ class MenuExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'krg_menu' => new \Twig_SimpleFunction('krg_menu', array($this, 'render'), [
+            'krg_menu' => new \Twig_SimpleFunction('krg_menu', [$this, 'render'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            'is_granted_roles' => new \Twig_SimpleFunction('is_granted_roles', array($this, 'isGranted'), [
+            'is_granted_roles' => new \Twig_SimpleFunction('is_granted_roles', [$this, 'isGranted'], [
                 'needs_environment' => false
             ])
         ];

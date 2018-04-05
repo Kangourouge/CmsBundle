@@ -40,7 +40,7 @@ class SeoType extends AbstractType
             ->add('ogTitle')
             ->add('ogDescription')
             ->add('ogImage')
-            ->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
     }
 
     public function onPreSetData(FormEvent $event)

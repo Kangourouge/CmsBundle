@@ -6,6 +6,7 @@ use KRG\CmsBundle\Entity\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,6 +19,11 @@ class PageController extends AbstractController
      */
     public function showAction(Request $request, PageInterface $page)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->container->get('kernel');
+        dump($kernel->getCacheDir());
+
+
         return $this->render('KRGCmsBundle:Page:show.html.twig', [
             'page' => $page
         ]);

@@ -51,15 +51,15 @@ class SeoLoader extends Loader
 
         $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
         $seoRepository = $this->entityManager->getRepository($className);
-        $seoEntries = $seoRepository->findBy(array(
+        $seoEntries = $seoRepository->findBy([
             'enabled' => true
-        ));
+        ]);
 
         $routes = new RouteCollection();
         $this->normalizer->setCircularReferenceHandler(function($object) {
             return $object->getId();
         });
-        $serializer = new Serializer(array($this->normalizer), array($this->encoder));
+        $serializer = new Serializer([$this->normalizer], [$this->encoder]);
 
         /* @var $seo SeoInterface */
         foreach ($seoEntries as $seo) {

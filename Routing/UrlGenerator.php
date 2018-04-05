@@ -65,7 +65,7 @@ class UrlGenerator extends BaseUrlGenerator
 
                 // If parameters setted from SeoPage, do not set it twice
                 if (count($compiledRoute->getVariables()) === 0) {
-                    $parameters = array();
+                    $parameters = [];
                 }
 
                 // Do not pass the parameters argument to keep rewritted urls intact
@@ -134,7 +134,7 @@ class UrlGenerator extends BaseUrlGenerator
 
         // Sort entries by number of matching parameters
         if ($nbRoute > 1) {
-            $weights = array();
+            $weights = [];
             foreach ($routes as $idx => $route) {
                 /* @var $seo SeoInterface */
                 $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');

@@ -33,7 +33,7 @@ class ClearCache
 
     public function warmupRouting()
     {
-        foreach (array('matcher_cache_class', 'generator_cache_class') as $option) {
+        foreach (['matcher_cache_class', 'generator_cache_class'] as $option) {
             $className = $this->router->getOption($option);
             $cacheFile = $this->cacheDir . DIRECTORY_SEPARATOR . $className . '.php';
             $this->filesystem->remove($cacheFile);

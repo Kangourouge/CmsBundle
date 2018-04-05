@@ -76,22 +76,22 @@ class SeoExtension extends \Twig_Extension
             return substr($key, 0, 1) !== '_';
         }, ARRAY_FILTER_USE_KEY);
 
-        $twig = new \Twig_Environment(new \Twig_Loader_Array(array()));
+        $twig = new \Twig_Environment(new \Twig_Loader_Array([]));
 
-        $data = array(
+        $data = [
             'metaTitle'       => null,
             'metaDescription' => null,
             'metaRobots'      => null,
             'ogTitle'         => null,
             'ogDescription'   => null,
             'ogImage'         => null,
-        );
+        ];
 
         // Use twig environnement to bind {{ var }}
         foreach($data as $key => &$value) {
             $getter = 'get' . ucfirst($key);
             if (method_exists($seo, $getter)) {
-                if ($input = call_user_func(array($seo, $getter))) {
+                if ($input = call_user_func([$seo, $getter])) {
                     $value = $twig->createTemplate($input)->render($params);
                 }
             }
@@ -118,14 +118,14 @@ class SeoExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
-            'seo_head' => new \Twig_SimpleFunction('seo_head', array($this, 'getSeoHead'), array(
+        return [
+            'seo_head' => new \Twig_SimpleFunction('seo_head', [$this, 'getSeoHead'], [
                 'needs_environment' => true,
-                'is_safe'           => array('html'),
-            )),
-            'seo_url' => new \Twig_SimpleFunction('seo_url', array($this, 'getSeoUrl'), array(
-                'is_safe' => array('html'),
-            )),
-        );
+                'is_safe'           => ['html'],
+            ]),
+            'seo_url' => new \Twig_SimpleFunction('seo_url', [$this, 'getSeoUrl'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
     }
 }

@@ -86,7 +86,7 @@ class BreadcrumbExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'krg_breadcrumb' => new \Twig_SimpleFunction('krg_breadcrumb', array($this, 'render'), [
+            'krg_breadcrumb' => new \Twig_SimpleFunction('krg_breadcrumb', [$this, 'render'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ])

@@ -48,7 +48,5 @@ services:
         public: true
 
     KRG\CmsBundle\DependencyInjection\ClearCache:
-        arguments:
-            $cacheDir: '%kernel.cache_dir%'
 
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'

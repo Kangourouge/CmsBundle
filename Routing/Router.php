@@ -21,8 +21,8 @@ class Router extends BaseRouter
             return $route instanceof \KRG\CmsBundle\Routing\Route;
         }));
         $generator->setSerializer(new Serializer(
-            array(new PropertyNormalizer()),
-            array(new JsonEncoder())
+            [new PropertyNormalizer()],
+            [new JsonEncoder()]
         ));
 
         return $generator;

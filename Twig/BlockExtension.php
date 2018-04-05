@@ -276,11 +276,11 @@ class BlockExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'krg_block' => new \Twig_SimpleFunction('krg_block', array($this, 'render'), [
+            'krg_block' => new \Twig_SimpleFunction('krg_block', [$this, 'render'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            'krg_snippet_list' => new \Twig_SimpleFunction('krg_snippet_list', array($this, 'getSnippets'), [
+            'krg_snippet_list' => new \Twig_SimpleFunction('krg_snippet_list', [$this, 'getSnippets'], [
                 'needs_environment' => true
             ]),
         ];
