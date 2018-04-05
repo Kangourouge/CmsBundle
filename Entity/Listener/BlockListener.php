@@ -66,6 +66,6 @@ class BlockListener implements EventSubscriber
 
     protected function clearCache()
     {
-        $this->clearCache->warmupTwig();
+        $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
     }
 }
