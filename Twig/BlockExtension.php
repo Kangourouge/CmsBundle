@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
+use KRG\CmsBundle\Entity\Block;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
@@ -250,9 +251,11 @@ class BlockExtension extends \Twig_Extension
         $blocks = [];
         foreach ($template->getBlockNames() as $name) {
             if (false === strstr($name, 'krg_page_')) {
+                $block = $this->entityManager->getRepository(BlockInterface::class)->findOneBy(['key' => $name]);
+                $thumbnail = ($block) ? $block->getThumbnail() : null;
                 $blocks[] = [
                     'html'      => $this->render($environment, $name),
-                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? null,
+                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? $thumbnail,
                     'label'     => $this->fileBlocks[$name]['label'] ?? $name
                 ];
             }

@@ -10,6 +10,9 @@ easy_admin:
                     - name
             form:
                 fields:
+                    -
+                        property: thumbnail
+                        type: KRG\CmsBundle\Form\Type\Base64FileType
                     - key
                     - name
                     -
@@ -19,3 +22,4 @@ easy_admin:
                             switch_header_footer: false
                             hide_header_footer: true
                     - enabled
+

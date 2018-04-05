@@ -31,7 +31,6 @@ class SeoListener implements EventSubscriber
     {
         return [
             Events::prePersist,
-            Events::preUpdate,
             Events::postFlush
         ];
     }
@@ -39,22 +38,10 @@ class SeoListener implements EventSubscriber
     public function prePersist(LifecycleEventArgs $event)
     {
         if ($event->getEntity() instanceof SeoInterface) {
-            $this->prePersistOrUpdate($event->getEntity());
+            $seo = $event->getEntity();
+            if(!$seo->getUid())
+                $seo->setUid(sprintf('krg_seo_krg_page_show_%s', uniqid()));
         }
-    }
-
-    public function preUpdate(PreUpdateEventArgs $event)
-    {
-        if ($event->getEntity() instanceof SeoInterface) {
-            $this->prePersistOrUpdate($event->getEntity());
-        }
-    }
-
-    public function prePersistOrUpdate(SeoInterface $seo)
-    {
-        $route = $seo->getRouteName();
-        $prefix = preg_match("/^krg_seo_.+/", $route) ? '' : 'krg_seo_';
-        $seo->setUid(sprintf('%s%s_%s', $prefix, $route, uniqid()));
     }
 
     public function postFlush(PostFlushEventArgs $event)

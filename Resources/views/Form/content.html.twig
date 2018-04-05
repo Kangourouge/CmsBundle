@@ -117,6 +117,16 @@
             }
 
             function saveEdition() {
+
+                var element = iframe.contentWindow.document.getElementById('krg_cms_page_wrapper');
+                var thumbnailBlock = document.getElementById('block_thumbnail');
+                if(thumbnailBlock){
+                    html2canvas(element).then(function(canvas) {
+                        thumbnailBlock.value = canvas.toDataURL("image/png");
+                    });
+                }
+
+
                 textarea.value = iframe.contentWindow.document.documentElement.outerHTML;
             }
 

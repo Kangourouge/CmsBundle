@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use EMC\FileinputBundle\Entity\FileInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractBlock implements BlockInterface
@@ -39,10 +40,17 @@ abstract class AbstractBlock implements BlockInterface
      */
     protected $working;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="EMC\FileinputBundle\Entity\FileInterface", cascade={"all"})
+     * @ORM\JoinColumn(name="thumbnail_id", referencedColumnName="id", nullable=true)
+     * @var FileInterface
+     */
+    protected $thumbnail;
+
     public function __construct()
     {
         $this->enabled = false;
-        $this->working = false;
+        $this->working = true;
     }
 
     public function __toString()
@@ -145,4 +153,24 @@ abstract class AbstractBlock implements BlockInterface
     {
         return $this->working;
     }
+
+    /**
+     * @return FileInterface
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * @param FileInterface $thumbnail
+     * @return AbstractBlock
+     */
+    public function setThumbnail(FileInterface $thumbnail = null)
+    {
+        $this->thumbnail = $thumbnail;
+        return $this;
+    }
+
+
 }

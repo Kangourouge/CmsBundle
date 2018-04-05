@@ -22,7 +22,15 @@ class PageListener implements EventSubscriber
     public function prePersist(LifecycleEventArgs $event)
     {
         if ($event->getEntity() instanceof PageInterface) {
-            $this->prePersistOrUpdate($event, $event->getEntity());
+            $page = $event->getEntity();
+            $seo = $page->getSeo();
+            $page->setKey(sprintf('krg_seo_krg_page_show_%s', uniqid()));
+            $seo->setRoute([
+                'name'   => 'krg_page_show',
+                'params' => ['key' => $page->getKey()],
+            ]);
+            $seo->setUid($page->getKey());
+            $this->prePersistOrUpdate($event, $page);
         }
     }
 
@@ -42,12 +50,6 @@ class PageListener implements EventSubscriber
     public function prePersistOrUpdate(LifecycleEventArgs $event, PageInterface $page)
     {
         $seo = $page->getSeo();
-        $page->setKey($seo->getUid());
-        $seo->setRoute([
-            'name'   => 'krg_page_show',
-            'params' => ['key' => $page->getKey()],
-        ]);
-
         $seo->setEnabled($page->getEnabled());
     }
 }
