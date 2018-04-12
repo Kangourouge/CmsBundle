@@ -64,3 +64,30 @@
     width: 100%;
     height: 100%;
 }
+
+/* iframe content */
+
+.cms-content-live-edit {
+    padding-bottom: 50px;
+}
+
+.cms-content-live-edit .cms-hidden-area {
+    display: block;
+    opacity: 0.66;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        #ececec 10px,
+        #ececec 20px
+    );
+}
+
+.cms-content-live-edit .cms-hidden-area::before {
+    content: 'Cette zone n\'est visible qu\'en cliquant sur : "' attr(data-parent-label) '"';
+    display: inline-block;
+    width: 100%;
+    padding: 25px 0 10px;
+    text-align: center;
+    font-style: italic;
+}

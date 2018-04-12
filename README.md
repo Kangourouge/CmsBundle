@@ -169,3 +169,9 @@ h2.html.twig
 ```twig 
     <h2>Title</h2>
 ```
+
+To be able to edit an invisible area from the admin, add class "cms-hidden-area" and the data attribute "data-parent-label"
+```
+<div class="cms-hidden-area" data-parent-label="Action button">
+</div> 
+```

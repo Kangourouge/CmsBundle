@@ -3,7 +3,7 @@
 {% set wrapperId = 'krg_cms_page_wrapper' %}
 
 {% block page %}
-    <div id="{{ wrapperId }}">
+    <div id="{{ wrapperId }}" class="cms-content-live-edit">
         {{ page.content|raw }}
     </div>
 {% endblock %}
@@ -42,7 +42,6 @@
 
         function stop() {
             if (element.data('contentbuilder')) {
-                element.data('contentbuilder').destroy();
             }
         }
 
