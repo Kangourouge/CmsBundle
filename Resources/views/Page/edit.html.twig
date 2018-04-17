@@ -4,7 +4,7 @@
 
 {% block page %}
     <div id="{{ wrapperId }}" class="cms-content-live-edit">
-        {{ page.content|raw }}
+        {% include block %}
     </div>
 {% endblock %}
 
@@ -15,21 +15,23 @@
 {% endblock %}
 
 {% block javascripts %}
+
     {{ parent() }}
     <script src="{{ asset('bundles/krgcms/cbuilder/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/krgcms/cbuilder/jquery-ui.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/krgcms/cbuilder/contentbuilder.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
-        var element = null;
+        var element = document.getElementById('{{ wrapperId }}');
+        var $element = null;
 
         $(document).ready(function ($) {
-            element = $('#{{ wrapperId }}');
+            $element = $(element);
         });
 
         function start() {
-            if (element) {
-                element.contentbuilder({
+            if ($element) {
+                $element.contentbuilder({
                     snippetFile: "{{ path('krg_page_snippets') }}",
                     sourceEditor: false,
                     toolbar: 'left',
@@ -41,7 +43,8 @@
         }
 
         function stop() {
-            if (element.data('contentbuilder')) {
+            if ($element.data('contentbuilder')) {
+                $element.data('contentbuilder').destroy();
             }
         }
 
@@ -52,6 +55,7 @@
             if (header) { header.toggle(); }
             if (footer) { footer.toggle(); }
         }
+
     </script>
 {% endblock %}
 

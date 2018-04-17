@@ -23,7 +23,14 @@ class ContentTransformer implements DataTransformerInterface
 
     public function transform($value)
     {
-       return $this->templating->render('KRGCmsBundle:Page:edit.html.twig', ['page' => ['content' => $value]]);
+        $filename = tempnam(sys_get_temp_dir(), 'page-');
+        file_put_contents($filename, $value);
+
+        $html = $this->templating->render('KRGCmsBundle:Page:edit.html.twig', ['page' => ['content' => $value], 'block' => $filename]);
+
+        unlink($filename);
+
+        return $html;
     }
 
     public function reverseTransform($value)
@@ -40,6 +47,21 @@ class ContentTransformer implements DataTransformerInterface
                     $image->setAttribute('src', $path);
                 }
             }
+
+            $content->filter('*')->each(function (Crawler $_crawler) {
+                $_crawler->each(function (Crawler $__crawler) {
+                    /** @var \DOMElement $node */
+                    foreach ($__crawler->getNode(0)->childNodes as $node) {
+                        if ($node->nodeType === XML_TEXT_NODE) {
+                            $text = trim($node->data);
+                            if (strlen($text) > 0) {
+                                $node->textContent = sprintf('{%% trans %%}%s{%% endtrans %%}', $text);
+                            }
+                        }
+                    }
+                });
+
+            });
 
             return $content->html();
         }
