@@ -10,11 +10,15 @@ use KRG\CmsBundle\Entity\PageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
+use Symfony\Component\Templating\EngineInterface;
 
 class BlockExtension extends \Twig_Extension
 {
     /** @var EntityManagerInterface */
     private $entityManager;
+
+    /** @var EngineInterface */
+    protected $templating;
 
     /** @var TemplateNameParser */
     private $nameParser;
@@ -37,7 +41,8 @@ class BlockExtension extends \Twig_Extension
     /** @var \Twig_TemplateWrapper */
     private $template;
 
-    public function __construct(EntityManagerInterface $entityManager, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $cacheDir)
+    public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $cacheDir)
+
     {
         $this->entityManager = $entityManager;
         $this->nameParser = $nameParser;
@@ -46,6 +51,7 @@ class BlockExtension extends \Twig_Extension
         $this->fileBlocks = $fileBlocks;
         $this->cacheDir = $cacheDir;
         $this->content = [];
+        $this->templating = $templating;
     }
 
     /**
@@ -58,8 +64,10 @@ class BlockExtension extends \Twig_Extension
         }
 
         try {
-            $this->createFileTemplate();
+
+            $this->createFileTemplate(KRGCmsExtension::KRG_BLOCKS_FILE, function(){ return implode('', $this->loadBlocks()); });
             $environment->setCache($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
+
             $environment->setLoader(new \Twig_Loader_Chain([
                 $environment->getLoader(), // Preserve old loader
                 new \Twig_Loader_Filesystem([$this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR]) // Add KRG cache dir
@@ -78,18 +86,19 @@ class BlockExtension extends \Twig_Extension
     /**
      * Generate KRGCmsExtension::KRG_BLOCKS_FILE twig template composed of each blocks
      */
-    public function createFileTemplate()
+    public function createFileTemplate($filename, \Closure $callback)
     {
         if (!is_dir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR)) {
             mkdir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
         }
 
-        $path = sprintf('%s/%s', $this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR, KRGCmsExtension::KRG_BLOCKS_FILE);
+        $path = sprintf('%s/%s', $this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR, $filename);
+
         if (!file_exists($path)) {
-            return (bool) file_put_contents($path, implode('', $this->loadBlocks()));
+            return (bool) file_put_contents($path, call_user_func($callback)) ? $path : null;
         }
 
-        return false;
+        return $path;
     }
 
     private function loadBlocks()
@@ -189,6 +198,24 @@ class BlockExtension extends \Twig_Extension
     }
 
     /**
+     * Render a block content
+     */
+    public function renderContent(\Twig_Environment $environment, $content)
+    {
+        try {
+            $filename = sprintf('content_%s.html.twig', sha1($content));
+            $pathname = $this->createFileTemplate($filename, function() use ($content) { return $content; });
+            if ($pathname !== null) {
+                return $this->templating->render('KRGCmsBundle:Block:show.html.twig', ['filename' => $pathname]);
+            }
+        } catch (\Exception $exception) {
+            $this->logger->error(sprintf('[KRGCmsBundle] Render exception, %s', $exception->getMessage()));
+        }
+
+        return null;
+    }
+
+    /**
      * Simple block loop detect, can be improved
      */
     protected function isSafe(BlockInterface $block)
@@ -227,6 +254,10 @@ class BlockExtension extends \Twig_Extension
     {
         return [
             'krg_block' => new \Twig_SimpleFunction('krg_block', [$this, 'render'], [
+                'needs_environment' => true,
+                'is_safe'           => ['html'],
+            ]),
+            'krg_block_conetnt' => new \Twig_SimpleFunction('krg_block_content', [$this, 'renderContent'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
