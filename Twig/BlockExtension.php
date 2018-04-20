@@ -33,7 +33,7 @@ class BlockExtension extends \Twig_Extension
     private $fileBlocks;
 
     /** @var string */
-    private $cacheDir;
+    private $twigCacheDir;
 
     /** @var array */
     private $content;
@@ -41,7 +41,7 @@ class BlockExtension extends \Twig_Extension
     /** @var \Twig_TemplateWrapper */
     private $template;
 
-    public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $cacheDir)
+    public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $twigCacheDir)
 
     {
         $this->entityManager = $entityManager;
@@ -49,10 +49,37 @@ class BlockExtension extends \Twig_Extension
         $this->locator = $locator;
         $this->logger = $logger;
         $this->fileBlocks = $fileBlocks;
-        $this->cacheDir = $cacheDir;
+        $this->twigCacheDir = $twigCacheDir;
         $this->content = [];
         $this->templating = $templating;
     }
+
+    /**
+     * Build blocks into a specific template
+     */
+    public function load(\Twig_Environment $environment)
+    {
+        try {
+
+            $this->createFileTemplate('cms.html.twig', function(){ return implode('', $this->loadBlocks()); });
+
+            $environment->setCache($this->twigCacheDir);
+
+            $environment->setLoader(new \Twig_Loader_Chain([
+                $environment->getLoader(), // Preserve old loader
+                new \Twig_Loader_Filesystem([$this->twigCacheDir]) // Add KRG cache dir
+            ]));
+
+            $this->template = $environment->load('cms.html.twig'); // Load template from cache
+
+            return $this->template;
+        } catch (\Exception $exception) {
+            $this->logger->error(sprintf('[KRGCmsBundle] %s', $exception->getMessage()));
+        }
+
+        return null;
+    }
+
 
     /**
      * Build blocks into a specific template
@@ -63,36 +90,19 @@ class BlockExtension extends \Twig_Extension
             return $this->template;
         }
 
-        try {
-
-            $this->createFileTemplate(KRGCmsExtension::KRG_BLOCKS_FILE, function(){ return implode('', $this->loadBlocks()); });
-            $environment->setCache($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
-
-            $environment->setLoader(new \Twig_Loader_Chain([
-                $environment->getLoader(), // Preserve old loader
-                new \Twig_Loader_Filesystem([$this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR]) // Add KRG cache dir
-            ]));
-
-            $this->template = $environment->load(KRGCmsExtension::KRG_BLOCKS_FILE); // Load template from cache
-
-            return $this->template;
-        } catch (\Exception $exception) {
-            $this->logger->error(sprintf('[KRGCmsBundle] %s', $exception->getMessage()));
-        }
-
-        return null;
+        return $this->load($environment);
     }
 
     /**
-     * Generate KRGCmsExtension::KRG_BLOCKS_FILE twig template composed of each blocks
+     * Generate twig template
      */
     public function createFileTemplate($filename, \Closure $callback)
     {
-        if (!is_dir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR)) {
-            mkdir($this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR);
+        if (!is_dir($this->twigCacheDir)) {
+            mkdir($this->twigCacheDir);
         }
 
-        $path = sprintf('%s/%s', $this->cacheDir . KRGCmsExtension::KRG_CACHE_DIR, $filename);
+        $path = sprintf('%s/%s', $this->twigCacheDir, $filename);
 
         if (!file_exists($path)) {
             return (bool) file_put_contents($path, call_user_func($callback)) ? $path : null;
@@ -105,6 +115,7 @@ class BlockExtension extends \Twig_Extension
     {
         if (empty($this->content)) {
             $this->content = array_merge(
+                ['{% trans_default_domain "cms" %}'],
                 $this->loadStaticBlocks(),
                 $this->loadFilterBlocks(),
                 $this->loadFileBlocks(),
@@ -257,7 +268,7 @@ class BlockExtension extends \Twig_Extension
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            'krg_block_conetnt' => new \Twig_SimpleFunction('krg_block_content', [$this, 'renderContent'], [
+            'krg_block_content' => new \Twig_SimpleFunction('krg_block_content', [$this, 'renderContent'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),

@@ -60,6 +60,6 @@ class PageListener implements EventSubscriber
     {
         $seo = $page->getSeo();
         $seo->setEnabled($page->getEnabled());
-        $this->clearCache->warmupTwig(KRGCmsExtension::KRG_CACHE_DIR);
+        $this->clearCache->warmupTwig();
     }
 }

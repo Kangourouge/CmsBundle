@@ -55,15 +55,15 @@ class MenuBuilder implements MenuBuilderInterface
      * @param RequestStack           $requestStack
      * @param RouterInterface        $router
      * @param AnnotationReader       $annotationReader
-     * @param                        $cacheDir
+     * @param                        $twigCacheDir
      */
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $cacheDir)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $twigCacheDir)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->router = $router;
         $this->annotationReader = $annotationReader;
-        $this->cache = new FilesystemAdapter('menu', 0, sprintf('%s/%s', $cacheDir, KRGCmsExtension::KRG_CACHE_DIR));
+        $this->cache = new FilesystemAdapter('menu', 0, $twigCacheDir);
         $this->annotation = $this->getAnnotation();
     }
 

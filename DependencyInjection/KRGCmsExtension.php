@@ -11,10 +11,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class KRGCmsExtension extends Extension
 {
-    const KRG_CACHE_DIR = '/krg';
-    const KRG_BLOCKS_FILE = 'blocks.html.twig';
-    const KRG_STATIC_FILE_BLOCKS_PATH = __DIR__.'/../Resources/blocks';
-
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

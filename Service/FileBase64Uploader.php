@@ -8,10 +8,10 @@ class FileBase64Uploader
 
     private $uploadDir;
 
-    public function __construct($rootDir)
+    public function __construct($rootDir, $uploadDir)
     {
         $this->rootDir = $rootDir;
-        $this->uploadDir = '/cms/';
+        $this->uploadDir = $uploadDir;
     }
 
     public function uploadBase64($base64)
