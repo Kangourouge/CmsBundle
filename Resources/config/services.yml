@@ -5,7 +5,6 @@ services:
         public: false
         bind:
             $cacheDir: '%kernel.cache_dir%'
-            $transDir: '%kernel.cache_dir%/krg/trans'
             $twigCacheDir: '%kernel.cache_dir%/krg/twig'
             $fileBlocks: '%krg_cms.blocks%'
             $rootDir: '%kernel.root_dir%'

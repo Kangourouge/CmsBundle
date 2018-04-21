@@ -30,12 +30,12 @@ class ContentTransformer implements DataTransformerInterface
 
         unlink($filename);
 
-        return $html;
+        return base64_encode($html);
     }
 
     public function reverseTransform($value)
     {
-        $crawler = new Crawler($value);
+        $crawler = new Crawler(base64_decode($value));
         $content = $crawler->filter('div#krg_cms_page_wrapper');
 
         if ($content->getNode(0)) {

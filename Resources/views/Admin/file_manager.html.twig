@@ -1,0 +1,23 @@
+{% extends '@EasyAdmin/default/layout.html.twig' %}
+
+{% block main %}
+    {{ parent() }}
+    <style type="text/css">
+        .content-header {
+            display: none;
+        }
+
+        #main {
+            height: calc(100vh - 50px);
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        iframe {
+            border: none;
+        }
+    </style>
+    <iframe class="iframe-file-manager" src="{{ path('file_manager', {module:1, conf:'cms'}) }}" width="100%" height="100%">
+
+{% endblock %}

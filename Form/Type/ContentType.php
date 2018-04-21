@@ -5,6 +5,7 @@ namespace KRG\CmsBundle\Form\Type;
 use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
 use KRG\CmsBundle\Service\FileBase64Uploader;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -35,7 +36,7 @@ class ContentType extends AbstractType
 
     public function getParent()
     {
-        return TextareaType::class;
+        return HiddenType::class;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -43,8 +44,7 @@ class ContentType extends AbstractType
         parent::buildView($view, $form, $options);
 
         $view->vars['responsive'] = $options['responsive'];
-        $view->vars['switch_header_footer'] = $options['switch_header_footer'];
-        $view->vars['hide_header_footer'] = $options['hide_header_footer'];
+        $view->vars['fragment'] = $options['fragment'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -58,8 +58,7 @@ class ContentType extends AbstractType
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],
-                'switch_header_footer' => false,
-                'hide_header_footer'   => false,
+                'fragment'   => true,
             ]);
     }
 }

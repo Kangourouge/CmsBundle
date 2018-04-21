@@ -1,7 +1,7 @@
 {% block krg_cms_route_row %}
     <div class="form-group field-text">
         <div class="col-sm-2 control-label required">
-            <label for="{{ form.vars.id }}_url">Source url</label><br>
+            <label for="{{ form.vars.id }}_url">URL</label><br>
         </div>
 
         <div class="col-sm-10">
@@ -44,7 +44,7 @@
                                     }
                                 }
                             } else if (xmlhttp.status === 500) {
-                                alert('This url doesn\'t have any related route. Please paste another one.');
+                                alert('{{ 'This url doesn\'t have any related route. Please paste another one'|trans }}.');
                                 bindRouteText();
                             }
                         }
@@ -71,7 +71,7 @@
 
             function bindRouteText() {
                 url.value = '';
-                url.setAttribute('placeholder', select.value ? 'Match route: ' + select.value + ' (click here to change)' : 'Paste an url here');
+                url.setAttribute('placeholder', select.value ? '{{ 'Matched route'|trans }}: ' + select.value + ' ({{ 'click here to change'|trans({}, 'easyadmin') }})'  : '{{ 'Paste your URL here'|trans({}, 'easyadmin') }}');
             }
 
             function addParam(name, value) {

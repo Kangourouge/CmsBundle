@@ -3,11 +3,11 @@ easy_admin:
         Block:
             class: '%krg_cms.block.class%'
             list:
-                title:  '<i class="fa fa-cubes"></i> Block CMS'
+                title:  '<i class="fa fa-cubes"></i> Block'
                 fields:
-                    - enabled
                     - key
                     - name
+                    - enabled
             form:
                 fields:
                     -
@@ -17,9 +17,8 @@ easy_admin:
                     - name
                     -
                         property: 'content'
-                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type: KRG\IntlBundle\Form\Type\TranslationType
                         type_options:
-                            switch_header_footer: false
-                            hide_header_footer: true
+                            entry_type: KRG\CmsBundle\Form\Type\ContentType
                     - enabled
 

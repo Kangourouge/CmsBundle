@@ -3,6 +3,8 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 use KRG\CmsBundle\Entity\Validator\UniqueKey;
 use KRG\CmsBundle\Entity\Validator\ValidContent;
 
@@ -13,9 +15,10 @@ use KRG\CmsBundle\Entity\Validator\ValidContent;
  * @ValidContent()
  * @UniqueKey()
  */
-class Block extends AbstractBlock implements BlockInterface, BlockContentInterface
+class Block extends AbstractBlock implements BlockInterface, BlockContentInterface, Translatable
 {
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="text", nullable=true)
      */
     protected $content;

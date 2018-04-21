@@ -1,0 +1,24 @@
+imports:
+    - { resource: easyadmin/ }
+
+easy_admin:
+    design:
+        menu:
+            - label: 'CMS'
+            -
+                entity: 'Block'
+                icon: 'cubes'
+            -
+                entity: 'Page'
+                icon: 'sticky-note-o'
+            -
+                entity: 'Menu'
+                icon: 'reorder'
+                params: { sortField: 'position', sortDirection: 'ASC' }
+            -
+                entity: 'Seo'
+                icon: 'sitemap'
+            -
+                label: 'Media'
+                route: 'krg_admin_file_manager'
+                icon: 'folder-open'

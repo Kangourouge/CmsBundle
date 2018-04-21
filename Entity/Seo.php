@@ -2,8 +2,8 @@
 
 namespace KRG\CmsBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,16 +34,19 @@ class Seo implements SeoInterface
 
     /**
      * @Assert\NotNull()
+     * @Gedmo\Translatable()
      * @ORM\Column(type="string", nullable=false)
      */
     protected $url;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="string", nullable=true)
      */
     protected $metaTitle;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="string", nullable=true)
      */
     protected $metaDescription;

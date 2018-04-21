@@ -5,16 +5,16 @@ easy_admin:
             list:
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - enabled
                     - name
                     - url
+                    - enabled
                 sort: ['position', 'ASC']
                 actions:
                     - { name: 'sortable', field: 'position', label: '' }
             form:
                 fields:
-                    - enabled
                     - { property: key, help: 'Unique identifier' }
                     - name
                     - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'Url' }
                     - parent
+                    - enabled

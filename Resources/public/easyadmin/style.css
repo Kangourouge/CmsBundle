@@ -1,12 +1,16 @@
-.cms-content-tools {
+.form-control > .cms-content-tools {
+    margin: -6px -12px;
+}
+
+.form-control > .cms-content-tools {
     height: 500px;
 }
 
-.cms-content-tools > header {
+.form-control > .cms-content-tools > header {
     display: none;
 }
 
-.cms-content-tools.fullscreen {
+.form-control > .cms-content-tools.fullscreen {
     position: fixed;
     top: 0;
     left: 0;
@@ -24,7 +28,7 @@
     background: #ccc;
 }
 
-.cms-content-tools.fullscreen > header {
+.form-control > .cms-content-tools.fullscreen > header {
     display: block;
     background: #f8f9fa;
     padding: 0 30px;
@@ -32,28 +36,28 @@
     border-bottom: 1px solid #fff;
 }
 
-.cms-content-tools.fullscreen > header .pull-left {
+.form-control > .cms-content-tools.fullscreen > header .pull-left {
     padding: 10px 0;
 }
 
-.cms-content-tools.fullscreen > header .btn-group-toggle label {
+.form-control > .cms-content-tools.fullscreen > header .btn-group-toggle label {
     text-decoration: none;
     padding: 18px 20px 15px;
     box-shadow: none;
 }
 
-.cms-content-tools.fullscreen > header .btn-group-toggle .btn {
+.form-control > .cms-content-tools.fullscreen > header .btn-group-toggle .btn {
     border-radius: 0;
 }
 
-.cms-content-tools.fullscreen > header .btn-group-toggle .btn.active {
+.form-control > .cms-content-tools.fullscreen > header .btn-group-toggle .btn.active {
     border-top: 3px solid #0747A8;
     padding-top: 15px;
     color: #0747A8;
     font-weight: bold;
 }
 
-.cms-content-tools iframe {
+.form-control > .cms-content-tools iframe {
     border: 1px solid #eaeaea;
     margin: auto;
     display: block;

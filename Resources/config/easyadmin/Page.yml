@@ -5,19 +5,24 @@ easy_admin:
             list:
                 title: '<i class="fa fa-file"></i> Page'
                 fields:
-                    - enabled
                     - name
                     - { property: seo.metaTitle, label: 'Title' }
                     - { property: seo.url, label: 'Url' }
+                    - enabled
                 actions:
-                    - { name: 'krg_page_admin_show', type: 'route', label: '', icon: 'eye' }
+                    - { name: 'krg_page_admin_show', type: 'route', label: 'action.show' }
             form:
                 fields:
                     - name
-                    - { property: seo, type: KRG\CmsBundle\Form\Type\SeoType, label: null }
+                    -
+                        property: seo
+                        type: KRG\CmsBundle\Form\Type\SeoType
+                        label: false
                     -
                         property: 'content'
-                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type: KRG\IntlBundle\Form\Type\TranslationType
                         type_options:
-                            switch_header_footer: true
+                            entry_type: KRG\CmsBundle\Form\Type\ContentType
+                            entry_options:
+                                fragment: false
                     - enabled

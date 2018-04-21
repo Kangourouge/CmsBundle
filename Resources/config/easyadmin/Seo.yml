@@ -3,23 +3,19 @@ easy_admin:
         Seo:
             class: '%krg_cms.seo.class%'
             list:
-                title: '<i class="fa fa-wrench"></i> Seo'
+                title: '<i class="fa fa-sitemap"></i> Seo'
                 fields:
-                    - enabled
                     - url
-                    - routeName
+                    - { property: routeName, label: 'Route' }
                     - metaTitle
                     - metaDescription
+                    - enabled
             form:
                 fields:
                     - { type: 'group', label: 'Configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - { property: url, label: 'Redirect url' }
-                    - enabled
+                    - { property: url, label: 'Redirect URL' }
                     - { type: 'group', label: 'Metas' }
                     - metaTitle
                     - { property: metaDescription, type: textarea }
-                    - metaRobots
-                    - ogTitle
-                    - ogDescription
-                    - ogImage
+                    - enabled
