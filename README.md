@@ -1,5 +1,10 @@
 # CMSBundle
 
+Dependencies:
+
+https://github.com/Kangourouge/EasyAdminExtensionBundle
+https://github.com/Kangourouge/DoctrineExtensionBundle
+
 AppKernel
 ---------
 
@@ -9,7 +14,9 @@ AppKernel
 public function registerBundles()
 {
     $bundles = array(
-        new KRG\CmsBundle\KRGCmsBundle()
+        new KRG\CmsBundle\KRGCmsBundle(),
+        new KRG\EasyAdminExtensionBundle\KRGEasyAdminExtensionBundle(),
+        new KRG\DoctrineExtensionBundle\KRGDoctrineExtensionBundle(),
     );
 }
 ```
@@ -60,12 +67,16 @@ Routing
 ```yaml
 # app/config/routing.yml
 
-krg_seo_route_loader:
+krg_seo:
     resource: .
     type: seo
     
-seo:
+krg_cms:
     resource: "@KRGCmsBundle/Controller/"
+    type:     annotation
+    
+krg_easyadmin_bundle:
+    resource: "@KRGEasyAdminExtensionBundle/Controller/AdminController.php"
     type:     annotation
 ```
 
@@ -78,20 +89,16 @@ EasyAdmin configuration:
 ```yaml
 # app/config/admin.yml
 
-parameters:
-    krg_cms.seo.class: AppBundle\Entity\Seo
-    krg_cms.page.class: AppBundle\Entity\Page
-    krg_cms.menu.class: AppBundle\Entity\Menu
-    krg_cms.block.class: AppBundle\Entity\Block
-    krg_cms.filter.class: AppBundle\Entity\Filter
-
 imports:
-    - { resource: '@KRGCmsBundle/Resources/config/easyadmin/*.yml' }
+    - { resource: '@KRGEasyAdminExtensionBundle/Resources/config/easyadmin.yml' }
+    - { resource: '@KRGDoctrineExtensionBundle/Resources/config/easyadmin.yml' }    
+    - { resource: '@KRGCmsBundle/Resources/config/easyadmin.yml.yml' }
     
 easy_admin:
     design:
         css:
             - '/bundles/krgcms/easyadmin/style.css'
+            - '/bundles/krgeasyadminextension/css/style.css'
 
 ```
 

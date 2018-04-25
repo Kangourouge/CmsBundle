@@ -1,9 +1,9 @@
 {
-  "name"       : "kangourouge/cms-bundle",
-  "description": "Kangourouge CMS Bundle",
-  "type"       : "symfony-bundle",
-  "license"    : "MIT",
-  "authors"    : [
+  "name"        : "kangourouge/cms-bundle",
+  "description" : "Kangourouge CMS Bundle",
+  "type"        : "symfony-bundle",
+  "license"     : "MIT",
+  "authors"     : [
     {
       "name" : "Arthur Miniconi",
       "email": "arthur.miniconi@gmail.com"
@@ -13,15 +13,27 @@
       "email": "chafiq.elmechrafi@gmail.com"
     }
   ],
-  "require"    : {
-    "php"                     : "7.*",
-    "symfony/framework-bundle": "~2.1|~3.0",
-    "doctrine/orm"            : "~2.3"
+  "require"     : {
+    "php"                                   : "7.*",
+    "symfony/framework-bundle"              : "~2.1|~3.0",
+    "kangourouge/doctrine-extension-bundle" : "1.*",
+    "kangourouge/easyadmin-extension-bundle": "1.*",
+    "doctrine/orm"                          : "~2.3"
   },
-  "autoload"   : {
+  "autoload"    : {
     "psr-0": {
       "KRG\\CmsBundle": ""
     }
   },
-  "target-dir" : "KRG/CmsBundle"
+  "target-dir"  : "KRG/CmsBundle",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url" : "https://github.com/Kangourouge/DoctrineExtensionBundle.git"
+    },
+    {
+      "type": "vcs",
+      "url" : "https://github.com/Kangourouge/EasyAdminExtensionBundle.git"
+    }
+  ]
 }
