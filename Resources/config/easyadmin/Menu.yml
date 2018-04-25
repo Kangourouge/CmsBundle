@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Menu:
-            class: '%krg_cms.menu.class%'
+            class: 'KRG\CmsBundle\Entity\MenuInterface'
             list:
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
@@ -9,12 +9,10 @@ easy_admin:
                     - url
                     - enabled
                 sort: ['position', 'ASC']
-                actions:
-                    - { name: 'sortable', field: 'position', label: '' }
             form:
                 fields:
                     - { property: key, help: 'Unique identifier' }
                     - name
-                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'Url' }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'URL' }
                     - parent
                     - enabled

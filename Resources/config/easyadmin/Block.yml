@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Block:
-            class: '%krg_cms.block.class%'
+            class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
                 title:  '<i class="fa fa-cubes"></i> Block'
                 fields:

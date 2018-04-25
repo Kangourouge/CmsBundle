@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin", name="krg_admin_")
+ * @Route("/admin/cms", name="krg_cms_admin_")
  */
 class AdminController extends AbstractController
 {

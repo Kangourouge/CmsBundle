@@ -4,21 +4,12 @@ imports:
 easy_admin:
     design:
         menu:
-            - label: 'CMS'
             -
-                entity: 'Block'
-                icon: 'cubes'
-            -
-                entity: 'Page'
-                icon: 'sticky-note-o'
-            -
-                entity: 'Menu'
-                icon: 'reorder'
-                params: { sortField: 'position', sortDirection: 'ASC' }
-            -
-                entity: 'Seo'
-                icon: 'sitemap'
-            -
-                label: 'Media'
-                route: 'krg_admin_file_manager'
-                icon: 'folder-open'
+                label: 'CMS'
+                roles: ['ROLE_CMS']
+                children:
+                    - { entity: 'Block', icon: 'cubes' }
+                    - { entity: 'Page', icon: 'file' }
+                    - { entity: 'Menu', icon: 'reorder' }
+                    - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
+                    - { label: 'Media', route: 'krg_cms_admin_file_manager', icon: 'folder-open' }

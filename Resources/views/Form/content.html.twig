@@ -33,24 +33,25 @@
                 </div>
             </header>
 
-            <div style="height: 100%;">
+            <div style="display: contents">
                 <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" frameborder="0"></iframe>
-                <div id="{{ form.vars.id }}_source" class="cms-content-source" style="display: none;"></div>
+                <div id="{{ form.vars.id }}_source" class="cms-content-source" style="display: none; overflow-y: scroll; height: 100%"></div>
             </div>
         </section>
         <div class="btn-group" role="group" style="margin: 20px 0">
             <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info">
                 {{ 'Edit HTML'|trans }} <span class="fa fa-code"></span>
             </button>
+            <!--
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ 'Previous versions'|trans }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
                     <li class="dropdown-item"><a class="btn-link" href="#">Dropdown link</a></li>
-                    <li class="dropdown-item"><a class="btn-link" href="#">Dropdown link</a></li>
                 </ul>
             </div>
+            -->
         </div>
 
         {{ form_widget(form) }}

@@ -14,11 +14,13 @@ use KRG\CmsBundle\Entity\Validator\ValidContent;
  * @ORM\MappedSuperclass()
  * @ValidContent()
  * @UniqueKey()
+ * @Gedmo\Loggable
  */
 class Block extends AbstractBlock implements BlockInterface, BlockContentInterface, Translatable
 {
     /**
      * @Gedmo\Translatable()
+     * @Gedmo\Versioned
      * @ORM\Column(type="text", nullable=true)
      */
     protected $content;

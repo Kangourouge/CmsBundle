@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Seo
  *
  * @ORM\MappedSuperclass(repositoryClass="KRG\CmsBundle\Repository\SeoRepository")
+ * @Gedmo\Loggable
  */
 class Seo implements SeoInterface
 {
@@ -23,18 +24,15 @@ class Seo implements SeoInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
-     */
-    protected $enabled;
-
-    /**
      * @ORM\Column(type="string", unique=true)
+     * @Gedmo\Versioned
      */
     protected $uid;
 
     /**
      * @Assert\NotNull()
      * @Gedmo\Translatable()
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=false)
      */
     protected $url;
@@ -55,6 +53,12 @@ class Seo implements SeoInterface
      * @ORM\Column(type="string", nullable=true)
      */
     protected $metaRobots;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
+     * @Gedmo\Versioned
+     */
+    protected $enabled;
 
     public function __construct()
     {

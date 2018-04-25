@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/cms/filter")
@@ -35,7 +36,7 @@ class FilterController extends AbstractController
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
         $form->handleRequest($request);
 
-        return $this->render('KRGCmsBundle:Block:framed_form.html.twig', [
+        return $this->render('KRGCmsBundle:Filter:edit.html.twig', [
             'form' => $form->createView()
         ]);
     }

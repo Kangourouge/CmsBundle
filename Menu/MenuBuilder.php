@@ -196,11 +196,12 @@ class MenuBuilder implements MenuBuilderInterface
      */
     public function isActive(array $node)
     {
-        if ($this->request === null) {
+        if ($this->request === null || ($node['url'] === null && count($node['route']) === 0)) {
             return false;
         }
 
         $nodeRoute = $node['route'];
+
         $requestRoute = [
             'name'   => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
             'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params'),
@@ -252,7 +253,7 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         $url = $menu->getUrl();
-        if ($url === null) {
+        if ($menu->getRouteName() !== null) {
             try {
                 $url = $this->router->generate($menu->getRouteName(), $menu->getRouteParams());
             } catch (\Exception $exception) {
@@ -260,18 +261,17 @@ class MenuBuilder implements MenuBuilderInterface
             }
         }
 
-        return array_merge([
-            [
-                'url'      => $url,
-                'route'    => $menu->getRoute(),
-                'name'     => $menu->getName(),
-                'title'    => $menu->getTitle(),
-                'children' => $this->_build($menu->getChildren()->toArray()),
-                'roles'    => $menu->getRoles(),
-                'active'   => false,
-            ],
-        ],
-            $this->_build($menus));
+        $node = [
+            'url'      => $url,
+            'route'    => $menu->getRoute(),
+            'name'     => $menu->getName(),
+            'title'    => $menu->getTitle(),
+            'children' => $this->_build($menu->getChildren()->toArray()),
+            'roles'    => $menu->getRoles(),
+            'active'   => false,
+        ];
+
+        return array_merge([$node], $this->_build($menus));
     }
 
     /**

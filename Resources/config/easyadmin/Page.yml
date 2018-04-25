@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Page:
-            class: '%krg_cms.page.class%'
+            class: 'KRG\CmsBundle\Entity\PageInterface'
             list:
                 title: '<i class="fa fa-file"></i> Page'
                 fields:
@@ -9,8 +9,6 @@ easy_admin:
                     - { property: seo.metaTitle, label: 'Title' }
                     - { property: seo.url, label: 'Url' }
                     - enabled
-                actions:
-                    - { name: 'krg_page_admin_show', type: 'route', label: 'action.show' }
             form:
                 fields:
                     - name

@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use EMC\FileinputBundle\Entity\FileInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,12 +30,6 @@ abstract class AbstractBlock implements BlockInterface
     protected $key;
 
     /**
-     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
-     * @var boolean
-     */
-    protected $enabled;
-
-    /**
      * @ORM\Column(type="boolean", name="is_working", options={"default":true})
      * @var boolean
      */
@@ -46,6 +41,12 @@ abstract class AbstractBlock implements BlockInterface
      * @var FileInterface
      */
     protected $thumbnail;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
+     * @var boolean
+     */
+    protected $enabled;
 
     public function __construct()
     {

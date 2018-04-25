@@ -6,16 +6,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
+use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
 
 /**
  * Menu
  *
  * @ORM\MappedSuperclass(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  * @Gedmo\Tree(type="nested")
+ * @Gedmo\Loggable
  */
-class Menu implements MenuInterface
+class Menu implements MenuInterface, SortableInterface
 {
     use NestedTreeEntity;
+    use SortableEntity;
     use SeoRouteTrait;
 
     /**
@@ -27,24 +31,28 @@ class Menu implements MenuInterface
 
     /**
      * @ORM\Column(type="string")
+     * @Gedmo\Versioned
      * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(name="`key`", type="string", unique=true, nullable=true)
+     * @Gedmo\Versioned
      * @var string
      */
     protected $key;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Gedmo\Versioned
      * @var string
      */
     protected $title;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     * @Gedmo\Versioned
      * @var string
      */
     protected $route;
@@ -53,6 +61,7 @@ class Menu implements MenuInterface
      * @ORM\ManyToOne(targetEntity="KRG\CmsBundle\Entity\MenuInterface", inversedBy="children")
      * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * @Gedmo\TreeParent
+     * @Gedmo\Versioned
      * @var MenuInterface
      */
     protected $parent;
@@ -65,25 +74,22 @@ class Menu implements MenuInterface
     protected $children;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @var integer
-     */
-    protected $position;
-
-    /**
      * @ORM\Column(type="json_array")
+     * @Gedmo\Versioned
      * @var string
      */
     protected $roles;
 
     /**
      * @ORM\Column(type="boolean", name="is_compound", nullable=true)
+     * @Gedmo\Versioned
      * @var boolean
      */
     protected $compound;
 
     /**
      * @ORM\Column(type="boolean", name="is_enabled")
+     * @Gedmo\Versioned
      * @var boolean
      */
     protected $enabled;
@@ -170,24 +176,6 @@ class Menu implements MenuInterface
     public function getUrl()
     {
         return $this->route['url'] ?? null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPosition()
-    {
-        return $this->position;
     }
 
     /**

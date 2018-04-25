@@ -3,11 +3,13 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PageInterface
  *
  * @ORM\MappedSuperclass
+ * @Gedmo\Loggable
  */
 class Page extends Block implements PageInterface, BlockContentInterface
 {

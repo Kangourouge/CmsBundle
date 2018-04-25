@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use KRG\CmsBundle\Entity\Validator\FilterWorking;
 use KRG\CmsBundle\Entity\Validator\UniqueKey;
 
@@ -12,11 +13,13 @@ use KRG\CmsBundle\Entity\Validator\UniqueKey;
  * @ORM\MappedSuperclass
  * @FilterWorking()
  * @UniqueKey()
+ * @Gedmo\Loggable
  */
 class Filter extends AbstractBlock implements FilterInterface
 {
     /**
      * @ORM\Column(type="json_array")
+     * @Gedmo\Versioned
      * @var array
      */
     protected $form;

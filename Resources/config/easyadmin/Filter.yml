@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         Filter:
-            class: '%krg_cms.filter.class%'
+            class: 'KRG\CmsBundle\Entity\FilterInterface'
             list:
                 title: '<i class="fa fa-filter"></i> Filters'
                 fields:

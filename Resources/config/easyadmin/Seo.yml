@@ -1,7 +1,8 @@
 easy_admin:
     entities:
         Seo:
-            class: '%krg_cms.seo.class%'
+            roles: ['ROLE_SEO']
+            class: 'KRG\CmsBundle\Entity\SeoInterface'
             list:
                 title: '<i class="fa fa-sitemap"></i> Seo'
                 fields:
