@@ -45,6 +45,12 @@ framework:
 
 doctrine:
     orm:
+        mappings:
+            loggable:
+                type: annotation
+                prefix: Gedmo\Loggable\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                is_bundle: false
         resolve_target_entities:
             KRG\CmsBundle\Entity\SeoInterface: AppBundle\Entity\Seo
             KRG\CmsBundle\Entity\PageInterface: AppBundle\Entity\Page

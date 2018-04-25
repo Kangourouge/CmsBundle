@@ -47,12 +47,14 @@ class RouteType extends AbstractType
             ->add('params', CollectionType::class, [
                 'allow_add'    => true,
                 'allow_delete' => true,
+                'required'     => false
             ]);
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         parent::finishView($view, $form, $options);
+
         $view->children['params']->vars['allow_add'] = false;
         $view->children['params']->vars['allow_delete'] = false;
     }
