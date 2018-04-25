@@ -1,6 +1,6 @@
 Block: Bloc
 Redirect URL: URL de redirection
-Enabled: Actif
+enabled: Actif
 action.new: Créer
 action.edit: Editer
 action.delete: Supprimer
@@ -8,13 +8,13 @@ action.search: Rechercher
 action.save: Sauvegarder
 action.list: Retour à la liste
 action.show: Afficher
-Name: Libellé
-Title: Titre
-Content: Contenu
-Key: Clé
-Unique identifier: Identifiant unique
-Paste your URL here: Collez votre URL
-Url: URL
+name: Libellé
+title: Titre
+content: Contenu
+key: Clé
+unique identifier: Identifiant unique
+paste your URL here: Collez votre URL
+url: URL
 label.form.empty_value:
 click here to change: Cliquez pour modifier
 Matched route: Itinéraire correspondant
