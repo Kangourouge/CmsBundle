@@ -5,7 +5,6 @@ namespace KRG\CmsBundle\Form\Type;
 use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
 use KRG\CmsBundle\Service\FileBase64Uploader;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -34,11 +33,6 @@ class ContentType extends AbstractType
         $builder->addModelTransformer(new ContentTransformer($this->templating, $this->fileUploader));
     }
 
-    public function getParent()
-    {
-        return HiddenType::class;
-    }
-
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
@@ -60,5 +54,10 @@ class ContentType extends AbstractType
                 ],
                 'fragment'   => true,
             ]);
+    }
+
+    public function getParent()
+    {
+        return TextareaType::class;
     }
 }
