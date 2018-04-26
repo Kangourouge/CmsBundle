@@ -95,3 +95,8 @@
     text-align: center;
     font-style: italic;
 }
+
+.form-control.krg-cms-form-control {
+    height: auto;
+}
+
