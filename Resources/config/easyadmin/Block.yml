@@ -5,6 +5,7 @@ easy_admin:
             list:
                 title:  '<i class="fa fa-cubes"></i> Block'
                 fields:
+                    - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50' }
                     - key
                     - name
                     - enabled
