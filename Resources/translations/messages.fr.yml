@@ -21,3 +21,4 @@ Matched route: Itinéraire correspondant
 Route: Itinéraire
 This url doesn't have any related route. Please paste another one: Cette URL n'a aucun itinéraire associé. Veuillez en coller un autre
 "<i class=\"fa fa-cubes\"></i> Block": "<i class=\"fa fa-cubes\"></i> Bloc"
+Available metas properties, usage {{ variable }}: Propriétés utilisables dans les metas, utilisation {{ variable }}

@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Form\Type;
 
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -32,17 +33,6 @@ class RouteType extends AbstractType
                 'label'       => 'Route',
                 'placeholder' => '',
                 'choices'     => $this->getChoices(),
-                'choice_attr' => function ($key) {
-                    if ($key) {
-                        $route = $this->routes->get($key);
-                        $compiledRoute = $route->compile();
-                        $parameters = array_flip($compiledRoute->getPathVariables());
-
-                        return ['data-params' => json_encode($parameters)];
-                    }
-
-                    return $key;
-                },
             ])
             ->add('params', CollectionType::class, [
                 'allow_add'    => true,

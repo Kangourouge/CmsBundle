@@ -15,73 +15,130 @@
     {{ form_widget(form.params, {'attr': {'style': 'border-left: 3px solid #ccc; margin-left: 16.666667%'}}) }}
 
     <script type="text/javascript">
-        (function(){
+        window.addEventListener('load', function() {
             var select = document.getElementById('{{ form.name.vars.id }}');
             var params = document.getElementById('{{ form.params.vars.id }}');
             var url = document.getElementById('{{ form.vars.id }}_url');
-            var prototype = params.dataset.prototype;
 
-            // Load
+            {% if form.parent.metaTitle %}
+                var propsWrapper = findAncestor(document.getElementById('{{ form.parent.metaTitle.vars.id }}'), 'box-body');
+                var divProps = null;
+            {% endif %}
+
+            {% if form.parent.url is defined %}
+                var redirectUrl = document.getElementById('{{ form.parent.url.vars.id }}');
+            {% endif %}
+
             select.addEventListener('change', routeChange);
-            url.addEventListener('paste', getRouteFromUrl);
+            url.addEventListener('paste', urlChange);
 
-            bindRouteText();
+            routeChange();
 
-            function getRouteFromUrl(event) {
+            function urlChange() {
                 setTimeout(function () { {# Paste timeout #}
-                    var xmlhttp = new XMLHttpRequest();
-
-                    xmlhttp.onreadystatechange = function () {
-                        if (xmlhttp.readyState === 4) {
-                            if (xmlhttp.status === 200) {
-                                var routeData = JSON.parse(xmlhttp.responseText);
-
-                                for (var i = 0; i < select.options.length; i++) {
-                                    if (select.options[i].value === routeData._route) {
-                                        select.selectedIndex = i;
-                                        routeChange(routeData);
-                                        break;
-                                    }
-                                }
-                            } else if (xmlhttp.status === 500) {
-                                alert('{{ 'This url doesn\'t have any related route. Please paste another one'|trans }}.');
-                                bindRouteText();
-                            }
-                        }
-                    };
-
-                    xmlhttp.open("GET", "{{ path('krg_cms_route_from_url') }}" + "?url=" + url.value, true);
-                    xmlhttp.send();
+                    bindRoute(url.value, 'url');
                 }, 100);
             }
 
-            function routeChange(routeData) {
+            function routeChange() {
                 var selectedOption = select.options[select.selectedIndex];
-                var _params = JSON.parse(selectedOption.dataset.params);
 
-                params.innerHTML = '';
-                for(var key in _params) {
-                    addParam(key, routeData[key]);
+                bindRoute(selectedOption.value, 'route');
+            }
+
+            function bindRoute(url, type) {
+                if (url.length === 0) {
+                    return;
                 }
 
-                params.style.display = _params.length === 0 ? 'none' : 'block';
+                var xmlhttp = new XMLHttpRequest();
 
-                bindRouteText();
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState === 4) {
+                        if (xmlhttp.status === 200) {
+                            var data = JSON.parse(xmlhttp.responseText);
+
+                            bindParameters(data.parameters);
+                            bindProperties(data.properties);
+                            bindSelect(data.route);
+                            bindRedirectUrl();
+                            bindRouteText();
+                        } else if (xmlhttp.status === 500) {
+                            alert('{{ 'This url doesn\'t have any related route. Please paste another one'|trans }}.');
+                            bindRouteText();
+                        }
+                    }
+                };
+
+                xmlhttp.open("GET", "{{ path('krg_cms_route_data') }}" + "?"+ type +"=" + url, true);
+                xmlhttp.send();
+            }
+
+            function bindSelect(route) {
+                for (var i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === route) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            function bindRedirectUrl() {
+                if (redirectUrl !== undefined && redirectUrl.value.length === 0) {
+                    redirectUrl.value = select.options[select.selectedIndex].innerText;
+                }
+            }
+
+            function bindParameters(parameters) {
+                params.innerHTML = '';
+                for(var name in parameters) {
+                    if (!parameters.hasOwnProperty(name)) continue;
+                    addParam(name, parameters[name]);
+                }
+                params.style.display = parameters.length === 0 ? 'none' : 'block';
+            }
+
+            function bindProperties(properties) {
+                if (properties.length === 0) {
+                    return;
+                }
+
+                if (divProps) {
+                    divProps.innerHTML = '';
+                }
+
+                if (propsWrapper !== undefined) {
+                    divProps = document.createElement('div');
+                    divProps.id = 'props-wrapper';
+                    divProps.innerHTML = '<strong>{{ 'Available metas properties, usage {{ variable }}'|trans }}:</strong> '
+                        + properties.join(', ') + '<br>'
+                        + '<hr>';
+
+                    propsWrapper.prepend(divProps);
+                }
             }
 
             function bindRouteText() {
                 url.value = '';
-                url.setAttribute('placeholder', select.value ? '{{ 'Matched route'|trans }}: ' + select.value + ' ({{ 'click here to change'|trans({}, 'easyadmin') }})'  : '{{ 'Paste your URL here'|trans({}, 'easyadmin') }}');
+                url.setAttribute('placeholder', select.value ?
+                    '{{ 'Matched route'|trans }}: ' + select.value + ' ({{ 'click here to change'|trans }})'
+                    : '{{ 'Paste your URL here'|trans }}');
             }
 
             function addParam(name, value) {
                 var attrValue = typeof value === 'undefined' ? '' : '" value="' + value;
 
-                params.innerHTML += prototype
+                params.innerHTML += params.dataset.prototype
                     .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
                     .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + attrValue);
             }
-        })();
+
+            function findAncestor(element, className) {
+                while ((element = element.parentElement) && !element.classList.contains(className));
+
+                return element;
+            }
+        }, false);
     </script>
 {% endblock %}

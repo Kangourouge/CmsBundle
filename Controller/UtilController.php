@@ -3,7 +3,9 @@
 namespace KRG\CmsBundle\Controller;
 
 use KRG\CmsBundle\Entity\PageInterface;
-use KRG\CmsBundle\Service\FileUploader;
+use KRG\CmsBundle\Model\RouteInfo;
+use KRG\CmsBundle\Service\FileBase64Uploader;
+use KRG\CmsBundle\Util\Helper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,23 +18,49 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilController extends AbstractController
 {
     /**
-     * @Route("/route-from-url", name="krg_cms_route_from_url")
+     * @Route("/route_data", name="krg_cms_route_data")
      * @Security("has_role('ROLE_ADMIN')"))
      */
-    public function routeFromUrlAction(Request $request)
+    public function getRouteDataAction(Request $request)
     {
-        if ($url = $request->get('url')) {
+        $router = $this->get('router');
+        $routeCollection = $router->getRouteCollection();
+        $routeName = $request->get('route');
+        $url = $request->get('url');
+        $route = null;
+
+        $routeInfo = new RouteInfo();
+        $routeInfo->setRoute($routeName);
+
+        if ($url) {
             try {
-                $url = str_replace(['http://', $request->getHttpHost()], '', $url);
-                $data = $this->get('router')->match($url);
+                $data = $router->match(str_replace(['http://', $request->getHttpHost()], '', $url));
             } catch (\Exception $e) {
                 throw new \Exception('No matching route');
             }
 
-            return new JsonResponse($data);
+            $routeInfo
+                ->setRoute($data['_route'])
+                ->setParameters(RouteInfo::extractParameters($data));
         }
 
-        throw new \Exception();
+        if ($routeInfo->getRoute()) {
+            if ($route = $routeCollection->get($routeInfo->getRoute())) {
+                if ($route->hasDefault('_controller')) {
+                    $routeInfo
+                        ->setController($route->getDefault('_controller'))
+                        ->setProperties(RouteInfo::extractProperties(Helper::getAvailablePropertiesFromRoute($route)));
+                }
+            } else {
+                throw new \Exception('No matching route');
+            }
+        }
+
+        if ($route && $routeName) {
+            $routeInfo->setParameters(RouteInfo::extractParameters(array_flip($route->compile()->getPathVariables())));
+        }
+
+        return new JsonResponse($routeInfo->toArray());
     }
 
     /**
@@ -44,7 +72,7 @@ class UtilController extends AbstractController
         list($width, $height) = getimagesize($image->getPathname());
 
         return new JsonResponse([
-            'url'  => sprintf('/uploads/%s', $this->get(FileUploader::class)->upload($image)),
+            'url'  => sprintf('/uploads/%s', $this->get(FileBase64Uploader::class)->upload($image)),
             'size' => [$width, $height]
         ]);
     }
