@@ -84,7 +84,7 @@
             }
 
             function bindRedirectUrl() {
-                if (redirectUrl !== undefined && redirectUrl.value.length === 0) {
+                if (redirectUrl !== undefined) {
                     redirectUrl.value = select.options[select.selectedIndex].innerText;
                 }
             }
@@ -99,12 +99,12 @@
             }
 
             function bindProperties(properties) {
-                if (properties.length === 0) {
-                    return;
+                if (divProps !== undefined && divProps) {
+                    divProps.innerHTML = '';
                 }
 
-                if (divProps) {
-                    divProps.innerHTML = '';
+                if (properties.length === 0) {
+                    return;
                 }
 
                 if (propsWrapper !== undefined) {
