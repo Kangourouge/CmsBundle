@@ -30,11 +30,12 @@ class RouteType extends AbstractType
     {
         $builder
             ->add('name', ChoiceType::class, [
-                'label'       => 'Route',
+                'label'       => 'seo.route',
                 'placeholder' => '',
                 'choices'     => $this->getChoices(),
             ])
             ->add('params', CollectionType::class, [
+                'label'        => 'seo.params',
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'required'     => false

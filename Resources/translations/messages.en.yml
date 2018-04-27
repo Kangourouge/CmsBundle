@@ -21,19 +21,21 @@ label.form.empty_value:
 click here to change: Cliquez pour modifier
 Matched route: Itinéraire correspondant
 Route: Itinéraire
+This url doesn't have any related route. Please paste another one: Cette URL n'a aucun itinéraire associé. Veuillez en coller un autre
 "<i class=\"fa fa-cubes\"></i> Block": "<i class=\"fa fa-cubes\"></i> Bloc"
+Available metas properties, usage {{ variable }}: Propriétés utilisables dans les metas, utilisation {{ variable }}
 
 seo:
-  url: Url de redirection
+  url: Redirect url
   configuration: Configuration
-  route: Itinéraire
+  route: Route
   metas: Metas
-  metaTitle: Titre
+  metaTitle: Title
   metaDescription: Description (meta)
 
 route:
-  url_error: Cette url n'est pas liée à un itinéraire
-  available_vars: Propriétés utilisables dans les metas, utilisation {{ variable }}
-  click_change: Cliquer ici pour mettre à jour
-  match: Itinéraire
-  paste_here: Générez une configuration en collant une url ici...
+  url_error: This url doesn\'t have any related route. Please paste another one
+  available_vars: Available metas properties, usage {{ variable }}
+  click_change: click here to change
+  match: Matched route
+  paste_here: Paste your URL here

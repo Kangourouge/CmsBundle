@@ -6,17 +6,17 @@ easy_admin:
             list:
                 title: '<i class="fa fa-sitemap"></i> Seo'
                 fields:
-                    - url
-                    - { property: routeName, label: 'Route' }
-                    - metaTitle
-                    - metaDescription
+                    - { property: url, label: 'seo.url' }
+                    - { property: routeName, label: 'seo.route' }
+                    - { property: metaTitle, label: 'seo.metaTitle' }
+                    - { property: metaDescription, label: 'seo.metaDescription' }
                     - enabled
             form:
                 fields:
-                    - { type: 'group', label: 'Configuration' }
+                    - { type: 'group', label: 'seo.configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - { property: url, label: 'Redirect URL' }
-                    - { type: 'group', label: 'Metas' }
-                    - metaTitle
-                    - { property: metaDescription, type: textarea }
+                    - { property: url, label: 'seo.url' }
+                    - { type: 'group', label: 'seo.metas' }
+                    - { property: metaTitle, label: 'seo.metaTitle' }
+                    - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
                     - enabled

@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-10">
-            <input type="text" id="{{ form.vars.id }}_url" class="form-control" />
+            <input type="text" id="{{ form.vars.id }}_url" />
         </div>
     </div>
 
@@ -48,6 +48,7 @@
 
             function bindRoute(url, type) {
                 if (url.length === 0) {
+                    bindRouteText();
                     return;
                 }
 
@@ -64,7 +65,7 @@
                             bindRedirectUrl();
                             bindRouteText();
                         } else if (xmlhttp.status === 500) {
-                            alert('{{ 'This url doesn\'t have any related route. Please paste another one'|trans }}.');
+                            alert('{{ 'route.url_error'|trans }}.');
                             bindRouteText();
                         }
                     }
@@ -110,7 +111,7 @@
                 if (propsWrapper !== undefined) {
                     divProps = document.createElement('div');
                     divProps.id = 'props-wrapper';
-                    divProps.innerHTML = '<strong>{{ 'Available metas properties, usage {{ variable }}'|trans }}:</strong> '
+                    divProps.innerHTML = '<strong>{{ 'route.available_vars'|trans }}:</strong> '
                         + properties.join(', ') + '<br>'
                         + '<hr>';
 
@@ -121,8 +122,8 @@
             function bindRouteText() {
                 url.value = '';
                 url.setAttribute('placeholder', select.value ?
-                    '{{ 'Matched route'|trans }}: ' + select.value + ' ({{ 'click here to change'|trans }})'
-                    : '{{ 'Paste your URL here'|trans }}');
+                    '{{ 'route.match'|trans }}: ' + select.value + ' ({{ 'route.click_change'|trans }})'
+                    : '{{ 'route.paste_here'|trans }}');
             }
 
             function addParam(name, value) {
