@@ -1,13 +1,16 @@
 # CMSBundle
 
-Dependencies:
+## Setup
 
-https://github.com/Kangourouge/EasyAdminExtensionBundle
-https://github.com/Kangourouge/DoctrineExtensionBundle
+### Installation
 
-AppKernel
----------
+#### Step 1: Download the bundle
 
+```sh
+$ composer require kangourouge/cms-bundle
+```
+
+#### Step 2: Enable the bundle and install assets
 ```php
 <?php
 
@@ -15,37 +18,41 @@ public function registerBundles()
 {
     $bundles = array(
         new KRG\CmsBundle\KRGCmsBundle(),
-        new KRG\EasyAdminExtensionBundle\KRGEasyAdminExtensionBundle(),
+        new KRG\IntlBundle\KRGIntlBundle(),
         new KRG\DoctrineExtensionBundle\KRGDoctrineExtensionBundle(),
+        new KRG\EasyAdminExtensionBundle\KRGEasyAdminExtensionBundle(),
     );
 }
 ```
 
+```sh
+$ bin/console assets:install
+```
 
-Configuration
--------------
+#### Step 3: Extend entities
 
-Create 5 entities:
+- class Seo extends \KRG\CmsBundle\Entity\Seo;
+- class Page extends \KRG\CmsBundle\Entity\Page;
+- class Menu extends \KRG\CmsBundle\Entity\Menu;
+- class Block extends \KRG\CmsBundle\Entity\Block;
+- class Filter extends \KRG\CmsBundle\Entity\Filter;
 
-class Seo extends \KRG\CmsBundle\Entity\Seo;
-class Page extends \KRG\CmsBundle\Entity\Page;
-class Menu extends \KRG\CmsBundle\Entity\Menu;
-class Block extends \KRG\CmsBundle\Entity\Block;
-class Filter extends \KRG\CmsBundle\Entity\Filter;
-
+#### Step 4: Configuration
 
 ```yaml
 # app/config/config.yml
 
 framework:
-    # ...
     serializer: { enable_annotations: true }
-
-...
 
 doctrine:
     orm:
         mappings:
+            translatable:
+                type: annotation
+                alias: Gedmo
+                prefix: Gedmo\Translatable\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
             loggable:
                 type: annotation
                 prefix: Gedmo\Loggable\Entity
@@ -58,8 +65,6 @@ doctrine:
             KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
             KRG\CmsBundle\Entity\FilterInterface: AppBundle\Entity\Filter
             
-...
-
 twig:
     form_themes:
         - 'KRGCmsBundle:Form:route.html.twig'
@@ -67,30 +72,31 @@ twig:
         - 'KRGCmsBundle:Form:content.html.twig'
 ```
 
-Routing
--------
-
 ```yaml
 # app/config/routing.yml
 
 krg_seo:
     resource: .
     type: seo
-    
-krg_cms:
-    resource: "@KRGCmsBundle/Controller/"
+
+krg_user:
+    resource: "@KRGUserBundle/Controller/"
     type:     annotation
-    
+    prefix:   /
+
 krg_easyadmin_bundle:
     resource: "@KRGEasyAdminExtensionBundle/Controller/AdminController.php"
     type:     annotation
+    prefix:   /admin
+
+krg_doctrine_bundle:
+    resource: "@KRGDoctrineExtensionBundle/Controller/"
+    type:     annotation
+
+krg_cms:
+    resource: "@KRGCmsBundle/Controller/"
+    type:     annotation
 ```
-
-
-Admin
------
-
-EasyAdmin configuration:
 
 ```yaml
 # app/config/admin.yml
@@ -105,11 +111,13 @@ easy_admin:
         css:
             - '/bundles/krgcms/easyadmin/style.css'
             - '/bundles/krgeasyadminextension/css/style.css'
-
 ```
 
-Twig
-----
+## Usage
+
+### Twig functions
+
+#### Title & metas: seo_head()
 
 ```twig
 <html>
@@ -120,32 +128,21 @@ Twig
 </head>
 ```
 
-Récupérer l'url d'une SeoPage depuis sa key :
+#### Page link: seo_url()
+
 ```twig
 {{ seo_url('cgu') }}
 ```
 
+#### Blocks: krg_block()
 
-Override service Menu Builder
------------------------------
-
-https://symfony.com/doc/current/service_container/autowiring.html#working-with-interfaces
-
-```yaml
-services:
-    KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
+```twig
+{{ krg_block('example') }}
 ```
 
-Assets
-------
+### Blocks usage
 
-bin/console assets:install
-
-# Blocks
-## Filters
-
-Form tags
----------
+#### Filters
 
 In order to be able to create a custom form, you need to tag your form like this:
 
@@ -160,10 +157,10 @@ services:
             - { name: 'krg.cms.form', handler: 'AppBundle\Form\Handler\TestHandler', template: '@App/Form/test.html.twig', alias: 'Form test' }
 ```
 
-## Files
+#### Files
 
 ```yaml
-# config.yml
+# app/config/config.yml
 
 krg_cms:
     blocks_path:
@@ -179,12 +176,23 @@ h2:
 ```
 
 h2.html.twig
-```twig 
-    <h2>Title</h2>
+```html
+<h2>Title</h2>
 ```
 
-To be able to edit an invisible area from the admin, add class "cms-hidden-area" and the data attribute "data-parent-label"
-```
+To be able to edit an invisible area from the admin, add class "cms-hidden-area" and the data attribute "data-parent-label" to your block source.
+```html
 <div class="cms-hidden-area" data-parent-label="Action button">
 </div> 
 ```
+
+## Override
+
+### MenuBuilder
+
+```yaml
+services:
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@AppBundle\Menu\MenuBuilder'
+```
+
+
