@@ -64,12 +64,6 @@ doctrine:
             KRG\CmsBundle\Entity\MenuInterface: AppBundle\Entity\Menu
             KRG\CmsBundle\Entity\BlockInterface: AppBundle\Entity\Block
             KRG\CmsBundle\Entity\FilterInterface: AppBundle\Entity\Filter
-            
-twig:
-    form_themes:
-        - 'KRGCmsBundle:Form:route.html.twig'
-        - 'KRGCmsBundle:Form:filter.html.twig'
-        - 'KRGCmsBundle:Form:content.html.twig'
 ```
 
 ```yaml

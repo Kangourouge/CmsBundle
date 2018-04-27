@@ -4,12 +4,13 @@ namespace KRG\CmsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Yaml\Yaml;
 
-class KRGCmsExtension extends Extension
+class KRGCmsExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -64,5 +65,16 @@ class KRGCmsExtension extends Extension
     public function getAlias()
     {
         return 'krg_cms';
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->prependExtensionConfig('twig', [
+            'form_themes' => [
+                'KRGCmsBundle:Form:route.html.twig',
+                'KRGCmsBundle:Form:filter.html.twig',
+                'KRGCmsBundle:Form:content.html.twig',
+            ]
+        ]);
     }
 }
