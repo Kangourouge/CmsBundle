@@ -5,21 +5,20 @@ easy_admin:
             list:
                 title:  '<i class="fa fa-cubes"></i> Block'
                 fields:
-                    - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50' }
-                    - key
-                    - name
+                    - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50', label: 'thumbnail' }
+                    - { property: key, label: 'block.key' }
+                    - { property: name }
                     - enabled
             form:
                 fields:
                     -
                         property: thumbnail
                         type: KRG\CmsBundle\Form\Type\Base64FileType
-                    - key
-                    - name
+                        label: 'block.thumbnail'
+                    - { property: key, label: 'block.key' }
+                    - { property: name }
                     -
                         property: 'content'
-                        type: KRG\IntlBundle\Form\Type\TranslationType
-                        type_options:
-                            entry_type: KRG\CmsBundle\Form\Type\ContentType
+                        type: KRG\CmsBundle\Form\Type\ContentType
                     - enabled
 

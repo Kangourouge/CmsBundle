@@ -15,7 +15,7 @@ easy_admin:
                 fields:
                     - { type: 'group', label: 'seo.configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - { property: url, label: 'seo.url' }
+                    - { property: url, label: 'seo.url_redirect' }
                     - { type: 'group', label: 'seo.metas' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
                     - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }

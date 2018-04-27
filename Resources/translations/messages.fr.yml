@@ -14,6 +14,7 @@ name: Libellé
 title: Titre
 content: Contenu
 key: Clé
+thumbnail: Miniature
 unique identifier: Identifiant unique
 paste your URL here: Collez votre URL
 url: URL
@@ -24,7 +25,8 @@ Route: Itinéraire
 "<i class=\"fa fa-cubes\"></i> Block": "<i class=\"fa fa-cubes\"></i> Bloc"
 
 seo:
-  url: Url de redirection
+  url: Url
+  url_redirect: Url de redirection
   configuration: Configuration
   route: Itinéraire
   metas: Metas
