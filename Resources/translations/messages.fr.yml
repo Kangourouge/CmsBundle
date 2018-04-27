@@ -1,5 +1,7 @@
 Block: Bloc
 Redirect URL: URL de redirection
+metaTitle: Titre (meta)
+metaDescription: Description (meta)
 enabled: Actif
 action.new: Créer
 action.edit: Editer
