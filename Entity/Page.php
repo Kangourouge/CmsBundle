@@ -20,6 +20,24 @@ class Page extends Block implements PageInterface, BlockContentInterface
      */
     protected $seo;
 
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $this->name = $this->name.' (clone)';
+            $this->key = null;
+            $this->enabled = false;
+            $this->seo = clone $this->seo;
+            $this->seo->setUrl($this->seo->getUrl().'-'.uniqid());
+            $this->seo->setUid(null);
+            $route = $this->seo->getRoute();
+            if (isset($route['params']['key'])) {
+                $route['params']['key'] = $this->seo->getUid();
+                $this->seo->setRoute($route);
+            }
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

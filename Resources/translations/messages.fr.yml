@@ -3,13 +3,7 @@ Redirect URL: URL de redirection
 metaTitle: Titre (meta)
 metaDescription: Description (meta)
 enabled: Actif
-action.new: Créer
-action.edit: Editer
-action.delete: Supprimer
-action.search: Rechercher
-action.save: Sauvegarder
-action.list: Retour à la liste
-action.show: Afficher
+
 name: Libellé
 title: Titre
 content: Contenu
@@ -32,6 +26,7 @@ seo:
   metas: Metas
   metaTitle: Titre
   metaDescription: Description (meta)
+  title: Titre
 
 route:
   url_error: Cette url n'est pas liée à un itinéraire

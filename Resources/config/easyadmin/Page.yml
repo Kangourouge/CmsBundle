@@ -9,6 +9,8 @@ easy_admin:
                     - { property: seo.metaTitle, label: 'seo.title' }
                     - { property: seo.url, label: 'seo.url' }
                     - enabled
+                actions:
+                    - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary' }
             form:
                 fields:
                     - name

@@ -32,6 +32,7 @@ seo:
   metas: Metas
   metaTitle: Title
   metaDescription: Description (meta)
+  title: Title
 
 route:
   url_error: This url doesn\'t have any related route. Please paste another one
