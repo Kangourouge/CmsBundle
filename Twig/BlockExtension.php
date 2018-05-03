@@ -3,7 +3,9 @@
 namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
+use EMC\FileinputBundle\Entity\File;
 use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
+use KRG\CmsBundle\Entity\Block;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
@@ -55,45 +57,6 @@ class BlockExtension extends \Twig_Extension
     }
 
     /**
-     * Build blocks into a specific template
-     */
-    public function load(\Twig_Environment $environment)
-    {
-        try {
-
-            $this->createFileTemplate('cms.html.twig', function(){ return implode('', $this->loadBlocks()); });
-
-            $environment->setCache($this->twigCacheDir);
-
-            $environment->setLoader(new \Twig_Loader_Chain([
-                $environment->getLoader(), // Preserve old loader
-                new \Twig_Loader_Filesystem([$this->twigCacheDir]) // Add KRG cache dir
-            ]));
-
-            $this->template = $environment->load('cms.html.twig'); // Load template from cache
-
-            return $this->template;
-        } catch (\Exception $exception) {
-            $this->logger->error(sprintf('[KRGCmsBundle] %s', $exception->getMessage()));
-        }
-
-        return null;
-    }
-
-
-    /**
-     * Build blocks into a specific template
-     */
-    private function getTemplate(\Twig_Environment $environment)
-    {
-        if ($this->template) {
-            return $this->template;
-        }
-
-        return $this->load($environment);
-    }
-
-    /**
      * Generate twig template
      */
     public function createFileTemplate($filename, \Closure $callback)
@@ -111,96 +74,27 @@ class BlockExtension extends \Twig_Extension
         return $path;
     }
 
-    private function loadBlocks()
-    {
-        if (empty($this->content)) {
-            $this->content = array_merge(
-                ['{% trans_default_domain "cms" %}'],
-                $this->loadStaticBlocks(),
-                $this->loadFilterBlocks(),
-                $this->loadFileBlocks(),
-                $this->loadPages()
-            );
-        }
-
-        return $this->content;
-    }
-
-    protected function loadFileBlocks()
-    {
-        $content = [];
-        foreach ($this->fileBlocks as $key => $block) {
-            try {
-                $path = $this->locator->locate($this->nameParser->parse($block['template']));
-            } catch (\InvalidArgumentException $exception) {
-                continue;
-            }
-
-            if ($fileContent = @file_get_contents($path)) {
-                $content[$key] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $key, $fileContent, $key);
-            }
-        }
-
-        return $content;
-    }
-
-    protected function loadPages()
-    {
-        $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
-        $content = [];
-
-        /* @var $page PageInterface */
-        foreach ($pages as $page) {
-            $content[$page->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block cms-page\">
-            {%% set krg_key = \"%s\" %%}
-            %s</div>
-            {%% endblock %s %%}\n", $page->getKey(), $page->getKey(), $page->getContent(), $page->getKey());
-        }
-
-        return $content;
-    }
-
-    protected function loadFilterBlocks()
-    {
-        $blocks = $this->entityManager->getRepository(FilterInterface::class)->findAll();
-        $content = [];
-
-        /* @var $filter FilterInterface */
-        foreach ($blocks as $block) {
-            $content[$block->getKey()] = sprintf("{%% block %s %%}<div class=\"cms-block cms-filter\">{{ render(controller('KRGCmsBundle:Filter:show', {'filter': %d})) }}</div>{%% endblock %s %%}\n", $block->getKey(), $block->getId(), $block->getKey());
-        }
-
-        return $content;
-    }
-
-    protected function loadStaticBlocks()
-    {
-        $blocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
-        $content = [];
-
-        /* @var $block BlockInterface */
-        foreach ($blocks as $block) {
-            if ($this->isValidBlock($block)) {
-                $content[$block->getKey()] = sprintf("{%% block %s %%}%s{%% endblock %s %%}\n", $block->getKey(), $block->getContent(), $block->getKey());
-            }
-        }
-
-        return $content;
-    }
-
     /**
      * Render a block by it's key
      */
     public function render(\Twig_Environment $environment, $key, $context = array())
     {
         try {
-            $template = $this->getTemplate($environment);
-
-            if ($template && $template->hasBlock($key)) {
-                return $template->renderBlock($key, $context);
+            /** @var BlockInterface $block */
+            $block = $this->entityManager->getRepository(BlockInterface::class)->findOneBy(['key' => $key]);
+            if ($block !== null) {
+                return $this->renderBlock($environment, $block);
             }
 
-            throw new \Exception('KRG block template is null');
+            foreach ($this->fileBlocks as $_key => $config) {
+                if ($_key !== $key) {
+                    continue;
+                }
+
+                $path = $this->locator->locate($this->nameParser->parse($config['template']));
+                return $this->renderContent($environment, @file_get_contents($path));
+            }
+
         } catch (\Exception $exception) {
             $this->logger->error(sprintf('[KRGCmsBundle] Render exception, %s', $exception->getMessage()));
         }
@@ -209,10 +103,25 @@ class BlockExtension extends \Twig_Extension
     }
 
     /**
+     * Render a block by it's key
+     */
+    public function renderBlock(\Twig_Environment $environment, BlockInterface $block)
+    {
+        if (!$block->isEnabled()) {
+            return null;
+        }
+        return $this->renderContent($environment, $block->getContent());
+    }
+
+    /**
      * Render a block content
      */
     public function renderContent(\Twig_Environment $environment, $content)
     {
+        if (!is_string($content) || strlen($content) === 0) {
+            return null;
+        }
+
         try {
             $filename = sprintf('content_%s.html.twig', sha1($content));
             $pathname = $this->createFileTemplate($filename, function() use ($content) { return $content; });
@@ -239,26 +148,58 @@ class BlockExtension extends \Twig_Extension
         return $block->isEnabled() && $block->isWorking() && $this->isSafe($block);
     }
 
+    private function getFragments() {
+        $fragments = [];
+
+        foreach ($this->fileBlocks as $key => $config) {
+
+            try {
+                $path = $this->locator->locate($this->nameParser->parse($config['template']));
+            } catch (\InvalidArgumentException $exception) {
+                continue;
+            }
+
+            if ($content = @file_get_contents($path)) {
+                $block = new Block();
+                $block->setKey($key);
+//                $block->setThumbnail($config['thumbnail'] ?? null);
+                $block->setEnabled(true);
+                $block->setName($config['name'] ?? $key);
+                $block->setContent($content);
+                $fragments[$key] = $block;
+            }
+
+        }
+
+        $blocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
+        foreach($blocks as $block) {
+            $fragments[$block->getKey()] = $block;
+        }
+
+        $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
+        foreach($pages as $page) {
+            $fragments[$page->getKey()] = $page;
+        }
+
+        return $fragments;
+    }
+
     public function getSnippets(\Twig_Environment $environment)
     {
-        if (null === ($template = $this->getTemplate($environment))) {
-            return [];
+        $fragments = $this->getFragments();
+
+        $snippets = [];
+        foreach ($fragments as $block) {
+            $name = $block->getName();
+            $thumbnail = $block->getThumbnail() ?: null;
+            $snippets[] = [
+                'html'      => $this->renderBlock($environment, $block),
+                'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? $thumbnail,
+                'label'     => $this->fileBlocks[$name]['label'] ?? $name
+            ];
         }
 
-        $blocks = [];
-        foreach ($template->getBlockNames() as $name) {
-            if (false === strstr($name, 'krg_page_')) {
-                $block = $this->entityManager->getRepository(BlockInterface::class)->findOneBy(['key' => $name]);
-                $thumbnail = ($block) ? $block->getThumbnail() : null;
-                $blocks[] = [
-                    'html'      => $this->render($environment, $name),
-                    'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? $thumbnail,
-                    'label'     => $this->fileBlocks[$name]['label'] ?? $name
-                ];
-            }
-        }
-
-        return $blocks;
+        return $snippets;
     }
 
     public function getFunctions()
