@@ -52,7 +52,7 @@ class MenuBuilder implements MenuBuilderInterface
     {
         $item = $this->cache->getItem($key);
         if ($item->isHit()) {
-       //     return $item->get();
+            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
