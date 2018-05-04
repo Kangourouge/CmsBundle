@@ -18,69 +18,47 @@ use Symfony\Component\Routing\RouterInterface;
 
 class MenuBuilder implements MenuBuilderInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    const CACHE_NAMESPACE = 'menu';
+
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * @var Request
-     */
+    /** @var Request */
     protected $request;
 
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * @var AnnotationReader
-     */
+    /** @var AnnotationReader */
     protected $annotationReader;
 
-    /**
-     * @var Annotation
-     */
+    /** @var Annotation */
     protected $annotation;
 
-    /**
-     * @var FilesystemAdapter
-     */
+    /** @var FilesystemAdapter */
     protected $cache;
 
-    /**
-     * MenuBuilder constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param RequestStack           $requestStack
-     * @param RouterInterface        $router
-     * @param AnnotationReader       $annotationReader
-     * @param                        $twigCacheDir
-     */
     public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $twigCacheDir)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->router = $router;
         $this->annotationReader = $annotationReader;
-        $this->cache = new FilesystemAdapter('menu', 0, $twigCacheDir);
+        $this->cache = new FilesystemAdapter(self::CACHE_NAMESPACE, 0, $twigCacheDir);
         $this->annotation = $this->getAnnotation();
     }
 
-    /**
-     * @return array
-     */
     public function getNodeTree($key)
     {
-        $item = $this->cache->getItem($key ?: 'default');
+        $item = $this->cache->getItem($key);
         if ($item->isHit()) {
-            return $item->get();
+       //     return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
         $repository = $this->entityManager->getRepository(MenuInterface::class);
 
-        /* get root nodes ordered by position */
+        /* Get root nodes ordered by position */
         $menu = $repository->findOneByKey($key);
         if ($menu === null) {
             return [];
@@ -89,16 +67,11 @@ class MenuBuilder implements MenuBuilderInterface
         /* Build nodes hierarchy */
         $nodes = $this->build($menu);
         $item->set($nodes);
-        $this->cache->commit();
+        $this->cache->save($item);
 
         return $nodes;
     }
 
-    /**
-     * @param $key
-     *
-     * @return array
-     */
     public function getNodes($key)
     {
         $nodes = $this->getNodeTree($key);
@@ -107,9 +80,6 @@ class MenuBuilder implements MenuBuilderInterface
         return $nodes;
     }
 
-    /**
-     * @return null|Annotation
-     */
     private function getAnnotation()
     {
         if ($this->request === null || !$this->request->get('_controller')) {
@@ -139,11 +109,6 @@ class MenuBuilder implements MenuBuilderInterface
         return null;
     }
 
-    /**
-     * @param $key
-     *
-     * @return array
-     */
     public function getActiveNodes($key)
     {
         $nodes = $this->getNodeTree($key);
@@ -165,11 +130,6 @@ class MenuBuilder implements MenuBuilderInterface
         return $activeNodes;
     }
 
-    /**
-     * @param array $nodes
-     *
-     * @return array
-     */
     private function activeNodes(array &$nodes)
     {
         if (($key = key($nodes)) === null) {
@@ -189,11 +149,6 @@ class MenuBuilder implements MenuBuilderInterface
         return $this->activeNodes($nodes);
     }
 
-    /**
-     * @param array $node
-     *
-     * @return bool
-     */
     public function isActive(array $node)
     {
         if ($this->request === null || ($node['url'] === null && count($node['route']) === 0)) {
@@ -201,7 +156,6 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         $nodeRoute = $node['route'];
-
         $requestRoute = [
             'name'   => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
             'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params'),
@@ -225,20 +179,11 @@ class MenuBuilder implements MenuBuilderInterface
         return true;
     }
 
-    /**
-     * @param MenuInterface $menu
-     * @return array|null
-     */
     public function build(MenuInterface $menu)
     {
         return $this->_build($menu->getChildren()->toArray());
     }
 
-    /**
-     * @param array $menus
-     *
-     * @return array
-     */
     protected function _build(array $menus)
     {
         if (count($menus) === 0) {
@@ -274,13 +219,6 @@ class MenuBuilder implements MenuBuilderInterface
         return array_merge([$node], $this->_build($menus));
     }
 
-    /**
-     * @param PropertyAccessor $propertyAccessor
-     * @param array            $attributes
-     * @param string           $value
-     *
-     * @return string
-     */
     private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value)
     {
         if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
@@ -291,5 +229,12 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         return $value;
+    }
+
+    protected function addItem($item, &$nodes, $position = 0)
+    {
+        array_splice($nodes, $position, null, [$item]);
+
+        return $nodes;
     }
 }

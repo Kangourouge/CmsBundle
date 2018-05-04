@@ -40,6 +40,8 @@ class MenuExtension extends \Twig_Extension
     {
         $template = $this->getTemplate($environment, $theme);
 
+        dump($key);
+
         return $template->renderBlock('menu', [
             'id'    => uniqid('krg_menu_'),
             'brand' => $brand,

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
+use KRG\DoctrineExtensionBundle\Entity\Tree\NestedTreeEntity;
 
 /**
  * Menu

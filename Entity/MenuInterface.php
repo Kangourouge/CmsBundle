@@ -2,6 +2,8 @@
 
 namespace KRG\CmsBundle\Entity;
 
+use KRG\DoctrineExtensionBundle\Entity\Tree\NestedTreeInterface;
+
 interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
 {
     /**
