@@ -15,7 +15,7 @@ easy_admin:
                         property: thumbnail
                         type: KRG\CmsBundle\Form\Type\Base64FileType
                         label: 'block.thumbnail'
-                    - { property: key, label: 'block.key' }
+                    - { property: key }
                     - { property: name }
                     -
                         property: 'content'
