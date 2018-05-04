@@ -6,7 +6,7 @@ easy_admin:
                 title:  '<i class="fa fa-cubes"></i> Block'
                 fields:
                     - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50', label: 'thumbnail' }
-                    - { property: key, label: 'block.key' }
+                    - { property: key }
                     - { property: name }
                     - enabled
             form:
