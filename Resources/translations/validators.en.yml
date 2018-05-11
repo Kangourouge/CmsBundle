@@ -1,4 +1,1 @@
-krg_cms:
-    block:
-        key:
-            error: "Invalid key (ex: block_key_1)"
+krg_cms.block.key.error: 'Invalid key (ex: block_key_1)'

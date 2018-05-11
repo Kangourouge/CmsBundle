@@ -3,10 +3,10 @@
         <section id="{{ form.vars.id }}_content" class="cms-content-tools">
             <header>
                 <div class="pull-left">
-                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">Update</button>
-                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">Cancel</button>
+                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans }}</button>
+                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">{{ 'Cancel'|trans }}</button>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="Render">Source</button>
+                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="{{ 'Render'|trans }}">{{ 'Source'|trans }}</button>
                     {% endif %}
                 </div>
 
@@ -14,7 +14,7 @@
                     {% if not form.vars.fragment %}
                         <div class="pull-left" style="margin-right: 30px;">
                             <div class="checkbox">
-                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>Header / footer</label>
+                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>{{ 'Header / footer'|trans }}</label>
                             </div>
                         </div>
                     {% endif %}

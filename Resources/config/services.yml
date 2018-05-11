@@ -8,7 +8,6 @@ services:
             $twigCacheDir: '%kernel.cache_dir%/krg/twig'
             $fileBlocks: '%krg_cms.blocks%'
             $rootDir: '%kernel.root_dir%'
-            $defaultLocale: '%kernel.default_locale%'
             $uploadDir: '/uploads/cms'
 
     KRG\CmsBundle\Twig\:
@@ -26,12 +25,6 @@ services:
     KRG\CmsBundle\Menu\:
         resource: '../../Menu/*'
         public: true
-
-    KRG\CmsBundle\Command\:
-        resource: '../../Command/*'
-
-    KRG\CmsBundle\Intl\:
-        resource: '../../Intl/*'
 
     KRG\CmsBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]

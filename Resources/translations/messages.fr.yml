@@ -1,36 +1,46 @@
 Block: Bloc
-Redirect URL: URL de redirection
-metaTitle: Titre (meta)
-metaDescription: Description (meta)
+'Redirect URL': 'URL de redirection'
+metaTitle: 'Titre (meta)'
+metaDescription: 'Description (meta)'
 enabled: Actif
-
+action.new: Créer
+action.edit: Éditer
+action.delete: Supprimer
+action.search: Rechercher
+action.save: 'Sauvegarder les modifications'
+action.list: 'Revenir à la liste'
+action.show: Voir
 name: Libellé
 title: Titre
 content: Contenu
 key: Clé
 thumbnail: Miniature
-unique identifier: Identifiant unique
-paste your URL here: Collez votre URL
+'unique identifier': 'Identifiant unique'
+'paste your URL here': 'Collez votre URL'
 url: URL
-label.form.empty_value:
-click here to change: Cliquez pour modifier
-Matched route: Itinéraire correspondant
+label.form.empty_value: 'null'
+'click here to change': 'Cliquez pour modifier'
+'Matched route': 'Itinéraire correspondant'
 Route: Itinéraire
-"<i class=\"fa fa-cubes\"></i> Block": "<i class=\"fa fa-cubes\"></i> Bloc"
-
-seo:
-  url: Url
-  url_redirect: Url de redirection
-  configuration: Configuration
-  route: Itinéraire
-  metas: Metas
-  metaTitle: Titre
-  metaDescription: Description (meta)
-  title: Titre
-
-route:
-  url_error: Cette url n'est pas liée à un itinéraire
-  available_vars: Propriétés utilisables dans les metas, utilisation {{ variable }}
-  click_change: Cliquer ici pour mettre à jour
-  match: Itinéraire
-  paste_here: Générez une configuration en collant une url ici...
+seo.url: URL
+seo.url_redirect: 'Url de redirection'
+seo.configuration: Configuration
+seo.route: Itinéraire
+seo.metas: Metas
+seo.metaTitle: Titre
+seo.metaDescription: 'Description (meta)'
+seo.title: Titre
+route.url_error: 'Cette url n''est pas liée à un itinéraire'
+route.available_vars: 'Propriétés utilisables dans les metas, utilisation {{ variable }}'
+route.click_change: 'Cliquer ici pour mettre à jour'
+route.match: Itinéraire
+route.paste_here: 'Générez une configuration en collant une url ici...'
+'Edit HTML': 'Edit HTML'
+'Previous versions': 'Previous versions'
+'Toggle navigation': 'Toggle navigation'
+'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
+Update: Mettre à jour
+Cancel: Annuler
+Render: Actualiser le rendu
+Source: Afficher la source
+'Header / footer': '__Header / footer'
