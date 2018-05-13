@@ -15,10 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/filemanager", name="file_manager")
+     * @Route("/media", name="media")
      */
-    public function fileManagerAction(Request $request)
+    public function mediaAction(Request $request)
     {
-        return $this->render('KRGCmsBundle:Admin:file_manager.html.twig');
+        return $this->render('KRGCmsBundle:Admin:media.html.twig');
     }
 }

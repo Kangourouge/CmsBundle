@@ -12,4 +12,4 @@ easy_admin:
                     - { entity: 'Page', icon: 'file' }
                     - { entity: 'Menu', icon: 'reorder' }
                     - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
-                    - { label: 'Media', route: 'krg_cms_admin_file_manager', icon: 'folder-open' }
+                    - { label: 'Media', route: 'krg_cms_admin_media', icon: 'folder-open' }
