@@ -1,0 +1,15 @@
+imports:
+    - { resource: easyadmin_intl/ }
+
+easy_admin:
+    design:
+        menu:
+            -
+                label: 'CMS'
+                roles: ['ROLE_CMS']
+                children:
+                    - { entity: 'Block', icon: 'cubes' }
+                    - { entity: 'Page', icon: 'file' }
+                    - { entity: 'Menu', icon: 'reorder' }
+                    - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
+                    - { label: 'Media', route: 'krg_cms_admin_file_manager', icon: 'folder-open' }

@@ -1,0 +1,17 @@
+easy_admin:
+    entities:
+        Filter:
+            class: 'KRG\CmsBundle\Entity\FilterInterface'
+            list:
+                title: '<i class="fa fa-filter"></i> Filters'
+                fields:
+                    - enabled
+                    - { property: 'working', type: 'boolean' }
+                    - key
+                    - name
+            form:
+                fields:
+                    - enabled
+                    - name
+                    - { property: key, type_options: { required: true } }
+                    - { property: form, type: KRG\CmsBundle\Form\Type\FilterType }

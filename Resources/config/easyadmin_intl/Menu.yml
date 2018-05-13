@@ -1,0 +1,24 @@
+easy_admin:
+    entities:
+        Menu:
+            class: 'KRG\CmsBundle\Entity\MenuInterface'
+            list:
+                max_results: 100
+                title: '<i class="fa fa-bars"></i> Menu'
+                fields:
+                    - name
+                    - url
+                    - parent
+                    - enabled
+                sort: ['position', 'ASC']
+            form:
+                fields:
+                    - { property: key, help: 'Unique identifier' }
+                    -
+                        property: 'name'
+                        type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        type_options:
+                            entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
+                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'URL' }
+                    - parent
+                    - enabled

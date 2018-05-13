@@ -1,0 +1,22 @@
+easy_admin:
+    entities:
+        Seo:
+            roles: ['ROLE_SEO']
+            class: 'KRG\CmsBundle\Entity\SeoInterface'
+            list:
+                title: '<i class="fa fa-sitemap"></i> Seo'
+                fields:
+                    - { property: url, label: 'seo.url' }
+                    - { property: routeName, label: 'seo.route' }
+                    - { property: metaTitle, label: 'seo.metaTitle' }
+                    - { property: metaDescription, label: 'seo.metaDescription' }
+                    - enabled
+            form:
+                fields:
+                    - { type: 'group', label: 'seo.configuration' }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
+                    - { property: url, label: 'seo.url_redirect' }
+                    - { type: 'group', label: 'seo.metas' }
+                    - { property: metaTitle, label: 'seo.metaTitle' }
+                    - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
+                    - enabled

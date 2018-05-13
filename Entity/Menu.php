@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
 use KRG\DoctrineExtensionBundle\Entity\Tree\NestedTreeEntity;
@@ -17,7 +18,7 @@ use KRG\DoctrineExtensionBundle\Entity\Tree\NestedTreeEntity;
  * @Gedmo\Tree(type="nested")
  * @Gedmo\Loggable
  */
-class Menu implements MenuInterface, SortableInterface
+class Menu implements MenuInterface, SortableInterface, Translatable
 {
     use NestedTreeEntity;
     use SortableEntity;
@@ -33,6 +34,7 @@ class Menu implements MenuInterface, SortableInterface
     /**
      * @ORM\Column(type="string")
      * @Gedmo\Versioned
+     * @Gedmo\Translatable
      * @var string
      */
     protected $name;
@@ -47,6 +49,7 @@ class Menu implements MenuInterface, SortableInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Gedmo\Versioned
+     * @Gedmo\Translatable
      * @var string
      */
     protected $title;
