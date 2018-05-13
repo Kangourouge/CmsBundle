@@ -7,7 +7,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use KRG\CmsBundle\DependencyInjection\ClearCache;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 

@@ -3,8 +3,8 @@
 namespace KRG\CmsBundle\Entity\Validator;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
+use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

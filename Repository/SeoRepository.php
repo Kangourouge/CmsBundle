@@ -4,7 +4,6 @@ namespace KRG\CmsBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use KRG\CmsBundle\Entity\SeoInterface;
 
 /**
  * Class SeoRepository

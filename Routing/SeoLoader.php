@@ -2,9 +2,9 @@
 
 namespace KRG\CmsBundle\Routing;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;

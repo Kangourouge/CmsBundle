@@ -48,9 +48,10 @@ class ContentTransformer implements DataTransformerInterface
                 }
             }
 
+            /*
             $content->filter('*')->each(function (Crawler $_crawler) {
                 $_crawler->each(function (Crawler $__crawler) {
-                    /** @var \DOMElement $node */
+                    /** @var \DOMElement $node * /
                     foreach ($__crawler->getNode(0)->childNodes as $node) {
                         if ($node->nodeType === XML_TEXT_NODE) {
                             $text = trim($node->data);
@@ -60,8 +61,8 @@ class ContentTransformer implements DataTransformerInterface
                         }
                     }
                 });
-
             });
+            */
 
             return $content->html();
         }

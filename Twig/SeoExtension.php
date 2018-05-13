@@ -2,10 +2,10 @@
 
 namespace KRG\CmsBundle\Twig;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;

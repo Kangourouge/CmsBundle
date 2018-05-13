@@ -1,10 +1,10 @@
 <?php
 namespace KRG\CmsBundle\DependencyInjection\Compiler;
 
+use KRG\CmsBundle\Form\FilterRegistry;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use KRG\CmsBundle\Form\FilterRegistry;
 
 class CmsCompilerPass implements CompilerPassInterface
 {

@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Controller;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Form\FilterRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -9,8 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/cms/filter")

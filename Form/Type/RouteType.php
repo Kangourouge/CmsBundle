@@ -2,7 +2,6 @@
 
 namespace KRG\CmsBundle\Form\Type;
 
-use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

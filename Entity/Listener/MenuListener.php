@@ -2,10 +2,8 @@
 
 namespace KRG\CmsBundle\Entity\Listener;
 
-use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Menu\MenuBuilder;

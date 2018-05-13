@@ -3,10 +3,7 @@
 namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
-use EMC\FileinputBundle\Entity\File;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\Block;
-use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use Psr\Log\LoggerInterface;

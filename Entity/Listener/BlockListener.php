@@ -2,11 +2,10 @@
 
 namespace KRG\CmsBundle\Entity\Listener;
 
-use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use KRG\CmsBundle\DependencyInjection\ClearCache;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\BlockInterface;
 
 class BlockListener implements EventSubscriber
