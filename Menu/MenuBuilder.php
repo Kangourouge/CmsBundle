@@ -49,7 +49,7 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function getNodeTree($key)
     {
-        $item = $this->cache->getItem($key);
+        $item = $this->cache->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
         if ($item->isHit()) {
             return $item->get();
         }
