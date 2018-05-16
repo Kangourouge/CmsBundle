@@ -4,8 +4,8 @@ services:
         autoconfigure: true
         public: false
         bind:
-            $cacheDir: '%kernel.cache_dir%'
             $twigCacheDir: '%kernel.cache_dir%/krg/twig'
+            $dataCacheDir: '%kernel.cache_dir%/krg/data'
             $fileBlocks: '%krg_cms.blocks%'
             $rootDir: '%kernel.root_dir%'
             $uploadDir: '/uploads/cms'
@@ -30,7 +30,12 @@ services:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
 
     KRG\CmsBundle\Routing\SeoLoader:
-        tags: [routing.loader]
+        tags:
+            - {name: 'routing.loader', priority: 100}
+
+    KRG\CmsBundle\Routing\RoutingLoader:
+        tags:
+            - 'routing.loader'
 
     KRG\CmsBundle\Form\FilterRegistry:
         public: true
@@ -48,7 +53,5 @@ services:
         resource: '../../Entity/Validator/*'
         tags: [validator.constraint_validator]
         public: true
-
-    KRG\CmsBundle\DependencyInjection\ClearCache:
 
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'

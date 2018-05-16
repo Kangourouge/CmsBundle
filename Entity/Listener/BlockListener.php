@@ -5,17 +5,22 @@ namespace KRG\CmsBundle\Entity\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use KRG\CmsBundle\DependencyInjection\ClearCache;
 use KRG\CmsBundle\Entity\BlockInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BlockListener implements EventSubscriber
 {
-    /** @var ClearCache */
-    private $clearCache;
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
-    public function __construct(ClearCache $clearCache)
+    /**
+     * BlockListener constructor.
+     *
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        $this->clearCache = $clearCache;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getSubscribedEvents()
@@ -46,6 +51,7 @@ class BlockListener implements EventSubscriber
     {
         if ($event->getObject() instanceof BlockInterface) {
             $this->clearCache();
+
         }
     }
 
@@ -58,6 +64,6 @@ class BlockListener implements EventSubscriber
 
     protected function clearCache()
     {
-        $this->clearCache->warmupTwig();
+        $this->eventDispatcher->dispatch('cache:clear:twig');
     }
 }

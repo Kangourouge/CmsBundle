@@ -2,68 +2,80 @@
 
 namespace KRG\CmsBundle\Routing;
 
+use KRG\CmsBundle\Entity\SeoInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\Entity\SeoInterface;
-use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Load custom routes from KRG SEOBUNDLE
+ * Load custom routes
  */
-class SeoLoader extends Loader
+class SeoLoader extends Loader implements RoutingLoaderInterface
 {
-    /** @var bool */
-    private $loaded = false;
-
     /** @var EntityManager */
     private $entityManager;
 
-    /** @var EncoderInterface */
-    private $encoder;
+    /** @var Serializer */
+    private $serializer;
 
-    /** @var ObjectNormalizer */
-    private $normalizer;
+    /** @var string */
+    private $dataCacheDir;
 
-    public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer)
+    public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
-        $this->encoder = $encoder;
-        $this->normalizer = $normalizer;
+        $normalizer->setCircularReferenceHandler(function($object) {
+            return $object->getId();
+        });
+        $this->serializer = new Serializer([$normalizer], [$encoder]);
+        $this->dataCacheDir = $dataCacheDir;
     }
 
     public function load($resource, $type = null)
     {
-        if (true === $this->loaded) {
-            throw new \RuntimeException('Do not add the "Seo" loader twice');
-        }
+        /** @var RouteCollection $collection */
+        $collection = $this->import($resource);
+        return $this->handle($collection);
+    }
 
-        $className = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
-        $seoRepository = $this->entityManager->getRepository($className);
-        $seoEntries = $seoRepository->findBy([
-            'enabled' => true
-        ]);
+    public function handle(RouteCollection $collection)
+    {
+        $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
+        $seos = $seoRepository->findBy(['enabled' => true]);
 
-        $routes = new RouteCollection();
-        $this->normalizer->setCircularReferenceHandler(function($object) {
-            return $object->getId();
-        });
-        $serializer = new Serializer([$this->normalizer], [$this->encoder]);
+        try {
+            foreach($seos as $seo) {
+                /** @var Route $route */
+                /** @var Route $routeClone */
+                /** @var Route $routeRedirect */
+                /** @var SeoInterface $seo */
+                $route = $collection->get($seo->getRouteName());
+                if ($route === null) {
+                    continue;
+                }
 
-        /* @var $seo SeoInterface */
-        foreach ($seoEntries as $seo) {
-            $route = new Route($seo->getUrl());
-            $route->setSeoClass($className);
-            $route->setSeo($serializer->serialize($seo, 'json'));
-            $routes->add($seo->getUid(), $route);
-        }
+                $routeClone = clone $route;
+                $routeClone->setPath($seo->getUrl());
+                $routeClone->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]));
 
-        $this->loaded = true;
+                $seo->setCompiledRoute($routeClone->compile());
 
-        return $routes;
+                $_seos = $route->getDefault('_seo_list') ?: [];
+                $_seos[] = $this->serializer->serialize($seo, 'json');
+
+                $route->setDefault('_cache_dir', $this->dataCacheDir);
+                $route->setDefault('_seo_list', $_seos);
+
+                $collection->add($seo->getUid(), $routeClone);
+            }
+        } catch (\Exception $exception) {}
+
+        return $collection;
     }
 
     public function supports($resource, $type = null)

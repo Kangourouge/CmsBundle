@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-10">
-            <input type="text" id="{{ form.vars.id }}_url" class="form-control" />
+            <input type="text" id="{{ form.vars.id }}_url" class="form-control" placeholder="{{ 'route.paste_here'|trans }}" />
         </div>
     </div>
 
@@ -31,8 +31,6 @@
 
             select.addEventListener('change', routeChange);
             url.addEventListener('paste', urlChange);
-
-            routeChange();
 
             function urlChange() {
                 setTimeout(function () { {# Paste timeout #}

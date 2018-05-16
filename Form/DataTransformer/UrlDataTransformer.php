@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Form\DataTransformer;
 
+use KRG\CmsBundle\Routing\UrlResolver;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -12,12 +13,17 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UrlDataTransformer implements DataTransformerInterface
 {
-    /** @var RouterInterface */
-    protected $router;
+    /** @var UrlResolver */
+    protected $urlResolver;
 
-    public function __construct(RouterInterface $router)
+    /**
+     * UrlDataTransformer constructor.
+     *
+     * @param UrlResolver $urlResolver
+     */
+    public function __construct(UrlResolver $urlResolver)
     {
-        $this->router = $router;
+        $this->urlResolver = $urlResolver;
     }
 
     public function transform($value)
@@ -35,44 +41,19 @@ class UrlDataTransformer implements DataTransformerInterface
             return [];
         }
 
-        $data = [
+        $routeInfo = [
             'url'    => $value,
             'name'   => null,
             'params' => [],
         ];
 
         try {
-            $context = new RequestContext();
-            $collection = $this->router->getRouteCollection();
-            $matcher = new UrlMatcher($collection, $context);
-            $attributes = $matcher->match($value);
-
-            $routeName = $attributes['_route'];
-            if (preg_match('/_redirect$/', $routeName) && preg_match('/:urlRedirectAction$/', $attributes['_controller'])) {
-                $routeName = preg_replace('/_redirect$/', '', $routeName);
-            }
-            $data['name'] = $routeName;
-
-            $route = $collection->get($routeName);
-            if ($route instanceof Route) {
-                $routeParams = $route->compile()->getPathVariables();
-                foreach ($routeParams as $routeParam) {
-                    if (preg_match('/^_/', $routeParam)) {
-                        continue;
-                    }
-                    else if (isset($attributes[$routeParam])) {
-                        $data['params'][$routeParam] = $attributes[$routeParam];
-                    }
-                    else if ($route->hasDefault($routeParam)) {
-                        $data['params'][$routeParam] = $route->hasDefault($routeParam);
-                    }
-                }
-            }
+            $routeInfo = array_merge($routeInfo, $this->urlResolver->resolve($value));
         } catch (ResourceNotFoundException $exception) {
         } catch (\Exception $exception) {
             throw new TransformationFailedException();
         }
 
-        return $data;
+        return $routeInfo;
     }
 }

@@ -8,28 +8,32 @@ use Doctrine\ORM\Events;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Menu\MenuBuilder;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MenuListener implements EventSubscriber
 {
-    /** @var FilesystemAdapter */
-    protected $cache;
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
-    public function __construct($twigCacheDir)
+    /**
+     * MenuListener constructor.
+     *
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        $this->cache = new FilesystemAdapter(MenuBuilder::CACHE_NAMESPACE, 0, $twigCacheDir);
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getSubscribedEvents()
     {
-        return [
-            Events::postUpdate,
-        ];
+        return [Events::postUpdate];
     }
 
     public function postUpdate(LifecycleEventArgs $event)
     {
         if ($event->getEntity() instanceof MenuInterface) {
-            $this->cache->deleteItem($event->getEntity()->getRootParent()->getKey());
+            $this->eventDispatcher->dispatch('cache:clear:data');
         }
     }
 }

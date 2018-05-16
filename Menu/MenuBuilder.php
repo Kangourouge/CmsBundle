@@ -17,8 +17,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class MenuBuilder implements MenuBuilderInterface
 {
-    const CACHE_NAMESPACE = 'menu';
-
     /** @var EntityManagerInterface */
     protected $entityManager;
 
@@ -35,21 +33,21 @@ class MenuBuilder implements MenuBuilderInterface
     protected $annotation;
 
     /** @var FilesystemAdapter */
-    protected $cache;
+    private $filesystemAdapter;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $twigCacheDir)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $dataCacheDir)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->router = $router;
         $this->annotationReader = $annotationReader;
-        $this->cache = new FilesystemAdapter(self::CACHE_NAMESPACE, 0, $twigCacheDir);
         $this->annotation = $this->getAnnotation();
+        $this->filesystemAdapter = new FilesystemAdapter('menu', 0, $dataCacheDir);
     }
 
     public function getNodeTree($key)
     {
-        $item = $this->cache->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -66,7 +64,7 @@ class MenuBuilder implements MenuBuilderInterface
         /* Build nodes hierarchy */
         $nodes = $this->build($menu);
         $item->set($nodes);
-        $this->cache->save($item);
+        $this->filesystemAdapter->save($item);
 
         return $nodes;
     }

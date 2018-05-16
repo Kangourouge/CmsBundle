@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Form\DataTransformer;
 
+use KRG\CmsBundle\Routing\UrlResolver;
 use KRG\CmsBundle\Service\FileBase64Uploader;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -15,10 +16,21 @@ class ContentTransformer implements DataTransformerInterface
     /** @var FileBase64Uploader */
     protected $fileUploader;
 
-    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader)
+    /** @var UrlResolver */
+    protected $urlResolver;
+
+    /**
+     * ContentTransformer constructor.
+     *
+     * @param EngineInterface $templating
+     * @param FileBase64Uploader $fileUploader
+     * @param UrlResolver $urlResolver
+     */
+    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver)
     {
         $this->templating = $templating;
         $this->fileUploader = $fileUploader;
+        $this->urlResolver = $urlResolver;
     }
 
     public function transform($value)
@@ -48,23 +60,18 @@ class ContentTransformer implements DataTransformerInterface
                 }
             }
 
-            /*
-            $content->filter('*')->each(function (Crawler $_crawler) {
-                $_crawler->each(function (Crawler $__crawler) {
-                    /** @var \DOMElement $node * /
-                    foreach ($__crawler->getNode(0)->childNodes as $node) {
-                        if ($node->nodeType === XML_TEXT_NODE) {
-                            $text = trim($node->data);
-                            if (strlen($text) > 0) {
-                                $node->textContent = sprintf('{%% trans %%}%s{%% endtrans %%}', $text);
-                            }
-                        }
-                    }
-                });
-            });
-            */
+            $value = $content->html();
 
-            return $content->html();
+            if (preg_match_all('|href="(.*)"|U', $value, $matches, PREG_SET_ORDER)) {
+                foreach($matches as $match) {
+                    $href = $match[1];
+                    try {
+                        $routeInfo = $this->urlResolver->resolve($href);
+                        $path = sprintf('{{ path("%s", %s) }}', $routeInfo['name'], json_encode($routeInfo['params']));
+                        $value = preg_replace(sprintf('`%s`', $match[0]), sprintf('href="%s"', $path), $value);
+                    } catch (\Exception $exception) {}
+                }
+            }
         }
 
         return $value;

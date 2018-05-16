@@ -2,6 +2,7 @@
 namespace KRG\CmsBundle\DependencyInjection\Compiler;
 
 use KRG\CmsBundle\Form\FilterRegistry;
+use KRG\CmsBundle\Routing\RoutingLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

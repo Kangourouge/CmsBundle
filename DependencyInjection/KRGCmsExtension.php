@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Yaml\Yaml;
 
 class KRGCmsExtension extends Extension implements PrependExtensionInterface

@@ -2,58 +2,38 @@
 
 namespace KRG\CmsBundle\Routing;
 
+use KRG\CmsBundle\Entity\Seo;
 use KRG\CmsBundle\Entity\SeoInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class UrlGenerator extends BaseUrlGenerator
 {
-    /** @var array */
-    private $seoRoutes;
-
-    /** @var Serializer */
-    private $serializer;
-
-    /** @var FilesystemAdapter */
-    private $cache;
-
-    public function __construct(RouteCollection $routes, RequestContext $context, $logger = null, SerializerInterface $serializer)
-    {
-        parent::__construct($routes, $context, $logger);
-
-        $this->serializer = $serializer;
-    }
-
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
-        if (!preg_match("/^krg_seo_.+/", $name)) {
-            $route = $this->resolve($name, $parameters);
-            if ($route !== null) {
-                /* @var $compiledRoute CompiledRoute */
-                $compiledRoute = $route->compile();
-
-                // If parameters setted from SeoPage, do not set it twice
-                if (count($compiledRoute->getVariables()) === 0) {
-                    $parameters = [];
+        if (isset($defaults['_seo_list'])) {
+            $compiledRoute = $this->resolve($defaults['_seo_list'], $name, $parameters, $defaults['_cache_dir']);
+            if ($compiledRoute !== null) {
+                $_parameters = [];
+                foreach ($parameters as $key => $value) {
+                    if (in_array($key, $compiledRoute['pathVariables'])) {
+                        $_parameters[$key] = $value;
+                    }
                 }
 
-                // Do not pass the parameters argument to keep rewritted urls intact
-                return parent::doGenerate(
-                    $compiledRoute->getVariables(),
-                    $route->getDefaults(),
-                    $route->getRequirements(),
-                    $compiledRoute->getTokens(),
-                    $parameters,
-                    $name,
-                    $referenceType,
-                    $compiledRoute->getHostTokens(),
-                    $route->getSchemes()
-                );
+                $parameters = $_parameters;
+                $variables = $compiledRoute['variables'];
+                $tokens = $compiledRoute['tokens'];
+                $hostTokens = $compiledRoute['hostTokens'];
             }
         }
 
@@ -70,63 +50,43 @@ class UrlGenerator extends BaseUrlGenerator
         );
     }
 
-    private function resolve($name, array $parameters)
+    private function resolve(array $seos, $name, array $parameters, $cacheDir)
     {
-        if (!$this->cache) {
-            $this->cache = new FilesystemAdapter('seo'); // TODO: APCu ?
-        }
+        $filesystemAdapter = new FilesystemAdapter('seo', 0, $cacheDir);
 
         // Check if route can be resolved from cache
-        $identifier = $name;
-        $flatten = @implode(array_values($parameters));
-        if (is_string($flatten)) { // "" is a string too
-            $identifier .= $flatten;
-            $cacheItem = $this->cache->getItem(md5($identifier));
-            if ($cacheItem->isHit()) {
-                return $cacheItem->get();
-            }
+        $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
+        $cacheItem = $filesystemAdapter->getItem($cacheKey);
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
         }
 
-        if (null === $this->seoRoutes) {
-            return null;
-        }
+        $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
 
-        // Get all compatible routes
-        $routes = array_filter($this->seoRoutes, function (Route $route) use ($name, $parameters) {
-            /* @var $seo SeoInterface */
-            $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
-
-            return $seo->getRouteName() === $name && $seo->isValid($parameters);
-        });
-        $nbRoute = count($routes);
-
+        $compiledRoute = null;
         // Sort entries by number of matching parameters
-        if ($nbRoute > 1) {
+        if (count($seos) > 0) {
             $weights = [];
-            foreach ($routes as $idx => $route) {
+            foreach ($seos as $idx => &$seo) {
                 /* @var $seo SeoInterface */
-                $seo = $this->serializer->deserialize($route->getSeo(), $route->getSeoClass(), 'json');
-                $weights[$idx] = $seo->diff($parameters);
+                $seo = $serializer->deserialize($seo, Seo::class, 'json');
+                if (($diff = $seo->diff($parameters)) >= 0) {
+                    $weights[$idx] = $diff;
+                }
             }
-            asort($weights);
-            $route = $routes[key($weights)];
-        } else if ($nbRoute === 1) {
-            $route = reset($routes);
-        } else {
-            $route = null;
+            unset($seo);
+            if (count($weights) > 0) {
+                asort($weights);
+                $seo = $seos[key($weights)];
+
+                $compiledRoute = $seo->getCompiledRoute();
+            }
         }
 
         // Store in cache
-        if (isset($cacheItem)) {
-            $cacheItem->set($route);
-            $this->cache->save($cacheItem);
-        }
+        $cacheItem->set($compiledRoute);
+        $filesystemAdapter->save($cacheItem);
 
-        return $route;
-    }
-
-    public function setSeoRoutes(array $routes)
-    {
-        $this->seoRoutes = $routes;
+        return $compiledRoute;
     }
 }

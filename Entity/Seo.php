@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -59,6 +60,11 @@ class Seo implements SeoInterface
      * @Gedmo\Versioned
      */
     protected $enabled;
+
+    /**
+     * @var CompiledRoute
+     */
+    protected $compiledRoute;
 
     public function __construct()
     {
@@ -192,7 +198,13 @@ class Seo implements SeoInterface
      */
     public function diff(array $parameters)
     {
-        return count(array_diff_assoc(array_filter($this->getRouteParams()), $parameters));
+        $_parameters = array_filter($this->getRouteParams());
+        foreach($parameters as $key => $value) {
+            if (isset($_parameters[$key]) && $_parameters[$key] !== $value) {
+                return -1;
+            }
+        }
+        return count(array_diff_assoc($_parameters, $parameters));
     }
 
     /**
@@ -201,5 +213,21 @@ class Seo implements SeoInterface
     public function isValid(array $parameters)
     {
         return $this->diff($parameters) === 0;
+    }
+
+    /**
+     * @return CompiledRoute
+     */
+    public function getCompiledRoute()
+    {
+        return $this->compiledRoute;
+    }
+
+    /**
+     * @param CompiledRoute $compiledRoute
+     */
+    public function setCompiledRoute(CompiledRoute $compiledRoute)
+    {
+        $this->compiledRoute = $compiledRoute;
     }
 }
