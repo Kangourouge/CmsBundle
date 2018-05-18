@@ -32,19 +32,21 @@
             select.addEventListener('change', routeChange);
             url.addEventListener('paste', urlChange);
 
+            bindRoute(select.options[select.selectedIndex].value, 'route', false);
+
             function urlChange() {
                 setTimeout(function () { {# Paste timeout #}
-                    bindRoute(url.value, 'url');
+                    bindRoute(url.value, 'url', true);
                 }, 100);
             }
 
             function routeChange() {
                 var selectedOption = select.options[select.selectedIndex];
 
-                bindRoute(selectedOption.value, 'route');
+                bindRoute(selectedOption.value, 'route', true);
             }
 
-            function bindRoute(url, type) {
+            function bindRoute(url, type, hardBind) {
                 if (url.length === 0) {
                     bindRouteText();
                     return;
@@ -57,10 +59,13 @@
                         if (xmlhttp.status === 200) {
                             var data = JSON.parse(xmlhttp.responseText);
 
-                            bindParameters(data.parameters);
+                            if (hardBind) {
+                                bindParameters(data.parameters);
+                                bindSelect(data.route);
+                                bindRedirectUrl();
+                            }
+
                             bindProperties(data.properties);
-                            bindSelect(data.route);
-                            bindRedirectUrl();
                             bindRouteText();
                         } else if (xmlhttp.status === 500) {
                             alert('{{ 'route.url_error'|trans }}.');
