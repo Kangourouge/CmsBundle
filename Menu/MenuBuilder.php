@@ -35,7 +35,7 @@ class MenuBuilder implements MenuBuilderInterface
     /** @var FilesystemAdapter */
     private $filesystemAdapter;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, $dataCacheDir)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
