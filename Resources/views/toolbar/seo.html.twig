@@ -2,8 +2,8 @@
 
 {% if seo is null %}
     <div class="krg-toolbar-block">
-        <a href="{{ path('easyadmin') }}?entity=Seo&action=new">
-            {{ 'seo.create'|trans }}
+        <a href="{{ path('easyadmin') }}?entity=Seo&action=new&url={{ app.request.uri }}">
+            {{ include('@KRGCms/icon/search.svg') }}{{ 'seo.create'|trans }}
         </a>
     </div>
 {% endif %}
@@ -11,7 +11,7 @@
 {% if seo is not null %}
     <div class="krg-toolbar-block">
         <a href="{{ path('easyadmin') }}?entity=Seo&action=edit&id={{ seo.id }}">
-            {{ 'seo.edit'|trans }}
+            {{ include('@KRGCms/icon/search.svg') }}{{ 'seo.edit'|trans }}
         </a>
 
         <div class="krg-toolbar-info">

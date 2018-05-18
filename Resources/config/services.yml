@@ -58,5 +58,5 @@ services:
 
     KRG\CmsBundle\Toolbar\:
         resource: '../../Toolbar'
-        tags: ['krg.easyadmin.toolbar']
+        tags: [{name: 'krg.easyadmin.toolbar', priority: 500}]
         public: true
