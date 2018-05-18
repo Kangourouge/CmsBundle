@@ -6,6 +6,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -38,7 +39,7 @@ class SeoListener implements EventSubscriber
             $seo = $event->getEntity();
 
             if (!$seo->getUid()) {
-                $seo->setUid(sprintf('krg_seo_krg_page_show_%s', uniqid()));
+                $seo->setUid(KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.uniqid());
             }
         }
     }

@@ -6,6 +6,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -15,11 +16,6 @@ class PageListener implements EventSubscriber
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
-    /**
-     * BlockListener constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -38,7 +34,7 @@ class PageListener implements EventSubscriber
         if ($event->getEntity() instanceof PageInterface) {
             $page = $event->getEntity();
             $seo = $page->getSeo();
-            $page->setKey(sprintf('krg_seo_krg_page_show_%s', uniqid()));
+            $page->setKey(KRGCmsExtension::KRG_ROUTE_SEO_PAGE_PREFIX.uniqid());
             $seo->setRoute([
                 'name'   => 'krg_page_show',
                 'params' => ['key' => $page->getKey()],

@@ -44,7 +44,9 @@ $ bin/console assets:install
 
 framework:
     serializer: { enable_annotations: true }
-
+    router:
+        type: 'krg.routing.loader'
+        
 doctrine:
     orm:
         mappings:
@@ -69,17 +71,13 @@ doctrine:
 ```yaml
 # app/config/routing.yml
 
-krg_seo:
-    resource: .
-    type: seo
-
 krg_user:
     resource: "@KRGUserBundle/Controller/"
     type:     annotation
     prefix:   /
 
 krg_easyadmin_bundle:
-    resource: "@KRGEasyAdminExtensionBundle/Controller/AdminController.php"
+    resource: "@KRGEasyAdminExtensionBundle/Controller/"
     type:     annotation
     prefix:   /admin
 

@@ -12,9 +12,6 @@ use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-/**
- * Load custom routes
- */
 class SeoLoader extends Loader implements RoutingLoaderInterface
 {
     /** @var EntityManager */
@@ -29,7 +26,7 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
     public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
-        $normalizer->setCircularReferenceHandler(function($object) {
+        $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
         $this->serializer = new Serializer([$normalizer], [$encoder]);
@@ -40,6 +37,7 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
     {
         /** @var RouteCollection $collection */
         $collection = $this->import($resource);
+
         return $this->handle($collection);
     }
 
@@ -48,14 +46,13 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
         $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
         $seos = $seoRepository->findBy(['enabled' => true]);
 
+        $seoCollection = new RouteCollection();
         try {
-            foreach($seos as $seo) {
+            foreach ($seos as $seo) {
                 /** @var Route $route */
                 /** @var Route $routeClone */
-                /** @var Route $routeRedirect */
                 /** @var SeoInterface $seo */
-                $route = $collection->get($seo->getRouteName());
-                if ($route === null) {
+                if (null === ($route = $collection->get($seo->getRouteName()))) {
                     continue;
                 }
 
@@ -71,11 +68,12 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
                 $route->setDefault('_cache_dir', $this->dataCacheDir);
                 $route->setDefault('_seo_list', $_seos);
 
-                $collection->add($seo->getUid(), $routeClone);
+                $seoCollection->add($seo->getUid(), $routeClone);
             }
-        } catch (\Exception $exception) {}
+        } catch (\Exception $exception) {
+        }
 
-        return $collection;
+        return $seoCollection;
     }
 
     public function supports($resource, $type = null)

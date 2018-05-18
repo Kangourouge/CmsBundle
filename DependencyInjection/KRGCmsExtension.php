@@ -13,6 +13,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class KRGCmsExtension extends Extension implements PrependExtensionInterface
 {
+    const KRG_ROUTE_SEO_PREFIX = 'krg_seo_';
+    const KRG_ROUTE_SEO_PAGE_PREFIX = self::KRG_ROUTE_SEO_PREFIX.'krg_page_show_';
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
