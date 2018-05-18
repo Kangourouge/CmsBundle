@@ -55,3 +55,8 @@ services:
         public: true
 
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'
+
+    KRG\CmsBundle\Toolbar\:
+        resource: '../../Toolbar'
+        tags: ['krg.easyadmin.toolbar']
+        public: true
