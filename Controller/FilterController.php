@@ -62,13 +62,13 @@ class FilterController extends AbstractController
             try {
                 // Call service handler (from tag)
                 $form->handleRequest($request);
+                $vars = [];
                 if ($form->isValid() && $config['handler']) {
-                    $config['handler']->perform($request, $form);
+                    $vars = $config['handler']->perform($request, $form);
                 }
+                $vars['form'] = $form->createView();
 
-                return $this->render($config['template'], [
-                    'form' => $form->createView()
-                ]);
+                return $this->render($config['template'], $vars);
             } catch(\Exception $exception) {
                 // Log an error and update filter
                 $logger = $this->container->get('logger');
