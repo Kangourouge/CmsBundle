@@ -5,15 +5,15 @@ easy_admin:
             list:
                 title: '<i class="fa fa-file"></i> Page'
                 fields:
-                    - name
+                    - { property: name, label: 'page.name' }
                     - { property: seo.metaTitle, label: 'seo.title' }
                     - { property: seo.url, label: 'seo.url' }
-                    - enabled
+                    - { property: enabled, label: 'page.enabled' }
                 actions:
                     - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary' }
             form:
                 fields:
-                    - name
+                    - { property: name, label: 'page.name' }
                     -
                         property: seo
                         type: KRG\CmsBundle\Form\Type\SeoType
@@ -23,4 +23,4 @@ easy_admin:
                         type: KRG\CmsBundle\Form\Type\ContentType
                         entry_options:
                             fragment: false
-                    - enabled
+                    - { property: enabled, label: 'page.enabled' }

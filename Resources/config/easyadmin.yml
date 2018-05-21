@@ -9,6 +9,7 @@ easy_admin:
                 roles: ['ROLE_CMS']
                 children:
                     - { entity: 'Block', icon: 'cubes' }
+                    - { entity: 'Filter', icon: 'filter' }
                     - { entity: 'Page', icon: 'file' }
                     - { entity: 'Menu', icon: 'reorder' }
                     - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }

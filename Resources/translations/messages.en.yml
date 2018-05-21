@@ -1,46 +1,71 @@
-Block: Block
-'Redirect URL': 'Redirect URL'
-metaTitle: 'Title (meta)'
-metaDescription: 'Description (meta)'
-enabled: Active
-action.new: Create
-action.edit: Edit
-action.delete: Delete
-action.search: Search
-action.save: Save
-action.list: 'Back to the list'
-action.show: Show
-name: Wording
-title: Title
-content: Content
-key: Key
-thumbnail: Thumbnail
-'unique identifier': 'unique identifier'
-'paste your URL here': 'paste your URL here'
-url: URL
+action:
+  new: Create
+  edit: Edit
+  delete: Delete
+  search: Search
+  save: Save
+  list: Back to list
+  show: View
+
+page:
+  name: Name
+  enabled: Enabled
+
+block:
+  thumbnail: Thumbnail
+  key: Key
+  name: Name
+  enabled: Enabled
+  content: Content
+
+filter:
+  key: Key
+  name: Name
+  working: Working
+  enabled: Enabled
+
+menu:
+  name: Name
+  key: Key
+  url: Url
+  parent: Parent
+  enabled: Enabled
+  unique_key: 'Unique identifier'
+
+seo:
+  url: Url
+  url_redirect: 'Redirect url'
+  configuration: Configuration
+  route: Route
+  metas: Metas
+  metaTitle: Title
+  metaDescription: 'Description (meta)'
+  title: Title
+  enabled: Enabled
+  params: Parameters
+
+route:
+  url_error: 'This url doesn''t have any related route. Please paste another one'
+  available_vars: 'Available metas properties, usage {{ variable }}'
+  click_change: 'Click here to change'
+  match: Route
+  paste_here: 'Paste your URL here'
+
 label.form.empty_value: 'null'
-'click here to change': 'click here to change'
-'Matched route': 'Matched route'
-Route: Route
-seo.url: Url
-seo.url_redirect: 'Redirect url'
-seo.configuration: Configuration
-seo.route: Route
-seo.metas: Metas
-seo.metaTitle: Title
-seo.metaDescription: 'Description (meta)'
-seo.title: Title
-route.url_error: 'This url doesn''t have any related route. Please paste another one'
-route.available_vars: 'Available metas properties, usage {{ variable }}'
-route.click_change: 'click here to change'
-route.match: 'Matched route'
-route.paste_here: 'Paste your URL here'
+
 'Edit HTML': 'Edit HTML'
 'Previous versions': 'Previous versions'
 'Toggle navigation': 'Toggle navigation'
-'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
+
 Update: Update
 Cancel: Cancel
 Render: Render
 Source: Source
-'Header / footer': 'en-tête/pied de page'
+
+'Header / footer': '__Header / footer'
+
+'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Block'
+'<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filters'
+'<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
+'<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
+'<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'

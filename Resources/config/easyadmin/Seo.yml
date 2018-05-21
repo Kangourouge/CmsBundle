@@ -9,8 +9,7 @@ easy_admin:
                     - { property: url, label: 'seo.url' }
                     - { property: routeName, label: 'seo.route' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
-                    - { property: metaDescription, label: 'seo.metaDescription' }
-                    - enabled
+                    - { property: enabled, label: 'seo.enabled' }
             form:
                 fields:
                     - { type: 'group', label: 'seo.configuration' }
@@ -19,4 +18,4 @@ easy_admin:
                     - { type: 'group', label: 'seo.metas' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
                     - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
-                    - enabled
+                    - { property: enabled, label: 'seo.enabled' }

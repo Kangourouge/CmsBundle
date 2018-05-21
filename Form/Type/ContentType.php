@@ -15,7 +15,6 @@ use Symfony\Component\Templating\EngineInterface;
 
 class ContentType extends AbstractType
 {
-
     /** @var EngineInterface */
     protected $templating;
 

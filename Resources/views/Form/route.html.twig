@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-sm-10">
-            <input type="text" id="{{ form.vars.id }}_url" class="form-control" placeholder="{{ 'route.paste_here'|trans }}" />
+            <input type="text" id="{{ form.vars.id }}_url" class="form-control" placeholder="{{ 'route.paste_here'|trans }}" value="{{ app.request.get('url') }}" />
         </div>
     </div>
 
@@ -16,9 +16,9 @@
 
     <script type="text/javascript">
         window.addEventListener('load', function() {
-            var select = document.getElementById('{{ form.name.vars.id }}');
-            var params = document.getElementById('{{ form.params.vars.id }}');
-            var url = document.getElementById('{{ form.vars.id }}_url');
+            var selectInput = document.getElementById('{{ form.name.vars.id }}');
+            var paramsInput = document.getElementById('{{ form.params.vars.id }}');
+            var urlInput = document.getElementById('{{ form.vars.id }}_url');
 
             {% if form.parent.metaTitle %}
                 var propsWrapper = findAncestor(document.getElementById('{{ form.parent.metaTitle.vars.id }}'), 'box-body');
@@ -29,19 +29,23 @@
                 var redirectUrl = document.getElementById('{{ form.parent.url.vars.id }}');
             {% endif %}
 
-            select.addEventListener('change', routeChange);
-            url.addEventListener('paste', urlChange);
+            selectInput.addEventListener('change', routeChange);
+            urlInput.addEventListener('paste', urlChange);
 
-            bindRoute(select.options[select.selectedIndex].value, 'route', false);
+            if (urlInput.value.length > 0) {
+                bindRoute(urlInput.value, 'url', true);
+            } else {
+                bindRoute(selectInput.options[selectInput.selectedIndex].value, 'route', false);
+            }
 
             function urlChange() {
                 setTimeout(function () { {# Paste timeout #}
-                    bindRoute(url.value, 'url', true);
+                    bindRoute(urlInput.value, 'url', true);
                 }, 100);
             }
 
             function routeChange() {
-                var selectedOption = select.options[select.selectedIndex];
+                var selectedOption = selectInput.options[selectInput.selectedIndex];
 
                 bindRoute(selectedOption.value, 'route', true);
             }
@@ -79,9 +83,9 @@
             }
 
             function bindSelect(route) {
-                for (var i = 0; i < select.options.length; i++) {
-                    if (select.options[i].value === route) {
-                        select.selectedIndex = i;
+                for (var i = 0; i < selectInput.options.length; i++) {
+                    if (selectInput.options[i].value === route) {
+                        selectInput.selectedIndex = i;
                         break;
                     }
                 }
@@ -89,17 +93,17 @@
 
             function bindRedirectUrl() {
                 if (redirectUrl !== undefined) {
-                    redirectUrl.value = select.options[select.selectedIndex].innerText;
+                    redirectUrl.value = selectInput.options[selectInput.selectedIndex].innerText;
                 }
             }
 
             function bindParameters(parameters) {
-                params.innerHTML = '';
+                paramsInput.innerHTML = '';
                 for(var name in parameters) {
                     if (!parameters.hasOwnProperty(name)) continue;
                     addParam(name, parameters[name]);
                 }
-                params.style.display = parameters.length === 0 ? 'none' : 'block';
+                paramsInput.style.display = parameters.length === 0 ? 'none' : 'block';
             }
 
             function bindProperties(properties) {
@@ -123,16 +127,16 @@
             }
 
             function bindRouteText() {
-                url.value = '';
-                url.setAttribute('placeholder', select.value ?
-                    '{{ 'route.match'|trans }}: ' + select.value + ' ({{ 'route.click_change'|trans }})'
+                urlInput.value = '';
+                urlInput.setAttribute('placeholder', selectInput.value ?
+                    '{{ 'route.match'|trans }}: ' + selectInput.value + ' ({{ 'route.click_change'|trans }})'
                     : '{{ 'route.paste_here'|trans }}');
             }
 
             function addParam(name, value) {
                 var attrValue = typeof value === 'undefined' ? '' : '" value="' + value;
 
-                params.innerHTML += params.dataset.prototype
+                paramsInput.innerHTML += paramsInput.dataset.prototype
                     .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
                     .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + attrValue);

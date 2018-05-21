@@ -1,46 +1,71 @@
-Block: Bloc
-'Redirect URL': 'URL de redirection'
-metaTitle: 'Titre (meta)'
-metaDescription: 'Description (meta)'
-enabled: Actif
-action.new: Créer
-action.edit: Éditer
-action.delete: Supprimer
-action.search: Rechercher
-action.save: 'Sauvegarder les modifications'
-action.list: 'Revenir à la liste'
-action.show: Voir
-name: Libellé
-title: Titre
-content: Contenu
-key: Clé
-thumbnail: Miniature
-'unique identifier': 'Identifiant unique'
-'paste your URL here': 'Collez votre URL'
-url: URL
+action:
+  new: Créer
+  edit: Éditer
+  delete: Supprimer
+  search: Rechercher
+  save: Sauvegarder les modifications
+  list: Revenir à la liste
+  show: Voir
+
+page:
+  name: Nom
+  enabled: Active
+
+block:
+  thumbnail: Miniature
+  key: Clé
+  name: Nom
+  enabled: Actif
+  content: Contenu
+
+filter:
+  key: Clé
+  name: Nom
+  working: Fonctionnel
+  enabled: Actif
+
+menu:
+  name: Nom
+  key: Clé
+  url: Url
+  parent: Parent
+  enabled: Actif
+  unique_key: 'Identifiant unique'
+
+seo:
+  url: Url
+  url_redirect: 'Url de redirection'
+  configuration: Configuration
+  route: Itinéraire
+  metas: Metas
+  metaTitle: Titre
+  metaDescription: 'Description (meta)'
+  title: Titre
+  enabled: Actif
+  params: Paramètres
+
+route:
+  url_error: 'Cette url n''est pas liée à un itinéraire'
+  available_vars: 'Propriétés utilisables dans les metas, utilisation {{ variable }}'
+  click_change: 'Cliquer ici pour mettre à jour'
+  match: Itinéraire
+  paste_here: 'Générez une configuration en collant une url ici...'
+
 label.form.empty_value: 'null'
-'click here to change': 'Cliquez pour modifier'
-'Matched route': 'Itinéraire correspondant'
-Route: Itinéraire
-seo.url: URL
-seo.url_redirect: 'Url de redirection'
-seo.configuration: Configuration
-seo.route: Itinéraire
-seo.metas: Metas
-seo.metaTitle: Titre
-seo.metaDescription: 'Description (meta)'
-seo.title: Titre
-route.url_error: 'Cette url n''est pas liée à un itinéraire'
-route.available_vars: 'Propriétés utilisables dans les metas, utilisation {{ variable }}'
-route.click_change: 'Cliquer ici pour mettre à jour'
-route.match: Itinéraire
-route.paste_here: 'Générez une configuration en collant une url ici...'
-'Edit HTML': 'Edit HTML'
-'Previous versions': 'Previous versions'
+
+'Edit HTML': 'Editer HTML'
+'Previous versions': 'Versions précédentes'
 'Toggle navigation': 'Toggle navigation'
-'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
+
 Update: Mettre à jour
 Cancel: Annuler
 Render: Actualiser le rendu
 Source: Afficher la source
+
 'Header / footer': '__Header / footer'
+
+'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
+'<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filtres'
+'<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
+'<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
+'<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'

@@ -6,15 +6,15 @@ easy_admin:
                 max_results: 100
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - name
-                    - url
-                    - parent
-                    - enabled
+                    - { property: name, label: 'menu.name' }
+                    - { property: url, label: 'menu.url' }
+                    - { property: parent, label: 'menu.parent' }
+                    - { property: enabled, label: 'menu.enabled' }
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { property: key, help: 'Unique identifier' }
-                    - name
+                    - { property: key, help: 'menu.unique_key', label: 'menu.key'  }
+                    - { property: name, label: 'menu.name' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'URL' }
-                    - parent
-                    - enabled
+                    - { property: parent, label: 'menu.parent' }
+                    - { property: enabled, label: 'menu.enabled' }

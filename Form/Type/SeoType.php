@@ -5,6 +5,8 @@ namespace KRG\CmsBundle\Form\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -26,10 +28,15 @@ class SeoType extends AbstractType
         $builder
             ->add('url', null, [
                 'constraints' => new NotNull(),
-                'required'    => true
+                'required'    => true,
+                'label'       => 'seo.url'
             ])
-            ->add('metaTitle')
-            ->add('metaDescription')
+            ->add('metaTitle', TextType::class, [
+                'label' => 'seo.metaTitle'
+            ])
+            ->add('metaDescription', TextareaType::class, [
+                'label' => 'seo.metaDescription',
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
     }
 
@@ -50,5 +57,10 @@ class SeoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SeoInterface::class
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'krg_cms_seo';
     }
 }

@@ -5,13 +5,13 @@ easy_admin:
             list:
                 title: '<i class="fa fa-filter"></i> Filters'
                 fields:
-                    - enabled
-                    - { property: 'working', type: 'boolean' }
-                    - key
-                    - name
+                    - { property: key, label: 'filter.key' }
+                    - { property: name, label: 'filter.name' }
+                    - { property: 'working', type: 'boolean', label: 'filter.working' }
+                    - { property: enabled, label: 'filter.enabled' }
             form:
                 fields:
-                    - enabled
-                    - name
-                    - { property: key, type_options: { required: true } }
+                    - { property: key, type_options: { required: true }, label: 'filter.key' }
+                    - { property: name, label: 'filter.name' }
                     - { property: form, type: KRG\CmsBundle\Form\Type\FilterType }
+                    - { property: enabled, label: 'filter.enabled' }

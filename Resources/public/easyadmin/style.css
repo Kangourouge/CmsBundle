@@ -1,3 +1,14 @@
+.form-group textarea.form-control {
+    min-height: auto;
+}
+
+/* */
+
+#krg-toolbar,
+#krg-toolbar-mini {
+    display: none !important;
+}
+
 .form-control > .cms-content-tools {
     margin: -6px -12px;
 }
