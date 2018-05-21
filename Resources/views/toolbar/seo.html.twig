@@ -30,3 +30,39 @@
     </div>
 {% endif %}
 
+{% if filter is not null %}
+    <div class="krg-toolbar-block">
+        <a href="{{ path('easyadmin') }}?entity=Filter&action=edit&id={{ filter.id }}">
+            {{ include('@KRGCms/icon/filter.svg') }}{{ 'filter.edit'|trans }}
+        </a>
+
+        <div class="krg-toolbar-info">
+            <div class="krg-toolbar-info-group">
+                <div class="krg-toolbar-info-piece">
+                    <b>{{ 'filter.name'|trans }}</b>
+                    <span>{{ filter.name }}</span>
+                </div>
+
+                <div class="krg-toolbar-info-piece">
+                    <b>{{ 'filter.key'|trans }}</b>
+                    <span>{{ filter.key }}</span>
+                </div>
+
+                <div class="krg-toolbar-info-piece">
+                    <b>{{ 'filter.type'|trans }}</b>
+                    <span>{{ filter.form.type }}</span>
+                </div>
+
+                <div class="krg-toolbar-info-piece">
+                    <b>{{ 'filter.data'|trans }}</b>
+                    <span class="krg-toolbar-dump">
+                        {% for key, value in filter.form.data if value|length > 0 %}
+                            {{ key }} = {{ value }}
+                        {% endfor %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+

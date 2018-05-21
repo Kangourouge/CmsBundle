@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Toolbar;
 
+use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\EasyAdminExtensionBundle\Toolbar\ToolbarInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,8 +38,17 @@ class SeoToolbar implements ToolbarInterface
                 $seo = $request->attributes->get('_seo');
             }
 
+            /** @var $filter FilterInterface */
+            $filter = null;
+            if ($request->attributes->has('filter')) {
+                if ($request->attributes->get('filter') instanceof FilterInterface) {
+                    $filter = $request->attributes->get('filter');
+                }
+            }
+
             return $this->templating->render('@KRGCms/toolbar/seo.html.twig', [
-                'seo' => $seo
+                'seo'    => $seo,
+                'filter' => $filter,
             ]);
         }
 

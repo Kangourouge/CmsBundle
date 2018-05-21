@@ -4,3 +4,10 @@ seo:
   meta:
     title: Titre
     description: Description
+
+filter:
+  edit: Filtres
+  name: Nom
+  key: Clé
+  type: Formulaire
+  data: Données
