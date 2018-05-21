@@ -5,6 +5,7 @@ namespace KRG\CmsBundle\Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\Block;
 use KRG\CmsBundle\Entity\BlockInterface;
+use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
@@ -36,9 +37,6 @@ class BlockExtension extends \Twig_Extension
 
     /** @var array */
     private $content;
-
-    /** @var \Twig_TemplateWrapper */
-    private $template;
 
     public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating, TemplateNameParser $nameParser, TemplateLocator $locator, LoggerInterface $logger, $fileBlocks, $twigCacheDir)
 
@@ -83,12 +81,19 @@ class BlockExtension extends \Twig_Extension
                 return $this->renderBlock($environment, $block);
             }
 
+            /** @var FilterInterface $filter */
+            $filter = $this->entityManager->getRepository(FilterInterface::class)->findOneBy(['key' => $key]);
+            if ($filter !== null) {
+                return $this->renderBlock($environment, $filter);
+            }
+
             foreach ($this->fileBlocks as $_key => $config) {
                 if ($_key !== $key) {
                     continue;
                 }
 
                 $path = $this->locator->locate($this->nameParser->parse($config['template']));
+
                 return $this->renderContent($environment, @file_get_contents($path));
             }
 
@@ -104,10 +109,17 @@ class BlockExtension extends \Twig_Extension
      */
     public function renderBlock(\Twig_Environment $environment, BlockInterface $block)
     {
-        if (!$block->isEnabled()) {
-            return null;
+        if ($block->isEnabled()) {
+            if ($block instanceof FilterInterface) {
+                $content = $this->templating->render('KRGCmsBundle:Filter:show.html.twig', ['filter' => $block]);
+            } else {
+                $content = $block->getContent();
+            }
+
+            return $this->renderContent($environment, $content);
         }
-        return $this->renderContent($environment, $block->getContent());
+
+        return null;
     }
 
     /**

@@ -32,11 +32,14 @@ class FilterController extends AbstractController
             throw new InvalidArgumentException('FormType is not managed');
         }
 
+        dump($config);
+
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
         $form->handleRequest($request);
 
         return $this->render('KRGCmsBundle:Filter:edit.html.twig', [
-            'form' => $form->createView()
+            'form'   => $form->createView(),
+            'config' => $config
         ]);
     }
 
