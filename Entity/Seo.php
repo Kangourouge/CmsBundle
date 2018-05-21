@@ -46,7 +46,7 @@ class Seo implements SeoInterface
 
     /**
      * @Gedmo\Translatable()
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $metaDescription;
 
