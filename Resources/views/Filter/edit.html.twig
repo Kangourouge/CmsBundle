@@ -3,3 +3,8 @@
 {% block body %}
     {{ include(config['template']) }}
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/krgcms/easyadmin/style.css') }}">
+{% endblock %}
