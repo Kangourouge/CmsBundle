@@ -32,8 +32,6 @@ class FilterController extends AbstractController
             throw new InvalidArgumentException('FormType is not managed');
         }
 
-        dump($config);
-
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
         $form->handleRequest($request);
 
