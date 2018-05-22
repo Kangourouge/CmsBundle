@@ -2,6 +2,8 @@
 
 namespace KRG\CmsBundle\Entity;
 
+use Symfony\Component\Routing\CompiledRoute;
+
 interface SeoInterface extends SeoRouteInterface
 {
     /**
@@ -99,6 +101,38 @@ interface SeoInterface extends SeoRouteInterface
     public function getMetaDescription();
 
     /**
+     * Get preContent
+     *
+     * @return string
+     */
+    public function getPreContent();
+
+    /**
+     * Set preContent
+     *
+     * @param string $preContent
+     *
+     * @return SeoInterface
+     */
+    public function setPreContent($preContent);
+
+    /**
+     * Get postContent
+     *
+     * @return string
+     */
+    public function getPostContent();
+
+    /**
+     * Set postContent
+     *
+     * @param string $postContent
+     *
+     * @return SeoInterface
+     */
+    public function setPostContent($postContent);
+
+    /**
      * @param array $parameters
      * @return int
      */
@@ -109,4 +143,14 @@ interface SeoInterface extends SeoRouteInterface
      * @return boolean
      */
     public function isValid(array $parameters);
+
+    /**
+     * @return CompiledRoute
+     */
+    public function getCompiledRoute();
+
+    /**
+     * @param CompiledRoute $compiledRoute
+     */
+    public function setCompiledRoute(CompiledRoute $compiledRoute);
 }

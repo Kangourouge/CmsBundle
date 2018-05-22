@@ -56,6 +56,18 @@ class Seo implements SeoInterface
     protected $metaRobots;
 
     /**
+     * @Gedmo\Translatable()
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $preContent;
+
+    /**
+     * @Gedmo\Translatable()
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $postContent;
+
+    /**
      * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
      * @Gedmo\Versioned
      */
@@ -146,11 +158,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set metaTitle
-     *
-     * @param string $metaTitle
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setMetaTitle($metaTitle)
     {
@@ -160,9 +168,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get metaTitle
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getMetaTitle()
     {
@@ -170,11 +176,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Set metaDescription
-     *
-     * @param string $metaDescription
-     *
-     * @return SeoInterface
+     * {@inheritdoc}
      */
     public function setMetaDescription($metaDescription)
     {
@@ -184,13 +186,43 @@ class Seo implements SeoInterface
     }
 
     /**
-     * Get metaDescription
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getMetaDescription()
     {
         return $this->metaDescription;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPreContent()
+    {
+        return $this->preContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPreContent($preContent)
+    {
+        $this->preContent = $preContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPostContent()
+    {
+        return $this->postContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPostContent($postContent)
+    {
+        $this->postContent = $postContent;
     }
 
     /**
@@ -204,6 +236,7 @@ class Seo implements SeoInterface
                 return -1;
             }
         }
+
         return count(array_diff_assoc($_parameters, $parameters));
     }
 
@@ -216,7 +249,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * @return CompiledRoute
+     * {@inheritdoc}
      */
     public function getCompiledRoute()
     {
@@ -224,7 +257,7 @@ class Seo implements SeoInterface
     }
 
     /**
-     * @param CompiledRoute $compiledRoute
+     * {@inheritdoc}
      */
     public function setCompiledRoute(CompiledRoute $compiledRoute)
     {

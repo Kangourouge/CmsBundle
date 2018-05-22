@@ -42,7 +42,12 @@ class FilterController extends AbstractController
     }
 
     /**
-     * @Route("/show/{key}", name="krg_cms_filter_show")
+     * @Route(
+     *     "/show/{key}/{page}",
+     *     defaults = {"page": "1"},
+     *     requirements = { "page": "\d+" },
+     *     name="krg_cms_filter_show"
+     * )
      */
     public function showAction(Request $request, FilterInterface $filter)
     {
@@ -58,7 +63,6 @@ class FilterController extends AbstractController
             }
 
             try {
-                // Call service handler (from tag)
                 $form->handleRequest($request);
                 $vars = [];
                 if ($form->isValid() && $config['handler']) {
@@ -68,7 +72,6 @@ class FilterController extends AbstractController
 
                 return $this->render($config['template'], $vars);
             } catch(\Exception $exception) {
-                // Log an error and update filter
                 $logger = $this->container->get('logger');
                 $logger->error(sprintf('Block form error (id: %d) (%s)', $filter->getId(), $exception->getMessage()));
                 $filter->setWorking(false);

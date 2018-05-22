@@ -6,14 +6,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class SeoExtension extends \Twig_Extension
 {
@@ -23,25 +18,36 @@ class SeoExtension extends \Twig_Extension
     /** @var Request */
     private $request;
 
-    /** @var TokenStorage */
-    private $tokenStorage;
+    /** @var FilesystemAdapter */
+    private $filesystemAdapter;
 
-    /** @var AuthorizationChecker */
-    private $authorizationChecker;
-
-    /** @var FormFactory */
-    private $formFactory;
-
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->formFactory = $formFactory;
         $this->request = $requestStack->getMasterRequest();
+        $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
     }
 
     public function getSeoHead(\Twig_Environment $environment)
+    {
+        return $environment->render('KRGCmsBundle:Seo:head.html.twig', $this->getSeoVars());
+    }
+
+    public function getSeoPreContent()
+    {
+        $data = $this->getSeoVars();
+
+        return $data['preContent'] ?? null;
+    }
+
+    public function getSeoPostContent()
+    {
+        $data = $this->getSeoVars();
+
+        return $data['postContent'] ?? null;
+    }
+
+    protected function getSeoVars()
     {
         if ($this->request === null) {
             return null;
@@ -50,7 +56,12 @@ class SeoExtension extends \Twig_Extension
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return null;
+            return [];
+        }
+
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
+        if ($item->isHit()) {
+            return $item->get();
         }
 
         // Get usefull parameters from the request
@@ -62,13 +73,11 @@ class SeoExtension extends \Twig_Extension
             'metaTitle'       => null,
             'metaDescription' => null,
             'metaRobots'      => null,
-            'ogTitle'         => null,
-            'ogDescription'   => null,
-            'ogImage'         => null,
+            'preContent'      => null,
+            'postContent'     => null,
         ];
 
-        // Use twig environnement to bind {{ var }}
-        foreach($data as $key => &$value) {
+        foreach ($data as $key => &$value) {
             $getter = 'get' . ucfirst($key);
             if (method_exists($seo, $getter)) {
                 if ($input = call_user_func([$seo, $getter])) {
@@ -78,7 +87,10 @@ class SeoExtension extends \Twig_Extension
         }
         unset($value);
 
-        return $environment->render('KRGCmsBundle:Seo:head.html.twig', $data);
+        $item->set($data);
+        $this->filesystemAdapter->save($item);
+
+        return $data;
     }
 
     public function getSeoUrl($key)
@@ -99,11 +111,17 @@ class SeoExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'seo_head' => new \Twig_SimpleFunction('seo_head', [$this, 'getSeoHead'], [
+            'seo_head'         => new \Twig_SimpleFunction('seo_head', [$this, 'getSeoHead'], [
                 'needs_environment' => true,
                 'is_safe'           => ['html'],
             ]),
-            'seo_url' => new \Twig_SimpleFunction('seo_url', [$this, 'getSeoUrl'], [
+            'seo_url'          => new \Twig_SimpleFunction('seo_url', [$this, 'getSeoUrl'], [
+                'is_safe' => ['html'],
+            ]),
+            'seo_pre_content'  => new \Twig_SimpleFunction('seo_pre_content', [$this, 'getSeoPreContent'], [
+                'is_safe' => ['html'],
+            ]),
+            'seo_post_content' => new \Twig_SimpleFunction('seo_post_content', [$this, 'getSeoPostContent'], [
                 'is_safe' => ['html'],
             ]),
         ];

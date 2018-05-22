@@ -18,4 +18,8 @@ easy_admin:
                     - { type: 'group', label: 'seo.metas' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
                     - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
+                    - { type: 'group', label: 'seo.content' }
+                    - { property: preContent, type: textarea, label: 'seo.preContent' }
+                    - { property: postContent, type: textarea, label: 'seo.postContent' }
+                    - { type: 'group', label: 'seo.status' }
                     - { property: enabled, label: 'seo.enabled' }

@@ -37,11 +37,8 @@ class SeoListener
             return null;
         }
 
-        /* @var $seoRepository SeoRepository */
-        $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
-
         /* @var $seo SeoInterface */
-        $seo = $seoRepository->findOneByUid($route);
+        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($route);
         if ($seo === null) {
             return null;
         }
@@ -53,7 +50,8 @@ class SeoListener
         $request->attributes->set('_route', $seo->getRouteName());
         $request->attributes->set('_seo', $seo);
         $request->attributes->set('_route_params', $params);
-        foreach($seo->getRouteParams() as $key => $value) {
+
+        foreach ($seo->getRouteParams() as $key => $value) {
             if ($value) {
                 $request->attributes->set($key, $value);
             }
