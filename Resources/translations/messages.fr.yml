@@ -49,7 +49,7 @@ menu:
   url: Url
   parent: Parent
   enabled: Actif
-  unique_key: 'Identifiant unique'
+  unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
 
 seo:
   url: Url
