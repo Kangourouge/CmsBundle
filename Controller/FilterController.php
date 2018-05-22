@@ -7,6 +7,7 @@ use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Form\FilterRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -33,11 +34,9 @@ class FilterController extends AbstractController
         }
 
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
-        $form->handleRequest($request);
 
-        return $this->render('KRGCmsBundle:Filter:edit.html.twig', [
-            'form'   => $form->createView(),
-            'config' => $config
+        return $this->renderForm($form, '@KRGCms/Filter/edit.html.twig', $request, $config, [
+            'display_form' => true,
         ]);
     }
 
@@ -63,14 +62,7 @@ class FilterController extends AbstractController
             }
 
             try {
-                $form->handleRequest($request);
-                $vars = [];
-                if ($form->isValid() && $config['handler']) {
-                    $vars = $config['handler']->perform($request, $form);
-                }
-                $vars['form'] = $form->createView();
-
-                return $this->render($config['template'], $vars);
+                return $this->renderForm($form, $config['template'], $request, $config);
             } catch(\Exception $exception) {
                 $logger = $this->container->get('logger');
                 $logger->error(sprintf('Block form error (id: %d) (%s)', $filter->getId(), $exception->getMessage()));
@@ -80,6 +72,18 @@ class FilterController extends AbstractController
         }
 
         return new Response();
+    }
+
+    protected function renderForm(FormInterface $form, string $template, Request $request, array $config, array $options = [])
+    {
+        $vars = [];
+        if ($config['handler']) {
+            $vars = $config['handler']->perform($request, $form, $options);
+        }
+        $vars['form'] = $form->createView();
+        $vars['config'] = $config;
+
+        return $this->render($template, $vars);
     }
 }
 

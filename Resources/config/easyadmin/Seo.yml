@@ -5,6 +5,7 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\SeoInterface'
             list:
                 title: '<i class="fa fa-sitemap"></i> Seo'
+                dql_filter:
                 fields:
                     - { property: url, label: 'seo.url' }
                     - { property: routeName, label: 'seo.route' }
@@ -12,14 +13,14 @@ easy_admin:
                     - { property: enabled, label: 'seo.enabled' }
             form:
                 fields:
-                    - { type: 'group', label: 'seo.configuration' }
+                    - { type: 'group', label: 'group.configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
                     - { property: url, label: 'seo.url_redirect' }
-                    - { type: 'group', label: 'seo.metas' }
+                    - { type: 'group', label: 'group.metas' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
                     - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
-                    - { type: 'group', label: 'seo.content' }
+                    - { type: 'group', label: 'group.content' }
                     - { property: preContent, type: textarea, label: 'seo.preContent' }
                     - { property: postContent, type: textarea, label: 'seo.postContent' }
-                    - { type: 'group', label: 'seo.status' }
+                    - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'seo.enabled' }

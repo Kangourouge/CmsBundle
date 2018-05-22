@@ -11,7 +11,10 @@ easy_admin:
                     - { property: enabled, label: 'filter.enabled' }
             form:
                 fields:
+                    - { type: 'group', label: 'group.configuration' }
                     - { property: key, type_options: { required: true }, label: 'filter.key' }
                     - { property: name, label: 'filter.name' }
+                    - { type: 'group', label: 'group.form' }
                     - { property: form, type: KRG\CmsBundle\Form\Type\FilterType }
+                    - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'filter.enabled' }

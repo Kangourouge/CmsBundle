@@ -13,14 +13,19 @@ easy_admin:
                     - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary' }
             form:
                 fields:
+                    - { type: 'group', label: 'group.configuration' }
                     - { property: name, label: 'page.name' }
+                    - { type: 'group', label: 'group.metas' }
                     -
                         property: seo
                         type: KRG\CmsBundle\Form\Type\SeoType
                         label: false
+                    - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'
+                        label: false
                         type: KRG\CmsBundle\Form\Type\ContentType
                         entry_options:
                             fragment: false
+                    - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'page.enabled' }

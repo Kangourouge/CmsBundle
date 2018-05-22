@@ -54,6 +54,11 @@ services:
         tags: [validator.constraint_validator]
         public: true
 
+    KRG\CmsBundle\Entity\Subscriber\:
+        resource: '../../Entity/Subscriber/*'
+        tags: [kernel.event_subscriber]
+        public: true
+
     KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'
 
     KRG\CmsBundle\Toolbar\:

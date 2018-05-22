@@ -24,13 +24,6 @@ class ContentType extends AbstractType
     /** @var UrlResolver */
     protected $urlResolver;
 
-    /**
-     * ContentTransformer constructor.
-     *
-     * @param EngineInterface $templating
-     * @param FileBase64Uploader $fileUploader
-     * @param UrlResolver $urlResolver
-     */
     public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver)
     {
         $this->templating = $templating;

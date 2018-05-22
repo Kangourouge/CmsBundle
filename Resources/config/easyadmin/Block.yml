@@ -11,15 +11,18 @@ easy_admin:
                     - { property: enabled, label: 'block.enabled' }
             form:
                 fields:
+                    - { type: 'group', label: 'group.configuration' }
                     -
                         property: thumbnail
                         type: KRG\CmsBundle\Form\Type\Base64FileType
                         label: 'block.thumbnail'
                     - { property: key, label: 'block.key' }
                     - { property: name, label: 'block.name' }
+                    - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'
                         type: KRG\CmsBundle\Form\Type\ContentType
                         label: 'block.content'
+                    - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'block.enabled' }
 

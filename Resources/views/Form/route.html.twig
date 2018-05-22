@@ -21,7 +21,7 @@
             var urlInput = document.getElementById('{{ form.vars.id }}_url');
 
             {% if form.parent.metaTitle %}
-                var propsWrapper = findAncestor(document.getElementById('{{ form.parent.metaTitle.vars.id }}'), 'box-body');
+                var propsWrapper = findAncestor(document.getElementById('{{ form.parent.metaTitle.vars.id }}'), 'field-group');
                 var divProps = null;
             {% endif %}
 
@@ -118,10 +118,8 @@
                 if (propsWrapper !== undefined) {
                     divProps = document.createElement('div');
                     divProps.id = 'props-wrapper';
-                    divProps.innerHTML = '<strong>{{ 'route.available_vars'|trans }}:</strong> '
-                        + properties.join(', ') + '<br>'
-                        + '<hr>';
-
+                    divProps.innerHTML = '<strong>{{ 'route.available_vars'|trans }}</strong><br>' + properties.join(', ') + '<br>';
+                    divProps.classList.add('box');
                     propsWrapper.prepend(divProps);
                 }
             }
