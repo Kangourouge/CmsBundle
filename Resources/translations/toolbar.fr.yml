@@ -4,6 +4,8 @@ seo:
   meta:
     title: Titre
     description: Description
+  preContent: Contenu (haut)
+  postContent: Contenu (bas)
 
 filter:
   edit: Filtres

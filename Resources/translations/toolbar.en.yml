@@ -4,3 +4,5 @@ seo:
   meta:
     title: Title
     description: Description
+  preContent: Content (top)
+  postContent: Content (bottom)

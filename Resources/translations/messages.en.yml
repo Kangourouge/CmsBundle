@@ -1,3 +1,18 @@
+admin_menu:
+  block: Block
+  filter: Filter
+  page: Page
+  menu: Menu
+  seo: SEO
+  media: Media
+
+group:
+  content: Content
+  configuration: Configuration
+  status: Status
+  metas: Metas
+  form: Form
+
 action:
   new: Create
   edit: Edit
@@ -23,6 +38,10 @@ filter:
   name: Name
   working: Working
   enabled: Enabled
+  configuration: Configuration
+  form: Form
+  status: Status
+  helper: To create a filter you must choose a form type, fill it without submitting and save.
 
 menu:
   name: Name
@@ -43,10 +62,14 @@ seo:
   title: Title
   enabled: Enabled
   params: Parameters
+  content: Content
+  preContent: Content (top)
+  postContent: Content (bottom)
+  status: Status
 
 route:
   url_error: 'This url doesn''t have any related route. Please paste another one'
-  available_vars: 'Available metas properties, usage {{ variable }}'
+  available_vars: 'Available properties — {{ variable }}'
   click_change: 'Click here to change'
   match: Route
   paste_here: 'Paste your URL here'
