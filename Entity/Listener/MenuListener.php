@@ -65,15 +65,12 @@ class MenuListener implements EventSubscriber
 
     protected function generateKey(MenuInterface $menu, $index = 0)
     {
-        $prefix = '';
-        /** @var $elder MenuInterface */
-        foreach ($menu->getHierarchy() as $elder) {
-            $prefix .= $elder->getKey().'_';
-        }
-
+        $prefix = $menu->getParent() ? $menu->getParent()->getKey().'_' : '';
         $suffix = $index > 0 ? '_'.$index : '';
+
         $key = sprintf('%s%s%s', $prefix, Str::underscoreCase($menu->getName()), $suffix);
         $key = (strlen($key) > 200) ? substr($key, 0, 200) : $key;
+
         if ($this->entityManager->getRepository(MenuInterface::class)->findOneBy(['key' => $key]) === null) {
             return $key;
         }
