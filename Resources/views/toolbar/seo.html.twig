@@ -2,47 +2,9 @@
 
 {% if seo is null %}
     <div class="krg-toolbar-block">
-        <a href="{{ path('easyadmin') }}?entity=Seo&action=new&url={{ app.request.uri }}">
-            {{ include('@KRGCms/icon/search.svg') }}{{ 'seo.create'|trans }}
+        <a href="{{ path('easyadmin') }}?entity=Seo&action=new&url={{ app.request.uri }}" title="{{ 'seo.create'|trans }}">
+            {{ include('@KRGCms/icon/plus.svg') }} Seo
         </a>
-    </div>
-{% endif %}
-
-{% if seo is not null %}
-    <div class="krg-toolbar-block">
-        <a href="{{ path('easyadmin') }}?entity=Seo&action=edit&id={{ seo.id }}">
-            {{ include('@KRGCms/icon/search.svg') }}{{ 'seo.edit'|trans }}
-        </a>
-
-        <div class="krg-toolbar-info">
-            <div class="krg-toolbar-info-group">
-                <div class="krg-toolbar-info-piece">
-                    <b>{{ 'seo.meta.title'|trans }}</b>
-                    <span>{{ seo.metaTitle }}</span>
-                </div>
-
-                {% if seo.metaDescription|length %}
-                    <div class="krg-toolbar-info-piece">
-                        <b>{{ 'seo.meta.description'|trans }}</b>
-                        <span>{{ seo.metaDescription }}</span>
-                    </div>
-                {% endif %}
-
-                {% if seo.preContent|length %}
-                    <div class="krg-toolbar-info-piece">
-                        <b>{{ 'seo.preContent'|trans }}</b>
-                        <span>{{ seo.preContent }}</span>
-                    </div>
-                {% endif %}
-
-                {% if seo.postContent|length %}
-                    <div class="krg-toolbar-info-piece">
-                        <b>{{ 'seo.postContent'|trans }}</b>
-                        <span>{{ seo.postContent }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
     </div>
 {% endif %}
 
@@ -54,14 +16,11 @@
 
         <div class="krg-toolbar-info">
             <div class="krg-toolbar-info-group">
+                {% include '@KRGCms/toolbar/_seo_infos.html.twig' with {'seo': filter.seo} only %}
+
                 <div class="krg-toolbar-info-piece">
                     <b>{{ 'filter.name'|trans }}</b>
                     <span>{{ filter.name }}</span>
-                </div>
-
-                <div class="krg-toolbar-info-piece">
-                    <b>{{ 'filter.key'|trans }}</b>
-                    <span>{{ filter.key }}</span>
                 </div>
 
                 <div class="krg-toolbar-info-piece">
@@ -80,5 +39,16 @@
             </div>
         </div>
     </div>
-{% endif %}
+{% elseif seo is not null %}
+    <div class="krg-toolbar-block">
+        <a href="{{ path('easyadmin') }}?entity=Seo&action=edit&id={{ seo.id }}" title="{{ 'seo.edit'|trans }}">
+            {{ include('@KRGCms/icon/search.svg') }} Seo
+        </a>
 
+        <div class="krg-toolbar-info">
+            <div class="krg-toolbar-info-group">
+                {% include '@KRGCms/toolbar/_seo_infos.html.twig' with {'seo': seo} only %}
+            </div>
+        </div>
+    </div>
+{% endif %}

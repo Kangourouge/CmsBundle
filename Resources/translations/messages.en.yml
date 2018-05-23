@@ -12,6 +12,8 @@ group:
   status: Status
   metas: Metas
   form: Form
+  filter: Filter
+  page: Page
 
 action:
   new: Create
@@ -41,7 +43,10 @@ filter:
   configuration: Configuration
   form: Form
   status: Status
-  helper: To create a filter you must choose a form type, fill it without submitting and save.
+  helper: |
+    To create a filter you must choose a form type, fill it without submitting and save.
+    In order to handle pagination you must add /{page} at the end of the url (ex: /results/{page})
+  unique_key: Unique identifier, leave this field empty to auto generate it
 
 menu:
   name: Name

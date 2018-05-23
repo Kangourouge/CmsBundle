@@ -1,0 +1,29 @@
+{% trans_default_domain 'toolbar' %}
+
+{% if seo %}
+    <div class="krg-toolbar-info-piece">
+        <b>{{ 'seo.meta.title'|trans }}</b>
+        <span>{{ seo.metaTitle|length ? seo.metaTitle : '-' }}</span>
+    </div>
+
+    {% if seo.metaDescription|length %}
+        <div class="krg-toolbar-info-piece">
+            <b>{{ 'seo.meta.description'|trans }}</b>
+            <span>{{ seo.metaDescription[:120] }}{{ seo.metaDescription|length > 120 ? '...' : '' }}</span>
+        </div>
+    {% endif %}
+
+    {% if seo.preContent|length %}
+        <div class="krg-toolbar-info-piece">
+            <b>{{ 'seo.preContent'|trans }}</b>
+            <span>{{ seo.preContent[:120] }}{{ seo.preContent|length > 120 ? '...' : '' }}</span>
+        </div>
+    {% endif %}
+
+    {% if seo.postContent|length %}
+        <div class="krg-toolbar-info-piece">
+            <b>{{ 'seo.postContent'|trans }}</b>
+            <span>{{ seo.postContent[:120] }}{{ seo.postContent|length > 120 ? '...' : '' }}</span>
+        </div>
+    {% endif %}
+{% endif %}

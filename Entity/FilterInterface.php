@@ -36,4 +36,20 @@ interface FilterInterface extends BlockInterface
      * @return array
      */
     public function getForm();
+
+    /**
+     * Set seo
+     *
+     * @param SeoInterface $seo
+     *
+     * @return FilterInterface
+     */
+    public function setSeo(SeoInterface $seo = null);
+
+    /**
+     * Get seo
+     *
+     * @return SeoInterface
+     */
+    public function getSeo();
 }

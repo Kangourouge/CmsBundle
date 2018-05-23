@@ -25,6 +25,13 @@ class Filter extends AbstractBlock implements FilterInterface
     protected $form;
 
     /**
+     * @ORM\OneToOne(targetEntity="KRG\CmsBundle\Entity\SeoInterface", cascade={"all"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="seo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @var SeoInterface
+     */
+    protected $seo;
+
+    /**
      * {@inheritdoc}
      */
     public function getFormType()
@@ -71,5 +78,23 @@ class Filter extends AbstractBlock implements FilterInterface
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSeo(SeoInterface $seo = null)
+    {
+        $this->seo = $seo;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSeo()
+    {
+        return $this->seo;
     }
 }

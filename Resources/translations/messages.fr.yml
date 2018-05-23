@@ -21,6 +21,8 @@ group:
   status: État
   metas: Metas
   form: Formulaire
+  filter: Filtre
+  page: Page
 
 page:
   name: Nom
@@ -41,7 +43,10 @@ filter:
   configuration: Configuration
   form: Formulaire
   status: État
-  helper: Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
+  helper: |
+    Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
+    La gestion de la pagination nécessite de suffixer l'url par /{page} (ex: /les-resultats/{page})
+  unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
 
 menu:
   name: Nom

@@ -8,6 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use KRG\CmsBundle\Entity\MenuInterface;
+use KRG\CmsBundle\Util\Str;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MenuListener implements EventSubscriber
@@ -29,29 +30,36 @@ class MenuListener implements EventSubscriber
         return [
             Events::preUpdate,
             Events::prePersist,
-            Events::postUpdate
+            Events::postUpdate,
         ];
     }
 
     public function prePersist(LifecycleEventArgs $event)
     {
         if ($event->getEntity() instanceof MenuInterface) {
-            /** @var $menu MenuInterface */
-            $menu = $event->getEntity();
-            if (strlen($menu->getKey()) === 0) {
-                $menu->setKey($this->generateKey($menu));
-            }
+            $this->prePersistOrUpdate($event->getEntity());
         }
     }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
         if ($event->getEntity() instanceof MenuInterface) {
-            /** @var $menu MenuInterface */
-            $menu = $event->getEntity();
-            if (strlen($menu->getKey()) === 0) {
-                $menu->setKey($this->generateKey($menu));
-            }
+            $this->prePersistOrUpdate($event->getEntity());
+        }
+    }
+
+    public function prePersistOrUpdate(MenuInterface $menu)
+    {
+        /** @var $menu MenuInterface */
+        if (strlen($menu->getKey()) === 0) {
+            $menu->setKey($this->generateKey($menu));
+        }
+    }
+
+    public function postUpdate(LifecycleEventArgs $event)
+    {
+        if ($event->getEntity() instanceof MenuInterface) {
+            $this->eventDispatcher->dispatch('cache:clear:data');
         }
     }
 
@@ -64,30 +72,12 @@ class MenuListener implements EventSubscriber
         }
 
         $suffix = $index > 0 ? '_'.$index : '';
-        $key = sprintf('%s%s%s', $prefix, self::underscoreCase($menu->getName()), $suffix);
+        $key = sprintf('%s%s%s', $prefix, Str::underscoreCase($menu->getName()), $suffix);
         $key = (strlen($key) > 200) ? substr($key, 0, 200) : $key;
         if ($this->entityManager->getRepository(MenuInterface::class)->findOneBy(['key' => $key]) === null) {
             return $key;
         }
 
-        return self::generateKey($menu, $index + 1);
-    }
-
-    public function postUpdate(LifecycleEventArgs $event)
-    {
-        if ($event->getEntity() instanceof MenuInterface) {
-            $this->eventDispatcher->dispatch('cache:clear:data');
-        }
-    }
-
-    public static function underscoreCase($string)
-    {
-        $string = strtr(utf8_decode($string), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-        $string = preg_replace('/[^a-z0-9]+/i', ' ', $string);
-        $string = trim($string);
-        $string = str_replace(' ', '_', $string);
-        $string = strtolower($string);
-
-        return $string;
+        return $this->generateKey($menu, $index + 1);
     }
 }

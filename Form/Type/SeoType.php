@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -25,19 +27,34 @@ class SeoType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add('url', null, [
-                'constraints' => new NotNull(),
-                'required'    => true,
-                'label'       => 'seo.url'
+                'constraints' => $options['required_url'] ? new NotNull() : null,
+                'label'       => 'seo.url',
+                'required'    => $options['required_url'],
             ])
             ->add('metaTitle', TextType::class, [
-                'label' => 'seo.metaTitle'
+                'label' => 'seo.metaTitle',
             ])
             ->add('metaDescription', TextareaType::class, [
                 'label' => 'seo.metaDescription',
-            ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
+            ]);
+
+        if ($options['pre_content']) {
+            $builder->add('preContent', TextareaType::class, [
+                'label' => 'seo.preContent',
+            ]);
+        }
+
+        if ($options['post_content']) {
+            $builder->add('postContent', TextareaType::class, [
+                'label' => 'seo.postContent',
+            ]);
+        }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
     }
 
     public function onPreSetData(FormEvent $event)
@@ -54,8 +71,13 @@ class SeoType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'data_class' => SeoInterface::class
+            'data_class'   => SeoInterface::class,
+            'required_url' => true,
+            'pre_content'  => false,
+            'post_content' => false,
         ]);
     }
 

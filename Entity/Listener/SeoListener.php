@@ -15,11 +15,6 @@ class SeoListener implements EventSubscriber
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
-    /**
-     * BlockListener constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;

@@ -8,7 +8,7 @@ seo:
   postContent: Contenu (bas)
 
 filter:
-  edit: Filtres
+  edit: Filtre
   name: Nom
   key: Clé
   type: Formulaire
