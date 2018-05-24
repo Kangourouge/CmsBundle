@@ -63,7 +63,8 @@ seo:
   configuration: Configuration
   route: Itinéraire
   metas: Metas
-  metaTitle: Titre
+  title: 'Titre (h1)'
+  metaTitle: 'Titre (meta)'
   metaDescription: 'Description (meta)'
   title: Titre
   enabled: Actif

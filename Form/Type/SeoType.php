@@ -27,18 +27,27 @@ class SeoType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        $builder
-            ->add('url', null, [
-                'constraints' => $options['required_url'] ? new NotNull() : null,
-                'label'       => 'seo.url',
-                'required'    => $options['required_url'],
-            ])
-            ->add('metaTitle', TextType::class, [
-                'label' => 'seo.metaTitle',
-            ])
-            ->add('metaDescription', TextareaType::class, [
-                'label' => 'seo.metaDescription',
+        $builder->add('url', null, [
+            'label'       => 'seo.url',
+            'constraints' => $options['required_url'] ? new NotNull() : null,
+            'required'    => $options['required_url'],
+        ]);
+
+        if ($options['title']) {
+            $builder->add('title', TextType::class, [
+                'label' => 'seo.title',
             ]);
+        }
+
+        if ($options['metas']) {
+            $builder
+                ->add('metaTitle', TextType::class, [
+                    'label' => 'seo.metaTitle',
+                ])
+                ->add('metaDescription', TextareaType::class, [
+                    'label' => 'seo.metaDescription',
+                ]);
+        }
 
         if ($options['pre_content']) {
             $builder->add('preContent', TextareaType::class, [
@@ -76,6 +85,8 @@ class SeoType extends AbstractType
             'required_url' => true,
             'pre_content'  => false,
             'post_content' => false,
+            'title'        => false,
+            'metas'        => true,
         ]);
     }
 

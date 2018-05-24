@@ -63,7 +63,8 @@ seo:
   configuration: Configuration
   route: Route
   metas: Metas
-  metaTitle: Title
+  title: 'Title (h1)'
+  metaTitle: 'Title (meta)'
   metaDescription: 'Description (meta)'
   title: Title
   enabled: Enabled

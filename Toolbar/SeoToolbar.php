@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Toolbar;
 
 use KRG\CmsBundle\Entity\FilterInterface;
+use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\EasyAdminExtensionBundle\Toolbar\ToolbarInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,9 +47,19 @@ class SeoToolbar implements ToolbarInterface
                 }
             }
 
+            /** @var $page PageInterface */
+            $page = null;
+            if ($request->attributes->has('page')) {
+                if ($request->attributes->get('page') instanceof PageInterface) {
+                    $page = $request->attributes->get('page');
+                }
+            }
+
+
             return $this->templating->render('@KRGCms/toolbar/seo.html.twig', [
                 'seo'    => $seo,
                 'filter' => $filter,
+                'page'   => $page,
             ]);
         }
 

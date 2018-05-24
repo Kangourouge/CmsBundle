@@ -69,6 +69,22 @@ interface SeoInterface extends SeoRouteInterface
     public function getUrl();
 
     /**
+     * Set Title
+     *
+     * @param string $title
+     *
+     * @return SeoInterface
+     */
+    public function setTitle($title);
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle();
+
+    /**
      * Set metaTitle
      *
      * @param string $metaTitle

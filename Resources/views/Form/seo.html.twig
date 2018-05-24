@@ -1,6 +1,11 @@
 {% block krg_cms_seo_row %}
     <div id="{{ form.vars.id }}_metas">
         {{ form_row(form.url) }}
+
+        {% if form.title is defined %}
+            {{ form_row(form.title) }}
+        {% endif %}
+
         {{ form_row(form.metaTitle) }}
         {{ form_row(form.metaDescription) }}
 
