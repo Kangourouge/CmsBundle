@@ -24,6 +24,7 @@ group:
   filter: Filtre
   page: Page
   menu: Menu
+  block: Bloc
 
 page:
   name: Nom
@@ -47,7 +48,6 @@ filter:
   helper: |
     Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
     La gestion de la pagination nécessite de suffixer l'url par /{page} (ex: /les-resultats/{page})
-  unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
 
 menu:
   name: Nom
@@ -55,7 +55,6 @@ menu:
   url: Url
   parent: Parent
   enabled: Actif
-  unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
 
 seo:
   url: Url
@@ -105,3 +104,5 @@ or: Ou
 '<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
 '<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
 '<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
+
+unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement

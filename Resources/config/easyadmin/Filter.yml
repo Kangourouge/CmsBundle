@@ -13,7 +13,7 @@ easy_admin:
                 fields:
                     - { type: 'group', label: 'group.filter' }
                     - { property: name, label: 'filter.name' }
-                    - { property: key, type_options: { required: false }, label: 'filter.key', help: 'filter.unique_key' }
+                    - { property: key, type_options: { required: false }, label: 'filter.key', help: 'unique_key' }
                     - { type: 'group', label: 'group.configuration' }
                     -
                         property: seo

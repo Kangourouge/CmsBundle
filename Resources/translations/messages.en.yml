@@ -15,6 +15,7 @@ group:
   filter: Filter
   page: Page
   menu: Menu
+  block: Block
 
 action:
   new: Create
@@ -47,7 +48,6 @@ filter:
   helper: |
     To create a filter you must choose a form type, fill it without submitting and save.
     In order to handle pagination you must add /{page} at the end of the url (ex: /results/{page})
-  unique_key: Unique identifier, leave this field empty to auto generate it
 
 menu:
   name: Name
@@ -55,7 +55,6 @@ menu:
   url: Url
   parent: Parent
   enabled: Enabled
-  unique_key: Unique identifier, leave this field empty to auto generate it
 
 seo:
   url: Url
@@ -105,3 +104,5 @@ or: Or
 '<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
 '<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
 '<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
+
+unique_key: Unique identifier, leave this field empty to auto generate it

@@ -11,13 +11,13 @@ easy_admin:
                     - { property: enabled, label: 'block.enabled' }
             form:
                 fields:
-                    - { type: 'group', label: 'group.configuration' }
+                    - { type: 'group', label: 'group.block' }
                     -
                         property: thumbnail
                         type: KRG\CmsBundle\Form\Type\Base64FileType
                         label: 'block.thumbnail'
-                    - { property: key, label: 'block.key' }
                     - { property: name, label: 'block.name' }
+                    - { property: key, label: 'block.key', type_options: { required: false }, help: 'unique_key' }
                     - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'
