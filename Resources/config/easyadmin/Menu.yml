@@ -16,7 +16,7 @@ easy_admin:
                     - { type: 'group', label: 'group.menu' }
                     - { property: name, label: 'menu.name' }
                     - { property: key, help: 'menu.unique_key', label: 'menu.key'  }
-                    - { property: parent, label: 'menu.parent' }
+                    - { property: parent, label: 'menu.parent', type_options: {'placeholder': ''} }
                     - { type: 'group', label: 'group.configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'menu.url' }
                     - { type: 'group', label: 'group.status' }
