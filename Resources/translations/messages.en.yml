@@ -14,6 +14,7 @@ group:
   form: Form
   filter: Filter
   page: Page
+  menu: Menu
 
 action:
   new: Create
@@ -79,6 +80,11 @@ route:
   match: Route
   paste_here: 'Paste your URL here'
 
+url:
+  bind: Bind
+  block_choice_page: '%name% (page) — %url%'
+  block_choice_filter: '%name% (filter) — %url%'
+
 label.form.empty_value: 'null'
 
 'Edit HTML': 'Edit HTML'
@@ -89,6 +95,7 @@ Update: Update
 Cancel: Cancel
 Render: Render
 Source: Source
+or: Or
 
 'Header / footer': '__Header / footer'
 

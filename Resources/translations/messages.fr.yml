@@ -23,6 +23,7 @@ group:
   form: Formulaire
   filter: Filtre
   page: Page
+  menu: Menu
 
 page:
   name: Nom
@@ -79,6 +80,11 @@ route:
   match: Itinéraire
   paste_here: 'Générez une configuration en collant une url ici...'
 
+url:
+  bind: Lier
+  block_choice_page: '%name% (page) — %url%'
+  block_choice_filter: '%name% (filtre) — %url%'
+
 label.form.empty_value: 'null'
 
 'Edit HTML': 'Editer HTML'
@@ -89,6 +95,7 @@ Update: Mettre à jour
 Cancel: Annuler
 Render: Actualiser le rendu
 Source: Afficher la source
+or: Ou
 
 'Header / footer': '__Header / footer'
 

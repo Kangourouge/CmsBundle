@@ -10,7 +10,7 @@ use KRG\CmsBundle\Entity\Validator\UniqueKey;
 /**
  * Filter
  *
- * @ORM\MappedSuperclass
+ * @ORM\MappedSuperclass(repositoryClass="KRG\CmsBundle\Repository\FilterRepository")
  * @FilterWorking()
  * @UniqueKey()
  * @Gedmo\Loggable

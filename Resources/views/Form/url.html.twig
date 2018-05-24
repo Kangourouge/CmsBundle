@@ -1,0 +1,29 @@
+{% block krg_cms_url_row %}
+    {{ form_row(form.url) }}
+
+    <div class="krg-separator">
+        <span class="krg-separator-text">
+            {{ 'or'|trans }}
+        </span>
+    </div>
+
+    {{ form_row(form.block, {'attr': {'data-widget': 'select2'}}) }}
+
+    <script type="text/javascript">
+        (function () {
+            var urlInput = document.getElementById('{{ form.url.vars.id }}');
+            var blockSelect = document.getElementById('{{ form.block.vars.id }}');
+
+            urlInput.addEventListener('keydown', function() {
+                if (null !== $(blockSelect).val()) {
+                    $(blockSelect).select2('val', '');
+                }
+            });
+
+            $(blockSelect).select2().on('change', function() {
+                urlInput.value = '';
+            });
+        })();
+    </script>
+{% endblock %}
+

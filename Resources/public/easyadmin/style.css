@@ -10,6 +10,21 @@
     min-height: auto;
 }
 
+.krg-separator {
+    margin: 0 5px 23px;
+    height: 10px;
+    border-bottom: 1px dashed #cdcdcd;
+    text-align: center;
+}
+
+.krg-separator .krg-separator-text {
+    font-size: 16px;
+    background-color: #ffffff;
+    padding: 0 10px;
+    text-transform: uppercase;
+    color: #b5b5b5;
+}
+
 /* */
 
 #krg-toolbar,

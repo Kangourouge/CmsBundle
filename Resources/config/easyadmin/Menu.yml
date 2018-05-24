@@ -13,10 +13,11 @@ easy_admin:
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { type: 'group', label: 'group.configuration' }
+                    - { type: 'group', label: 'group.menu' }
                     - { property: name, label: 'menu.name' }
                     - { property: key, help: 'menu.unique_key', label: 'menu.key'  }
-                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'URL' }
                     - { property: parent, label: 'menu.parent' }
+                    - { type: 'group', label: 'group.configuration' }
+                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'menu.url' }
                     - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'menu.enabled' }
