@@ -45,9 +45,7 @@ filter:
   configuration: Configuration
   form: Form
   status: Status
-  helper: |
-    To create a filter you must choose a form type, fill it without submitting and save.
-    In order to handle pagination you must add /{page} at the end of the url (ex: /results/{page})
+  helper: To create a filter you must choose a form type, fill it without submitting and save.
 
 menu:
   name: Name

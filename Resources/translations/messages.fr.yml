@@ -45,9 +45,7 @@ filter:
   configuration: Configuration
   form: Formulaire
   status: État
-  helper: |
-    Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
-    La gestion de la pagination nécessite de suffixer l'url par /{page} (ex: /les-resultats/{page})
+  helper: Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
 
 menu:
   name: Nom
