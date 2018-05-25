@@ -4,6 +4,13 @@
     background: #fff;
 }
 
+#filter_form iframe {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin-top: 5px;
+    padding-top: 20px;
+}
+
 /* */
 
 .form-group textarea.form-control {
