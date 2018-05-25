@@ -34,7 +34,11 @@ class SeoExtension extends \Twig_Extension
 
     public function getSeoHead(\Twig_Environment $environment)
     {
-        return $environment->render('KRGCmsBundle:Seo:head.html.twig', $this->getSeoVars());
+        if ($seoVars = $this->getSeoVars()) {
+            return $environment->render('KRGCmsBundle:Seo:head.html.twig', $seoVars);
+        }
+
+        return null;
     }
 
     public function getSeoPreContent()
@@ -60,7 +64,7 @@ class SeoExtension extends \Twig_Extension
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return [];
+            return null;
         }
 
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
