@@ -30,14 +30,12 @@ class FilterController extends AbstractController
         $filterRegistry = $this->container->get(FilterRegistry::class);
         $config = $filterRegistry->get($type);
         if (!$config) {
-            throw new InvalidArgumentException('FormType is not managed');
+            throw new InvalidArgumentException('FormType not managed');
         }
 
         $form = $this->createForm($type, null, ['method' => 'GET', 'csrf_protection' => false]);
 
-        return $this->renderForm($form, '@KRGCms/Filter/edit.html.twig', $request, $config, [
-            'display_form' => true,
-        ]);
+        return $this->renderForm($form, '@KRGCms/Filter/edit.html.twig', $request, $config, true);
     }
 
     /**
@@ -74,14 +72,18 @@ class FilterController extends AbstractController
         return new Response();
     }
 
-    protected function renderForm(FormInterface $form, string $template, Request $request, array $config, array $options = [])
+    protected function renderForm(FormInterface $form, string $template, Request $request, array $config, $fromAdmin = false)
     {
-        $vars = [];
+        $vars = [
+            'form'       => $form->createView(),
+            'config'     => $config,
+            'from_admin' => $fromAdmin,
+            'is_filter'  => true,
+        ];
+
         if ($config['handler']) {
-            $vars = $config['handler']->perform($request, $form, $options);
+            $vars = array_merge($vars, $config['handler']->perform($request, $form));
         }
-        $vars['form'] = $form->createView();
-        $vars['config'] = $config;
 
         return $this->render($template, $vars);
     }

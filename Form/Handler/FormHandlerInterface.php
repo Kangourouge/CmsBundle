@@ -7,5 +7,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface FormHandlerInterface
 {
-    public function perform(Request $request, FormInterface $form, array $options = []);
+    public function perform(Request $request, FormInterface $form);
 }
