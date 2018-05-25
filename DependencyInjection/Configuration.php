@@ -14,8 +14,16 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('title')->end()
-                ->scalarNode('default_title')->end()
+                ->arrayNode('seo')
+                    ->children()
+                        ->arrayNode('title')
+                            ->children()
+                                ->scalarNode('suffix')->defaultNull()->end()
+                            ->end()
+                        ->end()
+                        ->booleanNode('og')->defaultFalse()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('blocks_path')
                     ->prototype('scalar')->end()
                 ->end()

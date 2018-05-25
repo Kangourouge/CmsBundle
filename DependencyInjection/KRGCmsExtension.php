@@ -21,8 +21,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $this->injectParameter('title', $container, $config);
-        $this->injectParameter('default_title', $container, $config);
+        $container->setParameter('krg_cms.seo', $config['seo']);
         $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
         $container->setParameter('router.options.generator_class', UrlGenerator::class);
         $container->setParameter('router.options.generator_base_class', UrlGenerator::class);
@@ -61,11 +60,6 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         }
 
         return $blocks;
-    }
-
-    private function injectParameter($name, ContainerBuilder $container, $config)
-    {
-        $container->setParameter(sprintf('krg_cms.%s', $name), isset($config[$name]) ? $config[$name] : null);
     }
 
     public function getAlias()

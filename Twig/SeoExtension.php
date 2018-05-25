@@ -21,11 +21,15 @@ class SeoExtension extends \Twig_Extension
     /** @var FilesystemAdapter */
     private $filesystemAdapter;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir)
+    /** @var array */
+    private $parameters;
+
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
+        $this->parameters = $seoParameters;
     }
 
     public function getSeoHead(\Twig_Environment $environment)
@@ -68,29 +72,43 @@ class SeoExtension extends \Twig_Extension
         $params = array_filter($this->request->attributes->all(), function ($key) {
             return substr($key, 0, 1) !== '_';
         }, ARRAY_FILTER_USE_KEY);
+
         $twig = new \Twig_Environment(new \Twig_Loader_Array([]));
+
         $data = [
-            'metaTitle'       => null,
-            'metaDescription' => null,
-            'metaRobots'      => null,
-            'preContent'      => null,
-            'postContent'     => null,
+            'title'       => $this->fetchVars($seo->getMetaTitle(), $params, $twig),
+            'preContent'  => $this->fetchVars($seo->getPreContent(), $params, $twig),
+            'postContent' => $this->fetchVars($seo->getPostContent(), $params, $twig),
         ];
 
-        foreach ($data as $key => &$value) {
-            $getter = 'get' . ucfirst($key);
-            if (method_exists($seo, $getter)) {
-                if ($input = call_user_func([$seo, $getter])) {
-                    $value = $twig->createTemplate($input)->render($params);
-                }
-            }
+        $data['metas'] = [
+            'description' => $this->fetchVars($seo->getMetaDescription(), $params, $twig),
+        ];
+
+        if (null !== $this->parameters['title']['suffix']) {
+            $data['title'] .= ' '.$this->parameters['title']['suffix'];
         }
-        unset($value);
+
+        if ($this->parameters['og']) {
+            $data['ogs'] = [
+                'title'       => $data['title'],
+                'description' => $data['metas']['description'],
+            ];
+        }
 
         $item->set($data);
         $this->filesystemAdapter->save($item);
 
         return $data;
+    }
+
+    protected function fetchVars($content, $params, \Twig_Environment $twig)
+    {
+        if (null == $content) {
+            return null;
+        }
+
+        return $twig->createTemplate($content)->render($params);
     }
 
     public function getSeoUrl($key)
@@ -122,6 +140,9 @@ class SeoExtension extends \Twig_Extension
                 'is_safe' => ['html'],
             ]),
             'seo_post_content' => new \Twig_SimpleFunction('seo_post_content', [$this, 'getSeoPostContent'], [
+                'is_safe' => ['html'],
+            ]),
+            'seo_canonical' => new \Twig_SimpleFunction('seo_canonical', [$this, 'getCanonical'], [
                 'is_safe' => ['html'],
             ]),
         ];

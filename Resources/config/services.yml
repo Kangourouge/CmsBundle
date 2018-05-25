@@ -8,6 +8,7 @@ services:
             $dataCacheDir: '%kernel.cache_dir%/krg/data'
             $fileBlocks: '%krg_cms.blocks%'
             $rootDir: '%kernel.root_dir%'
+            $seoParameters: '%krg_cms.seo%'
             $uploadDir: '/uploads/cms'
 
     KRG\CmsBundle\Twig\:

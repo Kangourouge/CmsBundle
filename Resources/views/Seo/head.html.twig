@@ -1,8 +1,21 @@
 {% spaceless %}
-    {% if metaTitle is defined and metaTitle %}
-        <title>{{ metaTitle }}</title>
+    {% if title|length %}
+        <title>{{ title }}</title>
     {% endif %}
-    {% if metaDescription is defined and metaDescription %}
-        <meta name="description" content="{{ metaDescription }}"/>
+
+    {% for meta, value in metas %}
+        {% if value|length > 0 %}
+            <meta name="{{ meta }}" content="{{ value }}"/>
+        {% endif %}
+    {% endfor %}
+
+    {% if ogs is defined %}
+        {% for og, value in ogs %}
+            {% if value|length > 0 %}
+                <meta property="og:{{ og }}" content="{{ value }}" />
+            {% endif %}
+        {% endfor %}
     {% endif %}
 {% endspaceless %}
+
+
