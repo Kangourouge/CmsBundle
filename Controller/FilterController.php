@@ -75,7 +75,6 @@ class FilterController extends AbstractController
     protected function renderForm(FormInterface $form, string $template, Request $request, array $config, $fromAdmin = false)
     {
         $vars = [
-            'form'       => $form->createView(),
             'config'     => $config,
             'from_admin' => $fromAdmin,
             'is_filter'  => true,
@@ -84,6 +83,8 @@ class FilterController extends AbstractController
         if ($config['handler']) {
             $vars = array_merge($vars, $config['handler']->perform($request, $form));
         }
+
+        $vars['form'] = $form->createView();
 
         return $this->render($template, $vars);
     }
