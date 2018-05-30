@@ -12,11 +12,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 class FilterType extends AbstractType
 {
     /** @var FilterRegistry */
-    private $registry;
+    protected $filterRegistry;
 
     public function __construct(FilterRegistry $registry)
     {
-        $this->registry = $registry;
+        $this->filterRegistry = $registry;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -33,7 +33,7 @@ class FilterType extends AbstractType
     public function getChoices()
     {
         $choices = [];
-        foreach ($this->registry->all() as $key => $value) {
+        foreach ($this->filterRegistry->all() as $key => $value) {
             $choices[sprintf('%s (%s)', $value['alias'], $key)] = $key;
         }
 
