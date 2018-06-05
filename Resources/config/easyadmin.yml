@@ -6,6 +6,7 @@ easy_admin:
         menu:
             -
                 label: 'CMS'
+                priority: 100
                 roles: ['ROLE_CMS']
                 children:
                     - { entity: 'Menu', icon: 'reorder', label: 'admin_menu.menu' }
