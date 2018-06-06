@@ -7,6 +7,7 @@ use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Util\Str;
@@ -94,6 +95,7 @@ class FilterListener implements EventSubscriber
         }
 
         if ($seo->getUrl()) {
+            $seo->setUid(KRGCmsExtension::KRG_ROUTE_SEO_FILTER_PREFIX.uniqid());
             $seo->setEnabled(true);
             $seo->setRoute([
                 'name'   => self::KRG_FILTER_SHOW_ROUTE,

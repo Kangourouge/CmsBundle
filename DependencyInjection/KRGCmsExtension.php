@@ -15,6 +15,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
 {
     const KRG_ROUTE_SEO_PREFIX = 'krg_seo_';
     const KRG_ROUTE_SEO_PAGE_PREFIX = self::KRG_ROUTE_SEO_PREFIX.'page_show_';
+    const KRG_ROUTE_SEO_FILTER_PREFIX = self::KRG_ROUTE_SEO_PREFIX.'filter_show_';
 
     public function load(array $configs, ContainerBuilder $container)
     {

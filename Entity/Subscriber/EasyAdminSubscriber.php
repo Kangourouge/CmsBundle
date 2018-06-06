@@ -41,6 +41,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
 
             $excludedUidStartsWith = [
                 KRGCmsExtension::KRG_ROUTE_SEO_PAGE_PREFIX,
+                KRGCmsExtension::KRG_ROUTE_SEO_FILTER_PREFIX,
             ];
 
             $i = 0;
