@@ -25,7 +25,7 @@ easy_admin:
                         property: 'content'
                         label: false
                         type: KRG\CmsBundle\Form\Type\ContentType
-                        entry_options:
+                        type_options:
                             fragment: false
                     - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'page.enabled' }

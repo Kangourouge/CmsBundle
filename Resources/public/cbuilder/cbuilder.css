@@ -138,7 +138,7 @@
     height: 100%;
     padding: 13px;
     color: #fff;
-    background-color: #202935;
+    background-color: #262b35;
 }
 
 #lnkToolOpen {
@@ -156,7 +156,9 @@
     text-decoration: none;
     color: #fff;
     border-right: none;
-    background: #202935;
+    background: #262b35;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 #lnkToolOpen.leftside {

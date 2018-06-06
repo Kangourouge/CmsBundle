@@ -22,7 +22,9 @@ easy_admin:
                     -
                         property: 'content'
                         type: KRG\CmsBundle\Form\Type\ContentType
-                        label: 'block.content'
+                        label: false
+                        type_options:
+                            height: 300
                     - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'block.enabled' }
 

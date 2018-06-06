@@ -24,11 +24,15 @@ class ContentType extends AbstractType
     /** @var UrlResolver */
     protected $urlResolver;
 
-    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver)
+    /** @var array */
+    protected $extraHideElements;
+
+    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver, array $extraHideElements = [])
     {
         $this->templating = $templating;
         $this->fileUploader = $fileUploader;
         $this->urlResolver = $urlResolver;
+        $this->extraHideElements = $extraHideElements;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -42,7 +46,11 @@ class ContentType extends AbstractType
     {
         parent::buildView($view, $form, $options);
 
+        dump($options);
+
         $view->vars['responsive'] = $options['responsive'];
+        $view->vars['height'] = $options['height'];
+        $view->vars['extra_hide_elements'] = $this->extraHideElements;
         $view->vars['fragment'] = $options['fragment'];
     }
 
@@ -52,12 +60,13 @@ class ContentType extends AbstractType
 
         $resolver
             ->setDefaults([
-                'responsive' => [
+                'responsive'          => [
                     ['label' => 'Destkop', 'width' => '100%'],
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],
-                'fragment'   => true,
+                'fragment'            => true,
+                'height'              => 500,
             ]);
     }
 

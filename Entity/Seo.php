@@ -42,12 +42,6 @@ class Seo implements SeoInterface
      * @Gedmo\Translatable()
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $title;
-
-    /**
-     * @Gedmo\Translatable()
-     * @ORM\Column(type="string", nullable=true)
-     */
     protected $metaTitle;
 
     /**
@@ -161,24 +155,6 @@ class Seo implements SeoInterface
     public function getUrl()
     {
         return $this->url;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**

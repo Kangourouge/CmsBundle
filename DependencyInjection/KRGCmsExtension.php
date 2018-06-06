@@ -24,6 +24,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('krg_cms.seo', $config['seo']);
         $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
+        $container->setParameter('krg_cms.page.extra_hide_elements', $config['page']['extra_hide_elements']);
         $container->setParameter('router.options.generator_class', UrlGenerator::class);
         $container->setParameter('router.options.generator_base_class', UrlGenerator::class);
 

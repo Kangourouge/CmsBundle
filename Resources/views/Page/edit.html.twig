@@ -48,14 +48,19 @@
             }
         }
 
-        function toggleHeaderFooter() {
+        function toggleHeaderFooter(extraHideArray) {
             var header = $('header').first();
             var footer = $('footer').first();
 
-            if (header) { header.toggle(); }
-            if (footer) { footer.toggle(); }
-        }
+            if (header) { header.toggleClass('hidden-f'); }
+            if (footer) { footer.toggleClass('hidden-f'); }
 
+            if (extraHideArray != undefined) {
+                $.each(extraHideArray, function (index, value) {
+                    $(value).toggleClass('hidden-f');
+                });
+            }
+        }
     </script>
 {% endblock %}
 

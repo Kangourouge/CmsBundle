@@ -20,7 +20,17 @@ easy_admin:
                     - { property: metaTitle, label: 'seo.metaTitle' }
                     - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
                     - { type: 'group', label: 'group.content' }
-                    - { property: preContent, type: textarea, label: 'seo.preContent' }
-                    - { property: postContent, type: textarea, label: 'seo.postContent' }
+                    -
+                        property: 'preContent'
+                        label: 'seo.preContent'
+                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type_options:
+                            height: 200
+                    -
+                        property: 'postContent'
+                        label: 'seo.postContent'
+                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type_options:
+                            height: 200
                     - { type: 'group', label: 'group.status' }
                     - { property: enabled, label: 'seo.enabled' }

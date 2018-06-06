@@ -95,7 +95,7 @@ Render: Actualiser le rendu
 Source: Afficher la source
 or: Ou
 
-'Header / footer': '__Header / footer'
+'Header / footer': 'Header / footer'
 
 '<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
 '<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filtres'

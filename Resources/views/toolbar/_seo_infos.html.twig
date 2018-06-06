@@ -1,13 +1,6 @@
 {% trans_default_domain 'toolbar' %}
 
 {% if seo %}
-    {% if seo.title|length %}
-        <div class="krg-toolbar-info-piece">
-            <b>{{ 'seo.title'|trans }}</b>
-            <span>{{ seo.title }}</span>
-        </div>
-    {% endif %}
-
     <div class="krg-toolbar-info-piece">
         <b>{{ 'seo.meta.title'|trans }}</b>
         <span>{{ seo.metaTitle|length ? seo.metaTitle : '-' }}</span>

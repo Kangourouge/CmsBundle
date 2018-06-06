@@ -95,7 +95,7 @@ Render: Render
 Source: Source
 or: Or
 
-'Header / footer': '__Header / footer'
+'Header / footer': 'Header / footer'
 
 '<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Block'
 '<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filters'

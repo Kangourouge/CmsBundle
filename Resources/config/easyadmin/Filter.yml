@@ -22,7 +22,6 @@ easy_admin:
                             required_url: false
                             pre_content: true
                             post_content: true
-                            title: true
                     - { type: 'group', label: 'group.form' }
                     - { property: form, type: KRG\CmsBundle\Form\Type\FilterType }
                     - { type: 'group', label: 'group.status' }

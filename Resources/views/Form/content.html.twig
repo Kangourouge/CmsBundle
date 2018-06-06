@@ -1,6 +1,8 @@
-{% block content_row %}
-    <div class="form-control krg-cms-form-control">
-        <section id="{{ form.vars.id }}_content" class="cms-content-tools">
+{% block content_widget %}
+    {% set withLabel = form.vars.label|length > 0 %}
+
+    <div class="form-control krg-cms-form-control"{% if not withLabel %} style="border:0"{% endif %}>
+        <section id="{{ form.vars.id }}_content" class="cms-content-tools" style="height: {{ height }}px">
             <header>
                 <div class="pull-left">
                     <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans }}</button>
@@ -40,20 +42,11 @@
                 {% endif %}
             </div>
         </section>
+
         <div class="btn-group" role="group" style="margin: 20px 0 5px">
             <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info">
                 {{ 'Edit HTML'|trans }} <span class="fa fa-code"></span>
             </button>
-            <!--
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ 'Previous versions'|trans }} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-item"><a class="btn-link" href="#">Dropdown link</a></li>
-                </ul>
-            </div>
-            -->
         </div>
 
         {{ form_widget(form, {attr: {style : 'display:none;'}}) }}
@@ -70,6 +63,7 @@
                 var btnEdit = document.getElementById('{{ form.vars.id }}_btn_edit');
                 var btnSave = document.getElementById('{{ form.vars.id }}_btn_update');
                 var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
+                var extraHideArray = [{% for extra in extra_hide_elements %}'{{ extra }}'{% if not loop.last %},{% endif %}{% endfor %}];
 
                 var source = null;
 
@@ -85,7 +79,7 @@
 
                 iframe.addEventListener('load', function () {
                     {% if form.vars.fragment %}
-                    iframe.contentWindow.toggleHeaderFooter();
+                    iframe.contentWindow.toggleHeaderFooter(extraHideArray);
                     {% endif %}
 
                     btnEdit.addEventListener('click', function (event) {
@@ -141,7 +135,7 @@
 
                 function toolbarTogglerHeaderFooter() {
                     document.getElementById('{{ form.vars.id }}_fragment_toggle').addEventListener('change', function (event) {
-                        iframe.contentWindow.toggleHeaderFooter();
+                        iframe.contentWindow.toggleHeaderFooter(extraHideArray);
                     });
                 }
 
@@ -219,5 +213,25 @@
                 {% endif %}
             });
         </script>
+    </div>
+{% endblock %}
+
+{% block content_row %}
+    {% set withLabel = form.vars.label|length > 0 %}
+
+    <div class="form-group">
+        {% if withLabel %}
+            {{ form_label(form) }}
+        {% endif %}
+
+        {% if withLabel %}
+            <div class="col-sm-10">
+        {% endif %}
+
+        {{ form_widget(form) }}
+
+        {% if withLabel %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

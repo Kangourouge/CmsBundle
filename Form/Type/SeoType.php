@@ -33,12 +33,6 @@ class SeoType extends AbstractType
             'required'    => $options['required_url'],
         ]);
 
-        if ($options['title']) {
-            $builder->add('title', TextType::class, [
-                'label' => 'seo.title',
-            ]);
-        }
-
         if ($options['metas']) {
             $builder
                 ->add('metaTitle', TextType::class, [
@@ -50,14 +44,16 @@ class SeoType extends AbstractType
         }
 
         if ($options['pre_content']) {
-            $builder->add('preContent', TextareaType::class, [
-                'label' => 'seo.preContent',
+            $builder->add('preContent', ContentType::class, [
+                'label'  => 'seo.preContent',
+                'height' => 200,
             ]);
         }
 
         if ($options['post_content']) {
-            $builder->add('postContent', TextareaType::class, [
-                'label' => 'seo.postContent',
+            $builder->add('postContent', ContentType::class, [
+                'label'  => 'seo.postContent',
+                'height' => 200,
             ]);
         }
 
