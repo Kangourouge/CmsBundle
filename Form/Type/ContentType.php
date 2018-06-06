@@ -46,8 +46,6 @@ class ContentType extends AbstractType
     {
         parent::buildView($view, $form, $options);
 
-        dump($options);
-
         $view->vars['responsive'] = $options['responsive'];
         $view->vars['height'] = $options['height'];
         $view->vars['extra_hide_elements'] = $this->extraHideElements;
