@@ -57,8 +57,10 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
                 }
 
                 $routeClone = clone $route;
-                $routeClone->setPath($seo->getUrl());
-                $routeClone->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]));
+                $routeClone
+                    ->setPath($seo->getUrl())
+                    ->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]))
+                    ->addOptions(['priority' => $seo->getPriority()]);
 
                 $seo->setCompiledRoute($routeClone->compile());
 

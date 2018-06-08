@@ -105,5 +105,5 @@ or: Or
 '<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
 
 unique_key: Unique identifier, leave this field empty to auto generate it
-priority_help: Optional and defaults to 0. The higher the priority, the sooner the rule gets executed.
+priority_help: Optional and defaults to 0. The higher the priority, the sooner the rule gets executed. Negative value will put the rule after Symfony rules.
 
