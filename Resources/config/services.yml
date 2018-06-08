@@ -20,10 +20,12 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-
-
     KRG\CmsBundle\Service\:
         resource: '../../Service/*'
+        public: true
+
+    KRG\CmsBundle\Finder\:
+        resource: '../../Finder/*'
         public: true
 
     KRG\CmsBundle\Menu\:

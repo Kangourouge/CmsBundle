@@ -25,7 +25,7 @@ class Filter extends AbstractBlock implements FilterInterface
     protected $form;
 
     /**
-     * @ORM\OneToOne(targetEntity="KRG\CmsBundle\Entity\SeoInterface", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="KRG\CmsBundle\Entity\SeoInterface", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
      * @ORM\JoinColumn(name="seo_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * @var SeoInterface
      */

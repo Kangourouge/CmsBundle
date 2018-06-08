@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Finder\SeoFinder;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,12 +25,16 @@ class SeoExtension extends \Twig_Extension
     /** @var array */
     private $parameters;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters)
+    /** @var SeoFinder */
+    private $seoFinder;
+
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
         $this->parameters = $seoParameters;
+        $this->seoFinder = $seoFinder;
     }
 
     public function getSeoHead(\Twig_Environment $environment)
@@ -115,12 +120,19 @@ class SeoExtension extends \Twig_Extension
         return $twig->createTemplate($content)->render($params);
     }
 
-    public function getSeoUrl($key)
+    /**
+     * Get Seo url from several inputs
+     */
+    public function getSeoUrl($input)
     {
+        if ($input instanceof SeoInterface) {
+            return $input->getUrl();
+        }
+
         /* @var $page PageInterface */
         $page = $this->entityManager->getRepository(PageInterface::class)->findBy([
             'enabled' => true,
-            'key'     => $key,
+            'key'     => $input,
         ]);
 
         if ($page) {
@@ -128,6 +140,14 @@ class SeoExtension extends \Twig_Extension
         }
 
         return '#';
+    }
+
+    /**
+     * Find Seo by custom $data (only filters for the moment)
+     */
+    public function findSeo(array $data, string $formType = null)
+    {
+        return $this->seoFinder->findSeoByFilterData($data, $formType);
     }
 
     public function getFunctions()
@@ -138,6 +158,9 @@ class SeoExtension extends \Twig_Extension
                 'is_safe'           => ['html'],
             ]),
             'seo_url'          => new \Twig_SimpleFunction('seo_url', [$this, 'getSeoUrl'], [
+                'is_safe' => ['html'],
+            ]),
+            'seo_find'         => new \Twig_SimpleFunction('seo_find', [$this, 'findSeo'], [
                 'is_safe' => ['html'],
             ]),
             'seo_pre_content'  => new \Twig_SimpleFunction('seo_pre_content', [$this, 'getSeoPreContent'], [
