@@ -4,6 +4,8 @@ namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
+use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,6 +39,11 @@ class Seo implements SeoInterface
      * @ORM\Column(type="string", nullable=false)
      */
     protected $url;
+
+    /**
+     * @ORM\Column(name="priority", type="integer")
+     */
+    protected $priority;
 
     /**
      * @Gedmo\Translatable()
@@ -82,6 +89,7 @@ class Seo implements SeoInterface
     {
         $this->enabled = false;
         $this->route = [];
+        $this->priority = 0;
     }
 
     public function __toString()
@@ -156,6 +164,25 @@ class Seo implements SeoInterface
     {
         return $this->url;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
 
     /**
      * {@inheritdoc}

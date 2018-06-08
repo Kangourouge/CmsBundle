@@ -44,7 +44,7 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
     public function handle(RouteCollection $collection)
     {
         $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
-        $seos = $seoRepository->findBy(['enabled' => true]);
+        $seos = $seoRepository->findBy(['enabled' => true], ['priority' => 'DESC', 'id' => 'ASC']);
 
         $seoCollection = new RouteCollection();
         try {

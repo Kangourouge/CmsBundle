@@ -70,6 +70,7 @@ seo:
   preContent: Contenu (haut)
   postContent: Contenu (bas)
   status: État
+  priority: Priorité
 
 route:
   url_error: 'Cette url n''est pas liée à un itinéraire'
@@ -104,3 +105,4 @@ or: Ou
 '<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
 
 unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
+priority_help: Optionnel, par défaut à 0. Plus la valeur est élevée plus la règle est exécutée en priorité.
