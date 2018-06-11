@@ -5,8 +5,8 @@ namespace KRG\CmsBundle\Form\DataTransformer;
 use KRG\CmsBundle\Routing\UrlResolver;
 use KRG\CmsBundle\Service\FileBase64Uploader;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Form\DataTransformerInterface;
 
 class ContentTransformer implements DataTransformerInterface
 {
@@ -19,13 +19,6 @@ class ContentTransformer implements DataTransformerInterface
     /** @var UrlResolver */
     protected $urlResolver;
 
-    /**
-     * ContentTransformer constructor.
-     *
-     * @param EngineInterface $templating
-     * @param FileBase64Uploader $fileUploader
-     * @param UrlResolver $urlResolver
-     */
     public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver)
     {
         $this->templating = $templating;
@@ -37,9 +30,7 @@ class ContentTransformer implements DataTransformerInterface
     {
         $filename = tempnam(sys_get_temp_dir(), 'page-');
         file_put_contents($filename, $value);
-
         $html = $this->templating->render('KRGCmsBundle:Page:edit.html.twig', ['page' => ['content' => $value], 'block' => $filename]);
-
         unlink($filename);
 
         return base64_encode($html);
@@ -62,6 +53,11 @@ class ContentTransformer implements DataTransformerInterface
 
             $value = $content->html();
 
+            // Check empty content
+            if (0 === strlen(trim(preg_replace('/\s\s+/', ' ', $value)))) {
+                return null;
+            }
+
             if (preg_match_all('|href="(.*)"|U', $value, $matches, PREG_SET_ORDER)) {
                 foreach($matches as $match) {
                     $href = $match[1];
@@ -74,6 +70,6 @@ class ContentTransformer implements DataTransformerInterface
             }
         }
 
-        return $value;
+        return trim($value);
     }
 }
