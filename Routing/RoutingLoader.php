@@ -56,9 +56,18 @@ class RoutingLoader extends Loader
     {
         $highPriorityCollection = new RouteCollection();
 
+        $routeContains = [
+            'admin',
+            '_login',
+            '_guess_token',
+            '_login_check',
+        ];
+
         foreach ($collection as $name => $route) {
-            if (strstr($name, 'admin')) {
-                $highPriorityCollection->add($name, $route);
+            foreach ($routeContains as $str) {
+                if (strstr($name, $str)) {
+                    $highPriorityCollection->add($name, $route);
+                }
             }
         }
 
