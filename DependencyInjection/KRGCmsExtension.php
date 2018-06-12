@@ -22,14 +22,22 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('krg_cms.seo', $config['seo']);
+        $container->setParameter('krg_cms.seo', $config['seo'] ?? []);
+        $container->setParameter('krg_cms.page', $config['page'] ?? []);
         $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
-        $container->setParameter('krg_cms.page.extra_hide_elements', $config['page']['extra_hide_elements']);
         $container->setParameter('router.options.generator_class', UrlGenerator::class);
         $container->setParameter('router.options.generator_base_class', UrlGenerator::class);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        if (false === interface_exists('KRG\EasyAdminExtensionBundle\Toolbar\ToolbarInterface')) {
+            foreach ($container->getDefinitions() as $key => $definition) {
+                if (strstr($key, 'KRG\CmsBundle\Toolbar')) {
+                    $container->removeDefinition($key);
+                }
+            }
+        }
     }
 
     private function loadBlocks($config)

@@ -10,7 +10,7 @@ services:
             $rootDir: '%kernel.root_dir%'
             $seoParameters: '%krg_cms.seo%'
             $uploadDir: '/uploads/cms'
-            $extraHideElements: '%krg_cms.page.extra_hide_elements%'
+            $pageConfig: '%krg_cms.page%'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'

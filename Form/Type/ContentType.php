@@ -25,14 +25,14 @@ class ContentType extends AbstractType
     protected $urlResolver;
 
     /** @var array */
-    protected $extraHideElements;
+    protected $pageConfig;
 
-    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver, array $extraHideElements = [])
+    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver, array $pageConfig = [])
     {
         $this->templating = $templating;
         $this->fileUploader = $fileUploader;
         $this->urlResolver = $urlResolver;
-        $this->extraHideElements = $extraHideElements;
+        $this->pageConfig = $pageConfig;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,7 +48,7 @@ class ContentType extends AbstractType
 
         $view->vars['responsive'] = $options['responsive'];
         $view->vars['height'] = $options['height'];
-        $view->vars['extra_hide_elements'] = $this->extraHideElements;
+        $view->vars['extra_hide_elements'] = $this->page['extra_hide_elements'] ?? [];
         $view->vars['fragment'] = $options['fragment'];
     }
 
