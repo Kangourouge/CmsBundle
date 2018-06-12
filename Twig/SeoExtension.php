@@ -90,7 +90,6 @@ class SeoExtension extends \Twig_Extension
             'postContent' => $this->fetchVars($seo->getPostContent(), $params, $twig),
         ];
 
-
         $data['metas'] = [
             'description' => $this->fetchVars($seo->getMetaDescription(), $params, $twig),
         ];
