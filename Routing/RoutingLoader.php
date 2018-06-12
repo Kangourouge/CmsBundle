@@ -24,70 +24,44 @@ class RoutingLoader extends Loader
 
     public function load($resource, $type = null)
     {
-        $tmpCollection = new RouteCollection();
-        /** @var $collection RouteCollection */
-        $collection = $this->import($resource);
+        /** @var $appCollection RouteCollection */
+        $appCollection = $this->import($resource);
 
-        try {
-            foreach ($this->loaders as $loader) {
-                $tmpCollection->addCollection($loader->handle($collection));
-            }
-        } catch (\Exception $exception) {
+        $tmpCollection = new RouteCollection();
+        foreach ($this->loaders as $loader) {
+            $tmpCollection->addCollection($loader->handle($appCollection));
         }
 
-        $finalCollection = new RouteCollection();
+        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
 
-        $highPriorityCollection = $this->getHighPriorityCollection($collection);
-        $lowPriorityCollection = $this->getLowPriorityCollection($tmpCollection);
+        $collection = new RouteCollection();
+        $collection->addCollection($highPriorityCollection);
+        $collection->addCollection($appCollection);
+        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
 
-        // 1 - High priority routes
-        $finalCollection->addCollection($highPriorityCollection);
-        // 2 - Loaded routes substracted from low priority routes
-        $finalCollection->addCollection($this->removeCollection($tmpCollection, $lowPriorityCollection));
-        // 3 - Original collection substracted from priority routes
-        $finalCollection->addCollection($this->removeCollection($collection, $highPriorityCollection));
-        // 4 - Low priority routes
-        $finalCollection->addCollection($lowPriorityCollection);
-
-        return $finalCollection;
+        return $collection;
     }
 
     public function getHighPriorityCollection(RouteCollection $collection)
     {
         $highPriorityCollection = new RouteCollection();
 
-        $routeContains = [
-            'admin',
-            '_login',
-            '_guess_token',
-            '_login_check',
-        ];
-
         foreach ($collection as $name => $route) {
-            foreach ($routeContains as $str) {
-                if (strstr($name, $str)) {
-                    $highPriorityCollection->add($name, $route);
-                }
+            $variables = $route->compile()->getVariables();
+
+            if (isset($variables['_locale'])) { // _locale var count as none
+                unset($variables['_locale']);
+            }
+
+            if (count($variables) === 0) {
+                $highPriorityCollection->add($name, $route);
             }
         }
 
         return $highPriorityCollection;
     }
 
-    public function getLowPriorityCollection(RouteCollection $collection)
-    {
-        $lowPriorityCollection = new RouteCollection();
-
-        foreach ($collection as $name => $route) {
-            if ($route->hasOption('priority') && $route->getOption('priority') < 0) {
-                $lowPriorityCollection->add($name, $route);
-            }
-        }
-
-        return $lowPriorityCollection;
-    }
-
-    public function removeCollection(RouteCollection $srcCollection, RouteCollection $subCollection)
+    public function substractCollection(RouteCollection $subCollection, RouteCollection $srcCollection)
     {
         $srcCollection->remove(array_keys($subCollection->all()));
 

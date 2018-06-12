@@ -41,11 +41,6 @@ class Seo implements SeoInterface
     protected $url;
 
     /**
-     * @ORM\Column(name="priority", type="integer")
-     */
-    protected $priority;
-
-    /**
      * @Gedmo\Translatable()
      * @ORM\Column(type="string", nullable=true)
      */
@@ -89,7 +84,6 @@ class Seo implements SeoInterface
     {
         $this->enabled = false;
         $this->route = [];
-        $this->priority = 0;
     }
 
     public function __toString()
@@ -164,25 +158,6 @@ class Seo implements SeoInterface
     {
         return $this->url;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
 
     /**
      * {@inheritdoc}

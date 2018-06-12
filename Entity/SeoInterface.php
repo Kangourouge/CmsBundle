@@ -69,22 +69,6 @@ interface SeoInterface extends SeoRouteInterface
     public function getUrl();
 
     /**
-     * Set priority
-     *
-     * @param string $priority
-     *
-     * @return SeoInterface
-     */
-    public function setPriority($priority);
-
-    /**
-     * Get priority
-     *
-     * @return integer
-     */
-    public function getPriority();
-
-    /**
      * Set metaTitle
      *
      * @param string $metaTitle

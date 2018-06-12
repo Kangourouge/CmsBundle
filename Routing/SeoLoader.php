@@ -44,7 +44,7 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
     public function handle(RouteCollection $collection)
     {
         $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
-        $seos = $seoRepository->findBy(['enabled' => true], ['priority' => 'DESC', 'id' => 'ASC']);
+        $seos = $seoRepository->findBy(['enabled' => true]);
 
         $seoCollection = new RouteCollection();
         try {
@@ -59,8 +59,7 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
                 $routeClone = clone $route;
                 $routeClone
                     ->setPath($seo->getUrl())
-                    ->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]))
-                    ->addOptions(['priority' => $seo->getPriority()]);
+                    ->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]));
 
                 $seo->setCompiledRoute($routeClone->compile());
 

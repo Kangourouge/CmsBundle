@@ -10,7 +10,6 @@ easy_admin:
                     - { property: url, label: 'seo.url' }
                     - { property: routeName, label: 'seo.route' }
                     - { property: metaTitle, label: 'seo.metaTitle' }
-                    - { property: priority, label: 'seo.priority' }
                     - { property: enabled, label: 'seo.enabled' }
             form:
                 fields:
@@ -34,5 +33,4 @@ easy_admin:
                         type_options:
                             height: 200
                     - { type: 'group', label: 'group.status' }
-                    - { property: priority, label: 'seo.priority', help: 'priority_help', type_options: { required: false } }
                     - { property: enabled, label: 'seo.enabled' }
