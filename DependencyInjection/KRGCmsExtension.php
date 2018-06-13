@@ -2,14 +2,13 @@
 
 namespace KRG\CmsBundle\DependencyInjection;
 
-use KRG\CmsBundle\Routing\UrlGenerator;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 class KRGCmsExtension extends Extension implements PrependExtensionInterface
 {
@@ -25,8 +24,6 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('krg_cms.seo', $config['seo'] ?? []);
         $container->setParameter('krg_cms.page', $config['page'] ?? []);
         $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
-        $container->setParameter('router.options.generator_class', UrlGenerator::class);
-        $container->setParameter('router.options.generator_base_class', UrlGenerator::class);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

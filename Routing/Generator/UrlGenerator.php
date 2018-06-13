@@ -1,23 +1,38 @@
 <?php
 
-namespace KRG\CmsBundle\Routing;
+namespace KRG\CmsBundle\Routing\Generator;
 
 use KRG\CmsBundle\Entity\Seo;
 use KRG\CmsBundle\Entity\SeoInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Routing\CompiledRoute;
-use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 
-class UrlGenerator extends BaseUrlGenerator
+class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
 {
+    /**
+     * IntlBundle — Url with an invisible default locale
+     */
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    {
+        $locale = $parameters['_locale'] ?? $this->context->getParameter('_locale');
+
+        if (null !== $locale) {
+            if (null !== ($route = $this->routes->get($name)) // Default localized routes to default route
+                && $locale === $route->getDefault('_locale')
+                && $route->hasDefault('_canonical_route')) {
+                $name = $route->getDefault('_canonical_route');
+            } elseif (null !== ($localizedRoute = $this->routes->get($name.'.locale')) // Default route with locale to localized route
+                && $localizedRoute->getDefault('_canonical_route') === $name
+                && $localizedRoute->getDefault('_locale') !== $locale) {
+                $name .= '.locale';
+            }
+        }
+
+        return parent::generate($name, $parameters, $referenceType);
+    }
+
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (isset($defaults['_seo_list'])) {

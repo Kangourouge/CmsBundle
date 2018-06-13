@@ -29,8 +29,10 @@ class RoutingLoader extends Loader
 
         $tmpCollection = new RouteCollection();
         foreach ($this->loaders as $loader) {
-            $tmpCollection->addCollection($loader->handle($appCollection));
+            $appCollection->addCollection($loader->handle($appCollection));
         }
+
+        return $appCollection;
 
         $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
 
@@ -49,11 +51,7 @@ class RoutingLoader extends Loader
         foreach ($collection as $name => $route) {
             $variables = $route->compile()->getVariables();
 
-            if (isset($variables['_locale'])) { // _locale var count as none
-                unset($variables['_locale']);
-            }
-
-            if (count($variables) === 0) {
+            if (count($variables) === 0 && false === strstr($name, '_i18n_')) {
                 $highPriorityCollection->add($name, $route);
             }
         }

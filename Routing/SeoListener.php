@@ -37,6 +37,11 @@ class SeoListener
             return null;
         }
 
+        $routeCollection = $this->router->getRouteCollection();
+        if ($_canonicalRoute = $routeCollection->get($route)->getDefault('_canonical_route')) {
+            $route = $_canonicalRoute;
+        }
+
         /* @var $seo SeoInterface */
         $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($route);
         if ($seo === null) {
@@ -44,7 +49,7 @@ class SeoListener
         }
 
         // Update request to keep url intact
-        $route = $this->router->getRouteCollection()->get($seo->getRouteName());
+        $route = $routeCollection->get($seo->getRouteName());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
         $request->attributes->set('_route', $seo->getRouteName());
         $request->attributes->set('_seo', $seo);
