@@ -15,8 +15,20 @@ easy_admin:
                 fields:
                     - { type: 'group', label: 'seo.configuration' }
                     - { property: route, type: KRG\CmsBundle\Form\Type\RouteType }
-                    - { property: url, label: 'seo.url_redirect' }
+                    -
+                        property: 'url'
+                        type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        type_options:
+                            entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
                     - { type: 'group', label: 'seo.metas' }
-                    - { property: metaTitle, label: 'seo.metaTitle' }
-                    - { property: metaDescription, type: textarea, label: 'seo.metaDescription' }
+                    -
+                        property: 'metaTitle'
+                        type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        type_options:
+                            entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
+                    -
+                        property: 'metaDescription'
+                        type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        type_options:
+                            entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
                     - enabled

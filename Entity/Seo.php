@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
 use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
 use Symfony\Component\Routing\CompiledRoute;
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\MappedSuperclass(repositoryClass="KRG\CmsBundle\Repository\SeoRepository")
  * @Gedmo\Loggable
  */
-class Seo implements SeoInterface
+class Seo implements SeoInterface, Translatable
 {
     use SeoRouteTrait;
 

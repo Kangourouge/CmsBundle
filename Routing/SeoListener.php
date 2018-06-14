@@ -30,20 +30,20 @@ class SeoListener
         }
 
         $request = $event->getRequest();
-        $route = $request->get('_route');
+        $routeName = $request->get('_route');
 
         // Retrieve the original route
-        if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $route)) {
+        if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $routeName)) {
             return null;
         }
 
         $routeCollection = $this->router->getRouteCollection();
-        if ($_canonicalRoute = $routeCollection->get($route)->getDefault('_canonical_route')) {
-            $route = $_canonicalRoute;
+        if (($route = $routeCollection->get($routeName)) && $route->hasDefault('_canonical_route')) {
+            $routeName = $route->getDefault('_canonical_route');
         }
 
         /* @var $seo SeoInterface */
-        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($route);
+        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($routeName);
         if ($seo === null) {
             return null;
         }

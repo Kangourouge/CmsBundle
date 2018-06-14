@@ -48,7 +48,7 @@ class CmsCompilerPass implements CompilerPassInterface
             $options['generator_class'] = UrlGenerator::class;
             $options['generator_base_class'] = UrlGenerator::class;
             $options['generator_dumper_class'] = PhpGeneratorDumper::class;
-//            $options['generator_cache_class'] = null; // No cache for debug
+            // $options['generator_cache_class'] = null; // No cache for debug
             $router->setArgument(2, $options);
         }
     }

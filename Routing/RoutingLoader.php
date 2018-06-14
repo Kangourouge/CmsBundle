@@ -27,21 +27,24 @@ class RoutingLoader extends Loader
         /** @var $appCollection RouteCollection */
         $appCollection = $this->import($resource);
 
-        $tmpCollection = new RouteCollection();
+//        $tmpCollection = new RouteCollection();
         foreach ($this->loaders as $loader) {
             $appCollection->addCollection($loader->handle($appCollection));
         }
 
         return $appCollection;
 
-        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
 
-        $collection = new RouteCollection();
-        $collection->addCollection($highPriorityCollection);
-        $collection->addCollection($appCollection);
-        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
-
-        return $collection;
+        //        return $appCollection;
+//
+//        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
+//
+//        $collection = new RouteCollection();
+//        $collection->addCollection($highPriorityCollection);
+//        $collection->addCollection($appCollection);
+//        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
+//
+//        return $collection;
     }
 
     public function getHighPriorityCollection(RouteCollection $collection)

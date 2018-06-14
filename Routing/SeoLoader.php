@@ -3,18 +3,17 @@
 namespace KRG\CmsBundle\Routing;
 
 use KRG\CmsBundle\Entity\SeoInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\Serializer\Encoder\EncoderInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 class SeoLoader extends Loader implements RoutingLoaderInterface
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     /** @var Serializer */
@@ -23,13 +22,17 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
     /** @var string */
     private $dataCacheDir;
 
-    public function __construct(EntityManagerInterface $entityManager, EncoderInterface $encoder, ObjectNormalizer $normalizer, string $dataCacheDir)
+    /** @var string */
+    private $seoClass;
+
+    public function __construct(EntityManagerInterface $entityManager, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
+        $normalizer = new PropertyNormalizer();
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
-        $this->serializer = new Serializer([$normalizer], [$encoder]);
+        $this->serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $this->dataCacheDir = $dataCacheDir;
     }
 
@@ -60,6 +63,10 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
                 $routeClone
                     ->setPath($seo->getUrl())
                     ->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]));
+
+                if ($seo->getRouteName() === 'krg_page_show') {
+                    $routeClone->setDefault('_seo_id', $seo->getId());
+                }
 
                 $seo->setCompiledRoute($routeClone->compile());
 

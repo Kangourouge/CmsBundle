@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Translatable\Entity\Translation;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Finder\SeoFinder;
@@ -69,12 +70,30 @@ class SeoExtension extends \Twig_Extension
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return null;
+            if ($id = $this->request->get('_seo_id')) {
+                $seo = $this->entityManager->getRepository(SeoInterface::class)->find($id);
+            }
+            if ($seo === null) {
+                return null;
+            }
         }
 
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
         if ($item->isHit()) {
-            return $item->get();
+            // return $item->get();
+        }
+
+        // Find and bind Seo translations
+        $translatableRepository = $this->entityManager->getRepository(Translation::class);
+        if ($translations = $translatableRepository->findTranslations($seo)) {
+            if (null !== ($trans = ($translations[$this->request->getLocale()] ?? null))) {
+                foreach ($trans as $property => $value) {
+                    $method = 'set'.ucwords($property);
+                    if (method_exists($seo, $method)) {
+                        $seo->{$method}($value);
+                    }
+                }
+            }
         }
 
         // Get usefull parameters from the request
