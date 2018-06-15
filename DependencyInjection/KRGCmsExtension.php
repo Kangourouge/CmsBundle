@@ -28,7 +28,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('krg_cms.intl_locales', $container->getParameter('krg_intl_locales') ?? null);
+        $container->setParameter('krg_cms.intl_locales', $container->hasParameter('krg_intl_locales') ? $container->getParameter('krg_intl_locales') : []);
 
         if (false === interface_exists('KRG\EasyAdminExtensionBundle\Toolbar\ToolbarInterface')) {
             foreach ($container->getDefinitions() as $key => $definition) {

@@ -29,13 +29,17 @@ class SeoExtension extends \Twig_Extension
     /** @var SeoFinder */
     private $seoFinder;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder)
+    /** @var array */
+    private $intlLocales;
+
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder, array $intlLocales)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
         $this->parameters = $seoParameters;
         $this->seoFinder = $seoFinder;
+        $this->intlLocales = $intlLocales;
     }
 
     public function getSeoHead(\Twig_Environment $environment)
@@ -80,17 +84,19 @@ class SeoExtension extends \Twig_Extension
 
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
         if ($item->isHit()) {
-            // return $item->get();
+             return $item->get();
         }
 
-        // Find and bind Seo translations
-        $translatableRepository = $this->entityManager->getRepository(Translation::class);
-        if ($translations = $translatableRepository->findTranslations($seo)) {
-            if (null !== ($trans = ($translations[$this->request->getLocale()] ?? null))) {
-                foreach ($trans as $property => $value) {
-                    $method = 'set'.ucwords($property);
-                    if (method_exists($seo, $method)) {
-                        $seo->{$method}($value);
+        if (count($this->intlLocales) > 0) {
+            // Find and bind Seo translations
+            $translatableRepository = $this->entityManager->getRepository(Translation::class);
+            if ($translations = $translatableRepository->findTranslations($seo)) {
+                if (null !== ($trans = ($translations[$this->request->getLocale()] ?? null))) {
+                    foreach ($trans as $property => $value) {
+                        $method = 'set'.ucwords($property);
+                        if (method_exists($seo, $method)) {
+                            $seo->{$method}($value);
+                        }
                     }
                 }
             }
@@ -113,7 +119,7 @@ class SeoExtension extends \Twig_Extension
             'description' => $this->fetchVars($seo->getMetaDescription(), $params, $twig),
         ];
 
-        if (isset($this->parameters['title']['suffix']) && strlen($this->parameters['title']['suffix']) > 0) {
+        if (strlen($data['title']) && isset($this->parameters['title']['suffix']) && strlen($this->parameters['title']['suffix']) > 0) {
             $data['title'] .= ' '.$this->parameters['title']['suffix'];
         }
 
