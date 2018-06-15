@@ -3,11 +3,13 @@
 namespace KRG\CmsBundle\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
-use KRG\CmsBundle\Entity\SeoInterface;
-use KRG\CmsBundle\Repository\SeoRepository;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 
 class SeoListener
 {
@@ -30,16 +32,23 @@ class SeoListener
         }
 
         $request = $event->getRequest();
+
         $routeName = $request->get('_route');
+        if ($canonicalRoute = $request->attributes->get('_canonical_route')) {
+            $routeName = $canonicalRoute;
+        }
 
         // Retrieve the original route
         if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $routeName)) {
-            return null;
-        }
-
-        $routeCollection = $this->router->getRouteCollection();
-        if (($route = $routeCollection->get($routeName)) && $route->hasDefault('_canonical_route')) {
-            $routeName = $route->getDefault('_canonical_route');
+            // If access by the app route, retrieve Seo
+            if (count($seos = $request->attributes->get('_seo_list')) > 0) {
+                $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
+                $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
+                $seo = $serializer->deserialize($seos[0], $seoClass, 'json');
+                $routeName = $seo->getUid();
+            }  else {
+                return null;
+            }
         }
 
         /* @var $seo SeoInterface */
@@ -49,7 +58,7 @@ class SeoListener
         }
 
         // Update request to keep url intact
-        $route = $routeCollection->get($seo->getRouteName());
+        $route = $this->router->getRouteCollection()->get($seo->getRouteName());
         $request->attributes->set('_controller', $route->getDefault('_controller'));
         $request->attributes->set('_route', $seo->getRouteName());
         $request->attributes->set('_seo', $seo);
