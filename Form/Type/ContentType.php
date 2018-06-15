@@ -48,7 +48,7 @@ class ContentType extends AbstractType
 
         $view->vars['responsive'] = $options['responsive'];
         $view->vars['height'] = $options['height'];
-        $view->vars['extra_hide_elements'] = $this->page['extra_hide_elements'] ?? [];
+        $view->vars['extra_hide_elements'] = $this->pageConfig['extra_hide_elements'] ?? [];
         $view->vars['fragment'] = $options['fragment'];
         $view->vars['attr']['class'] = 'hidden';
     }
