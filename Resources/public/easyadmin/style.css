@@ -19,6 +19,10 @@
     padding-top: 20px;
 }
 
+.label-empty {
+    display: none;
+}
+
 /* */
 
 .form-group textarea.form-control {
@@ -147,3 +151,39 @@
 .w-50 {
     width: 50px;
 }
+
+.box h3.box-title {
+    font-size: 19px;
+}
+
+.box-splitted .box-body {
+    padding: 15px 15px 14px;
+}
+
+.box-splitted h3.box-title {
+    margin: 6px 0 0;
+}
+
+.btn-group .btn-default {
+    background: #dedede;
+    outline: none !important;
+    opacity: 0.4;
+    transition: all 250ms ease;
+}
+
+.btn-group .btn-default.active,
+.btn-group .btn-default:active,
+.btn-group .btn-default.active.focus,
+.btn-group .btn-default.active:focus,
+.btn-group .btn-default.active:hover,
+.btn-group .btn-default:active.focus,
+.btn-group .btn-default:active:focus,
+.btn-group .btn-default:active:hover {
+    opacity: 1;
+    color: #333;
+    background-color: #fff;
+    border-color: #ebebeb;
+    box-shadow: none;
+}
+
+

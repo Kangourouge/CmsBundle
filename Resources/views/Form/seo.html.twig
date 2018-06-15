@@ -1,21 +1,34 @@
 {% block krg_cms_seo_row %}
-    <div id="{{ form.vars.id }}_metas" class="{{ hidden }}">
-        {{ form_row(form.url) }}
+    {% if _external_edit_id is defined %}
+        <div class="pull-left">
+            <p>
+                {{ 'seo.external_edit'|trans }}
+            </p>
+        </div>
+        <div class="pull-right">
+            <p>
+                <a href="{{ easyadmin_path('Seo', 'edit', {'id': _external_edit_id}) }}" class="btn btn-info" target="_blank">{{ 'action.edit'|trans }}</a>
+            </p>
+        </div>
+    {% else %}
+        <div id="{{ form.vars.id }}_metas">
+            {{ form_row(form.url) }}
 
-        {% if form.title is defined %}
-            {{ form_row(form.title) }}
-        {% endif %}
+            {% if form.title is defined %}
+                {{ form_row(form.title) }}
+            {% endif %}
 
-        {{ form_row(form.metaTitle) }}
-        {{ form_row(form.metaDescription) }}
+            {{ form_row(form.metaTitle) }}
+            {{ form_row(form.metaDescription) }}
 
-        {% if form.preContent is defined %}
-            {{ form_row(form.preContent) }}
-        {% endif %}
+            {% if form.preContent is defined %}
+                {{ form_row(form.preContent) }}
+            {% endif %}
 
-        {% if form.postContent is defined %}
-            {{ form_row(form.postContent) }}
-        {% endif %}
-    </div>
+            {% if form.postContent is defined %}
+                {{ form_row(form.postContent) }}
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 

@@ -50,6 +50,7 @@ class ContentType extends AbstractType
         $view->vars['height'] = $options['height'];
         $view->vars['extra_hide_elements'] = $this->page['extra_hide_elements'] ?? [];
         $view->vars['fragment'] = $options['fragment'];
+        $view->vars['attr']['class'] = 'hidden';
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -58,13 +59,13 @@ class ContentType extends AbstractType
 
         $resolver
             ->setDefaults([
-                'responsive'          => [
+                'responsive' => [
                     ['label' => 'Destkop', 'width' => '100%'],
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],
-                'fragment'            => true,
-                'height'              => 500,
+                'fragment'   => true,
+                'height'     => 500,
             ]);
     }
 
