@@ -46,29 +46,39 @@ class UrlType extends TextType
         $builder->addModelTransformer(new UrlDataTransformer($this->urlResolver, $this->entityManager));
     }
 
+    /**
+     * List page and filters urls
+     */
     public function getChoices()
     {
         $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
         $filters = $this->entityManager->getRepository(FilterInterface::class)->findWithSeo();
 
-        $choices = [];
+        $pageChoices = [];
         /* @var $page PageInterface */
         foreach ($pages as $page) {
-            $name = $this->translator->transChoice('url.block_choice_page', null, [
-                '%name%' => $page->getName(), '%url%' => $page->getSeo()->getUrl()
-            ]);
-            $choices[$name] = UrlDataTransformer::getBlockIdentifier($page);
+            $name = $this->getChoice($page->getName(), $page->getSeo()->getUrl(), 'url.block_choice_page');
+            $pageChoices[$name] = UrlDataTransformer::getBlockIdentifier($page);
         }
 
         /* @var $page FilterInterface */
+        $filterChoices = [];
         foreach ($filters as $filter) {
-            $name = $this->translator->transChoice('url.block_choice_filter', null, [
-                '%name%' => $filter->getName(), '%url%' => $filter->getSeo()->getUrl()
-            ]);
-            $choices[$name] = UrlDataTransformer::getBlockIdentifier($filter);
+            $name = $this->getChoice($filter->getName(), $filter->getSeo()->getUrl(), 'url.block_choice_filter');
+            $filterChoices[$name] = UrlDataTransformer::getBlockIdentifier($filter);
         }
 
-        return $choices;
+        return array_merge($pageChoices, $filterChoices);
+    }
+
+    protected function getChoice(string $name, string $url, string $transDomain, string $locale = null)
+    {
+        $params = ['%name%' => $name, '%url%' => $url];
+        if ($locale) {
+            $params['%locale%'] = $locale;
+        }
+
+        return $this->translator->transChoice($transDomain, null, $params);
     }
 
     public function configureOptions(OptionsResolver $resolver)

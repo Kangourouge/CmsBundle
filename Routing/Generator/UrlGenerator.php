@@ -16,17 +16,15 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         $locale = $parameters['_locale'] ?? $this->context->getParameter('_locale');
 
         if (null !== $locale && ($localizedRoute = $this->routes->get($name.'.'.$locale)) && $localizedRoute->getDefault('_canonical_route') === $name) {
-            // Force rewritte if default locale route is rewritted
-            if (($route = $this->routes->get($name)) && ($locale !== $route->getDefault('_locale') || $route->getDefault('_force_rewritte'))) {
-                $name = $name.'.'.$locale;
-            }
+            $name = $name.'.'.$locale;
         }
 
         return parent::generate($name, $parameters, $referenceType);
     }
 
-    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
-    {
+//    NEEDED ?
+//    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
+//    {
 //        if (isset($defaults['_seo_list'])) {
 //            $compiledRoute = $this->resolve($defaults['_seo_list'], $name, $parameters, $defaults['_cache_dir']);
 //            if ($compiledRoute !== null) {
@@ -43,57 +41,58 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
 //                $hostTokens = $compiledRoute['hostTokens'];
 //            }
 //        }
+//
+//        return parent::doGenerate(
+//            $variables,
+//            $defaults,
+//            $requirements,
+//            $tokens,
+//            $parameters,
+//            $name,
+//            $referenceType,
+//            $hostTokens,
+//            $requiredSchemes
+//        );
+//    }
 
-        return parent::doGenerate(
-            $variables,
-            $defaults,
-            $requirements,
-            $tokens,
-            $parameters,
-            $name,
-            $referenceType,
-            $hostTokens,
-            $requiredSchemes
-        );
-    }
-
-    private function resolve(array $seos, $name, array $parameters, $cacheDir)
-    {
-        $filesystemAdapter = new FilesystemAdapter('seo', 0, $cacheDir);
-
-        // Check if route can be resolved from cache
-        $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
-        $cacheItem = $filesystemAdapter->getItem($cacheKey);
-        if ($cacheItem->isHit()) {
-             return $cacheItem->get();
-        }
-
-        $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
-
-        $compiledRoute = null;
-        // Sort entries by number of matching parameters
-        if (count($seos) > 0) {
-            $weights = [];
-            foreach ($seos as $idx => &$seo) {
-                /* @var $seo SeoInterface */
-                $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get App class with metadatafactory
-                if (($diff = $seo->diff($parameters)) >= 0) {
-                    $weights[$idx] = $diff;
-                }
-            }
-            unset($seo);
-
-            if (count($weights) > 0) {
-                asort($weights);
-                $seo = $seos[key($weights)];
-                $compiledRoute = $seo->getCompiledRoute();
-            }
-        }
-
-        // Store in cache
-        $cacheItem->set($compiledRoute);
-        $filesystemAdapter->save($cacheItem);
-
-        return $compiledRoute;
-    }
+//    NEEDED ?
+//    private function resolve(array $seos, $name, array $parameters, $cacheDir)
+//    {
+//        $filesystemAdapter = new FilesystemAdapter('seo', 0, $cacheDir);
+//
+//        // Check if route can be resolved from cache
+//        $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
+//        $cacheItem = $filesystemAdapter->getItem($cacheKey);
+//        if ($cacheItem->isHit()) {
+//             return $cacheItem->get();
+//        }
+//
+//        $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
+//
+//        $compiledRoute = null;
+//        // Sort entries by number of matching parameters
+//        if (count($seos) > 0) {
+//            $weights = [];
+//            foreach ($seos as $idx => &$seo) {
+//                /* @var $seo SeoInterface */
+//                $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get App class with metadatafactory
+//                if (($diff = $seo->diff($parameters)) >= 0) {
+//                    $weights[$idx] = $diff;
+//                }
+//            }
+//            unset($seo);
+//
+//            if (count($weights) > 0) {
+//                asort($weights);
+//                $seo = $seos[key($weights)];
+//                $compiledRoute = $seo->getCompiledRoute();
+//            }
+//        }
+//
+//        // Store in cache
+//        $cacheItem->set($compiledRoute);
+//        $filesystemAdapter->save($cacheItem);
+//
+//        return $compiledRoute;
+//    }
 }

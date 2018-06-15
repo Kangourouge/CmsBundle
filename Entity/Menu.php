@@ -57,6 +57,7 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     /**
      * @ORM\Column(type="json_array", nullable=true)
      * @Gedmo\Versioned
+     * @Gedmo\Translatable
      * @var string
      */
     protected $route;
