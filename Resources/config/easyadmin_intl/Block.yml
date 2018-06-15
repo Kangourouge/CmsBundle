@@ -3,24 +3,28 @@ easy_admin:
         Block:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
-                title:  '<i class="fa fa-cubes"></i> Block'
+                title: '<i class="fa fa-cubes"></i> Block'
                 fields:
-                    - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50', label: 'thumbnail' }
-                    - { property: key }
-                    - { property: name }
-                    - enabled
+                    - { property: Thumbnail, type: image, base_path: '/', css_class: 'w-50', label: 'block.thumbnail' }
+                    - { property: key, label: 'block.key' }
+                    - { property: name, label: 'block.name' }
+                    - { property: enabled, label: 'block.enabled' }
             form:
                 fields:
+                    - { type: 'group', label: 'group.block' }
                     -
                         property: thumbnail
                         type: KRG\CmsBundle\Form\Type\Base64FileType
                         label: 'block.thumbnail'
-                    - { property: key }
-                    - { property: name }
+                    - { property: name, label: 'block.name' }
+                    - { property: key, label: 'block.key', type_options: { required: false }, help: 'unique_key' }
+                    - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
-                    - enabled
-
+                            type_options:
+                                height: 300
+                    - { type: 'group', label: 'group.status' }
+                    - { property: enabled, label: 'block.enabled' }

@@ -1,5 +1,5 @@
 {% block krg_cms_seo_row %}
-    <div id="{{ form.vars.id }}_metas">
+    <div id="{{ form.vars.id }}_metas" class="{{ hidden }}">
         {{ form_row(form.url) }}
 
         {% if form.title is defined %}
