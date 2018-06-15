@@ -21,8 +21,8 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-    KRG\CmsBundle\Service\:
-        resource: '../../Service/*'
+    KRG\CmsBundle\Image\:
+        resource: '../../Image/*'
         public: true
 
     KRG\CmsBundle\Finder\:

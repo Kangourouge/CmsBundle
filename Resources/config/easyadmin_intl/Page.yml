@@ -15,9 +15,11 @@ easy_admin:
                 fields:
                     - name
                     -
-                        property: seo
-                        type: KRG\CmsBundle\Form\Type\SeoType
+                        property: 'seo'
                         label: false
+                        type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        type_options:
+                            entry_type: 'KRG\CmsBundle\Form\Type\SeoType'
                     -
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
