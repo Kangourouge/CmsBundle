@@ -4,7 +4,7 @@ namespace KRG\CmsBundle\Form\Type;
 
 use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
 use KRG\CmsBundle\Routing\UrlResolver;
-use KRG\CmsBundle\Service\FileBase64Uploader;
+use KRG\CmsBundle\Image\FileBase64Uploader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
