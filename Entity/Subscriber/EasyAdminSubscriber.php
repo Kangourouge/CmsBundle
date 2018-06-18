@@ -2,7 +2,6 @@
 
 namespace KRG\CmsBundle\Entity\Subscriber;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
@@ -45,11 +44,11 @@ class EasyAdminSubscriber implements EventSubscriberInterface
             ];
 
             $i = 0;
-            foreach ($excludedUidContains as $uidStartsWith) {
+            foreach ($excludedUidContains as $uid) {
                 $param = 'param_'.$i++;
                 $queryBuilder
                     ->andWhere('entity.uid NOT LIKE :'.$param)
-                    ->setParameter($param, '%'.$uidStartsWith.'%');
+                    ->setParameter($param, '%'.$uid.'%');
             }
         }
     }
