@@ -2,7 +2,7 @@
 
 {% set wrapperId = 'krg_cms_page_wrapper' %}
 
-{% block page %}
+{% block container %}
     <div id="{{ wrapperId }}" class="cms-content-live-edit">
         {% include block %}
     </div>
@@ -15,7 +15,6 @@
 {% endblock %}
 
 {% block javascripts %}
-
     {{ parent() }}
     <script src="{{ asset('bundles/krgcms/cbuilder/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/krgcms/cbuilder/jquery-ui.min.js') }}" type="text/javascript"></script>
