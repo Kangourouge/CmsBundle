@@ -49,7 +49,7 @@ class MenuBuilder implements MenuBuilderInterface
     {
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
         if ($item->isHit()) {
-//            return $item->get();
+            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
@@ -168,7 +168,6 @@ class MenuBuilder implements MenuBuilderInterface
         ];
 
         if ($requestRoute['name'] === 'krg_page_show' && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
-            dump($nodeRoute['name'] .'  =?  '. $_seo->getUid().' __'.($nodeRoute['name'] === $_seo->getUid()));
             return $nodeRoute['name'] === $_seo->getUid();
         }
 

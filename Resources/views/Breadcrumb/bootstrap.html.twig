@@ -12,6 +12,16 @@
 
 {% block breadcrumb_node %}
     <li class="{% if node.active %}active{% endif %}">
-        <a href="{{ node.url }}">{{ node.name }}</a>
+        {{ block(node.url ? 'breadcrumb_link' : 'breadcrumb_name') }}
     </li>
+{% endblock %}
+
+{% block breadcrumb_link %}
+    <a href="{{ node.url }}">
+        {{ block('breadcrumb_name') }}
+    </a>
+{% endblock %}
+
+{% block breadcrumb_name %}
+    {{ node.name|trans }}
 {% endblock %}
