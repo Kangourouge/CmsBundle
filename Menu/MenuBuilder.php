@@ -47,7 +47,7 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function getNodeTree($key)
     {
-        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), sha1($key)));
         if ($item->isHit()) {
             return $item->get();
         }
