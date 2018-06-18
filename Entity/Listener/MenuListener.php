@@ -7,7 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
+use Gedmo\Translatable\Entity\Translation;
 use KRG\CmsBundle\Entity\MenuInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Util\Str;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -19,10 +21,14 @@ class MenuListener implements EventSubscriber
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager)
+    /** @var array */
+    private $intlLocales;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager, array $intlLocales)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
+        $this->intlLocales = $intlLocales;
     }
 
     public function getSubscribedEvents()
@@ -53,6 +59,23 @@ class MenuListener implements EventSubscriber
         /** @var $menu MenuInterface */
         if (strlen($menu->getKey()) === 0) {
             $menu->setKey($this->generateKey($menu));
+        }
+
+        // Find other locales Seo urls
+        if ($this->intlLocales) {
+            $transRepository = $this->entityManager->getRepository(Translation::class);
+            $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
+            foreach ($this->intlLocales as $locale) {
+                if ($seo = $seoRepository->findOneBy(['url' => $menu->getUrl()])) {
+                    $seoTranslations = $transRepository->findTranslations($seo);
+
+                    if (isset($seoTranslations[$locale]['url'])) {
+                        $transMenuRouteInfo = $menu->getRoute();
+                        $transMenuRouteInfo['url'] = $seoTranslations[$locale]['url'];
+                        $transRepository->translate($menu, 'route', $locale, $transMenuRouteInfo);
+                    }
+                }
+            }
         }
     }
 

@@ -5,27 +5,27 @@ easy_admin:
             list:
                 title: '<i class="fa fa-file"></i> Page'
                 fields:
-                    - { property: name, label: 'page.name' }
-                    - { property: seo.metaTitle, label: 'seo.title' }
-                    - { property: seo.url, label: 'seo.url' }
-                    - { property: enabled, label: 'page.enabled' }
+                    - { property: 'name', label: 'page.name' }
+                    - { property: 'seo.metaTitle', label: 'seo.title' }
+                    - { property: 'seo.url', label: 'seo.url' }
+                    - { property: 'enabled', label: 'page.enabled' }
                 actions:
                     - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary' }
             form:
                 fields:
                     - { type: 'group', label: 'group.page' }
-                    - { property: name, label: 'page.name' }
+                    - { property: 'name', label: 'page.name' }
                     - { type: 'group', label: 'group.configuration' }
                     -
                         property: seo
-                        type: KRG\CmsBundle\Form\Type\SeoType
+                        type: 'KRG\CmsBundle\Form\Type\SeoType'
                         label: false
                     - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'
                         label: false
-                        type: KRG\CmsBundle\Form\Type\ContentType
+                        type: 'KRG\CmsBundle\Form\Type\ContentType'
                         type_options:
                             fragment: false
                     - { type: 'group', label: 'group.status' }
-                    - { property: enabled, label: 'page.enabled' }
+                    - { property: 'enabled', label: 'page.enabled' }

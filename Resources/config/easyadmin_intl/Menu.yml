@@ -6,19 +6,22 @@ easy_admin:
                 max_results: 100
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - name
-                    - url
-                    - parent
-                    - enabled
+                    - { property: 'name', label: 'menu.name' }
+                    - { property: 'url', label: 'menu.url' }
+                    - { property: 'parent', label: 'menu.parent' }
+                    - { property: 'enabled', label: 'menu.enabled' }
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { property: key, help: 'Unique identifier' }
+                    - { type: 'group', label: 'group.menu' }
                     -
                         property: 'name'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
-                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'URL' }
-                    - parent
-                    - enabled
+                    - { property: 'key', help: 'unique_key', label: 'menu.key'  }
+                    - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
+                    - { type: 'group', label: 'group.configuration' }
+                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: 'menu.url' }
+                    - { type: 'group', label: 'group.status' }
+                    - { property: 'nabled', label: 'menu.enabled' }

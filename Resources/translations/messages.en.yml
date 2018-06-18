@@ -70,6 +70,7 @@ seo:
   preContent: Content (top)
   postContent: Content (bottom)
   status: Status
+  external_edit: Url and metas configuration on multilingual context must be done through Seo form.
 
 route:
   url_error: 'This url doesn''t have any related route. Please paste another one'

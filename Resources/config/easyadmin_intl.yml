@@ -6,10 +6,11 @@ easy_admin:
         menu:
             -
                 label: 'CMS'
+                priority: 100
                 roles: ['ROLE_CMS']
                 children:
-                    - { entity: 'Block', icon: 'cubes' }
-                    - { entity: 'Page', icon: 'file' }
-                    - { entity: 'Menu', icon: 'reorder' }
-                    - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
-                    - { label: 'Media', route: 'krg_cms_admin_media', icon: 'folder-open' }
+                    - { entity: 'Menu', icon: 'reorder', label: 'admin_menu.menu' }
+                    - { entity: 'Page', icon: 'file', label: 'admin_menu.page' }
+                    - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'], label: 'admin_menu.seo' }
+                    - { entity: 'Block', icon: 'cubes', label: 'admin_menu.block' }
+                    - { route: 'krg_cms_admin_media', icon: 'folder-open', label: 'admin_menu.media' }

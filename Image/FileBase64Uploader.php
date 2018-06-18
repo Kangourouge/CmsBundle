@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\CmsBundle\Service;
+namespace KRG\CmsBundle\Image;
 
 class FileBase64Uploader
 {

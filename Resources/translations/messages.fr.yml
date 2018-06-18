@@ -70,6 +70,7 @@ seo:
   preContent: Contenu (haut)
   postContent: Contenu (bas)
   status: État
+  external_edit: La configuration de l'url et des metas dans un contexte multilingue s'effectue depuis le formulaire Seo.
 
 route:
   url_error: 'Cette url n''est pas liée à un itinéraire'

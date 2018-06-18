@@ -2,14 +2,16 @@
 
 namespace KRG\CmsBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RouteType extends AbstractType
 {
@@ -22,7 +24,18 @@ class RouteType extends AbstractType
     public function __construct(RouterInterface $router, $regexp = null)
     {
         $this->routes = $router->getRouteCollection();
-        $this->regexp = $regexp ?: '`^(_|admin|easyadmin|liip).*`';
+        $exludedRoutes = [
+            'wdt',
+            'admin',
+            'easyadmin',
+            'liip',
+            'profiler',
+            '_twig',
+            '_guess_token',
+            KRGCmsExtension::KRG_ROUTE_SEO_PREFIX
+        ];
+
+        $this->regexp = $regexp ?: '/('.join('|', $exludedRoutes).')/';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -52,9 +65,9 @@ class RouteType extends AbstractType
     public function getChoices()
     {
         $choices = [];
-        /* @var $route RouterInterface */
+        /* @var $route Route */
         foreach ($this->routes as $name => $route) {
-            if (preg_match($this->regexp, $name)) {
+            if (preg_match($this->regexp, $name) || $route->hasRequirement('_locale')) {
                 continue;
             }
             $choices[$route->getPath()] = $name;

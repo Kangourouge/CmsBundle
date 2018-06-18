@@ -4,6 +4,7 @@ namespace KRG\CmsBundle\Twig;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Translatable\Entity\Translation;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Finder\SeoFinder;
@@ -28,13 +29,17 @@ class SeoExtension extends \Twig_Extension
     /** @var SeoFinder */
     private $seoFinder;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder)
+    /** @var array */
+    private $intlLocales;
+
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder, array $intlLocales)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
         $this->parameters = $seoParameters;
         $this->seoFinder = $seoFinder;
+        $this->intlLocales = $intlLocales;
     }
 
     public function getSeoHead(\Twig_Environment $environment)
@@ -69,12 +74,32 @@ class SeoExtension extends \Twig_Extension
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
         if ($seo === null) {
-            return null;
+            if ($id = $this->request->get('_seo_id')) {
+                $seo = $this->entityManager->getRepository(SeoInterface::class)->find($id);
+            }
+            if ($seo === null) {
+                return null;
+            }
         }
 
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
         if ($item->isHit()) {
-            return $item->get();
+             return $item->get();
+        }
+
+        if (count($this->intlLocales) > 0) {
+            // Find and bind Seo translations
+            $translatableRepository = $this->entityManager->getRepository(Translation::class);
+            if ($translations = $translatableRepository->findTranslations($seo)) {
+                if (null !== ($trans = ($translations[$this->request->getLocale()] ?? null))) {
+                    foreach ($trans as $property => $value) {
+                        $method = 'set'.ucwords($property);
+                        if (method_exists($seo, $method)) {
+                            $seo->{$method}($value);
+                        }
+                    }
+                }
+            }
         }
 
         // Get usefull parameters from the request
@@ -94,11 +119,11 @@ class SeoExtension extends \Twig_Extension
             'description' => $this->fetchVars($seo->getMetaDescription(), $params, $twig),
         ];
 
-        if (null !== $this->parameters['title']['suffix']) {
+        if (strlen($data['title']) && isset($this->parameters['title']['suffix']) && strlen($this->parameters['title']['suffix']) > 0) {
             $data['title'] .= ' '.$this->parameters['title']['suffix'];
         }
 
-        if ($this->parameters['og']) {
+        if (isset($this->parameters['og']) && $this->parameters['og']) {
             $data['ogs'] = [
                 'title'       => $data['title'],
                 'description' => $data['metas']['description'],

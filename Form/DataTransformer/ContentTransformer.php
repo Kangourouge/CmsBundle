@@ -3,7 +3,7 @@
 namespace KRG\CmsBundle\Form\DataTransformer;
 
 use KRG\CmsBundle\Routing\UrlResolver;
-use KRG\CmsBundle\Service\FileBase64Uploader;
+use KRG\CmsBundle\Image\FileBase64Uploader;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\DataTransformerInterface;

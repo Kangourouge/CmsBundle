@@ -4,7 +4,7 @@ namespace KRG\CmsBundle\Controller;
 
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Model\RouteInfo;
-use KRG\CmsBundle\Service\FileBase64Uploader;
+use KRG\CmsBundle\Image\FileBase64Uploader;
 use KRG\CmsBundle\Util\Helper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

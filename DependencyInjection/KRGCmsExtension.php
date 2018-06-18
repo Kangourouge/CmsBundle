@@ -2,14 +2,13 @@
 
 namespace KRG\CmsBundle\DependencyInjection;
 
-use KRG\CmsBundle\Routing\UrlGenerator;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 class KRGCmsExtension extends Extension implements PrependExtensionInterface
 {
@@ -22,14 +21,22 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('krg_cms.seo', $config['seo']);
+        $container->setParameter('krg_cms.seo', $config['seo'] ?? []);
+        $container->setParameter('krg_cms.page', $config['page'] ?? []);
         $container->setParameter('krg_cms.blocks', $this->loadBlocks($config));
-        $container->setParameter('krg_cms.page.extra_hide_elements', $config['page']['extra_hide_elements']);
-        $container->setParameter('router.options.generator_class', UrlGenerator::class);
-        $container->setParameter('router.options.generator_base_class', UrlGenerator::class);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter('krg_cms.intl_locales', $container->hasParameter('krg_intl_locales') ? $container->getParameter('krg_intl_locales') : []);
+
+        if (false === interface_exists('KRG\EasyAdminExtensionBundle\Toolbar\ToolbarInterface')) {
+            foreach ($container->getDefinitions() as $key => $definition) {
+                if (strstr($key, 'KRG\CmsBundle\Toolbar')) {
+                    $container->removeDefinition($key);
+                }
+            }
+        }
     }
 
     private function loadBlocks($config)

@@ -1,5 +1,5 @@
 {% spaceless %}
-    {% if title|length %}
+    {% if title is defined and title|length > 0 %}
         <title>{{ title }}</title>
     {% endif %}
 

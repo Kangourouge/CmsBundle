@@ -27,19 +27,24 @@ class RoutingLoader extends Loader
         /** @var $appCollection RouteCollection */
         $appCollection = $this->import($resource);
 
-        $tmpCollection = new RouteCollection();
+//        $tmpCollection = new RouteCollection();
         foreach ($this->loaders as $loader) {
-            $tmpCollection->addCollection($loader->handle($appCollection));
+            $appCollection->addCollection($loader->handle($appCollection));
         }
 
-        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
+        return $appCollection;
 
-        $collection = new RouteCollection();
-        $collection->addCollection($highPriorityCollection);
-        $collection->addCollection($appCollection);
-        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
 
-        return $collection;
+        //        return $appCollection;
+//
+//        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
+//
+//        $collection = new RouteCollection();
+//        $collection->addCollection($highPriorityCollection);
+//        $collection->addCollection($appCollection);
+//        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
+//
+//        return $collection;
     }
 
     public function getHighPriorityCollection(RouteCollection $collection)
@@ -49,11 +54,7 @@ class RoutingLoader extends Loader
         foreach ($collection as $name => $route) {
             $variables = $route->compile()->getVariables();
 
-            if (isset($variables['_locale'])) { // _locale var count as none
-                unset($variables['_locale']);
-            }
-
-            if (count($variables) === 0) {
+            if (count($variables) === 0 && false === strstr($name, '_i18n_')) {
                 $highPriorityCollection->add($name, $route);
             }
         }

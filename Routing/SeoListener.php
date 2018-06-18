@@ -3,11 +3,13 @@
 namespace KRG\CmsBundle\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
-use KRG\CmsBundle\Entity\SeoInterface;
-use KRG\CmsBundle\Repository\SeoRepository;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 
 class SeoListener
 {
@@ -30,15 +32,27 @@ class SeoListener
         }
 
         $request = $event->getRequest();
-        $route = $request->get('_route');
+
+        $routeName = $request->get('_route');
+        if ($canonicalRoute = $request->attributes->get('_canonical_route')) {
+            $routeName = $canonicalRoute;
+        }
 
         // Retrieve the original route
-        if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $route)) {
-            return null;
+        if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $routeName)) {
+            // If access by the app route, retrieve Seo
+            if (count($seos = $request->attributes->get('_seo_list')) > 0) {
+                $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
+                $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
+                $seo = $serializer->deserialize($seos[0], $seoClass, 'json');
+                $routeName = $seo->getUid();
+            }  else {
+                return null;
+            }
         }
 
         /* @var $seo SeoInterface */
-        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($route);
+        $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($routeName);
         if ($seo === null) {
             return null;
         }

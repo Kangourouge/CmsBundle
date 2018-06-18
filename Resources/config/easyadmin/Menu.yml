@@ -6,18 +6,18 @@ easy_admin:
                 max_results: 100
                 title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - { property: name, label: 'menu.name' }
-                    - { property: url, label: 'menu.url' }
-                    - { property: parent, label: 'menu.parent' }
-                    - { property: enabled, label: 'menu.enabled' }
+                    - { property: 'name', label: 'menu.name' }
+                    - { property: 'url', label: 'menu.url' }
+                    - { property: 'parent', label: 'menu.parent' }
+                    - { property: 'enabled', label: 'menu.enabled' }
                 sort: ['position', 'ASC']
             form:
                 fields:
                     - { type: 'group', label: 'group.menu' }
-                    - { property: name, label: 'menu.name' }
-                    - { property: key, help: 'unique_key', label: 'menu.key'  }
-                    - { property: parent, label: 'menu.parent', type_options: {'placeholder': ''} }
+                    - { property: 'name', label: 'menu.name' }
+                    - { property: 'key', help: 'unique_key', label: 'menu.key'  }
+                    - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
                     - { type: 'group', label: 'group.configuration' }
-                    - { property: route, type: KRG\CmsBundle\Form\Type\UrlType, label: 'menu.url' }
+                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: 'menu.url' }
                     - { type: 'group', label: 'group.status' }
-                    - { property: enabled, label: 'menu.enabled' }
+                    - { property: 'enabled', label: 'menu.enabled' }

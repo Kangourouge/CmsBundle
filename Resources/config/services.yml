@@ -10,7 +10,8 @@ services:
             $rootDir: '%kernel.root_dir%'
             $seoParameters: '%krg_cms.seo%'
             $uploadDir: '/uploads/cms'
-            $extraHideElements: '%krg_cms.page.extra_hide_elements%'
+            $pageConfig: '%krg_cms.page%'
+            $intlLocales: '%krg_cms.intl_locales%'
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
@@ -20,8 +21,8 @@ services:
         resource: '../../Form/Type/*'
         tags: [form.type]
 
-    KRG\CmsBundle\Service\:
-        resource: '../../Service/*'
+    KRG\CmsBundle\Image\:
+        resource: '../../Image/*'
         public: true
 
     KRG\CmsBundle\Finder\:

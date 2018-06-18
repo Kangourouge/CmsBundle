@@ -4,7 +4,7 @@ namespace KRG\CmsBundle\Form\Type;
 
 use KRG\CmsBundle\Form\DataTransformer\ContentTransformer;
 use KRG\CmsBundle\Routing\UrlResolver;
-use KRG\CmsBundle\Service\FileBase64Uploader;
+use KRG\CmsBundle\Image\FileBase64Uploader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,14 +25,14 @@ class ContentType extends AbstractType
     protected $urlResolver;
 
     /** @var array */
-    protected $extraHideElements;
+    protected $pageConfig;
 
-    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver, array $extraHideElements = [])
+    public function __construct(EngineInterface $templating, FileBase64Uploader $fileUploader, UrlResolver $urlResolver, array $pageConfig = [])
     {
         $this->templating = $templating;
         $this->fileUploader = $fileUploader;
         $this->urlResolver = $urlResolver;
-        $this->extraHideElements = $extraHideElements;
+        $this->pageConfig = $pageConfig;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,8 +48,9 @@ class ContentType extends AbstractType
 
         $view->vars['responsive'] = $options['responsive'];
         $view->vars['height'] = $options['height'];
-        $view->vars['extra_hide_elements'] = $this->extraHideElements;
+        $view->vars['extra_hide_elements'] = $this->pageConfig['extra_hide_elements'] ?? [];
         $view->vars['fragment'] = $options['fragment'];
+        $view->vars['attr']['class'] = 'hidden';
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -58,13 +59,13 @@ class ContentType extends AbstractType
 
         $resolver
             ->setDefaults([
-                'responsive'          => [
+                'responsive' => [
                     ['label' => 'Destkop', 'width' => '100%'],
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],
-                'fragment'            => true,
-                'height'              => 500,
+                'fragment'   => true,
+                'height'     => 500,
             ]);
     }
 
