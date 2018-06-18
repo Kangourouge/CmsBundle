@@ -39,17 +39,17 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         if ($this->implementsInterface($entity['class'], SeoInterface::class)) {
             $queryBuilder = $event->getArgument('query_builder');
 
-            $excludedUidStartsWith = [
+            $excludedUidContains = [
                 KRGCmsExtension::KRG_ROUTE_SEO_PAGE_PREFIX,
                 KRGCmsExtension::KRG_ROUTE_SEO_FILTER_PREFIX,
             ];
 
             $i = 0;
-            foreach ($excludedUidStartsWith as $uidStartsWith) {
-                $param = 'param_'.$i;
+            foreach ($excludedUidContains as $uidStartsWith) {
+                $param = 'param_'.$i++;
                 $queryBuilder
                     ->andWhere('entity.uid NOT LIKE :'.$param)
-                    ->setParameter($param, $uidStartsWith.'%');
+                    ->setParameter($param, '%'.$uidStartsWith.'%');
             }
         }
     }
