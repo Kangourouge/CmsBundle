@@ -32,15 +32,12 @@ class SeoListener
         }
 
         $request = $event->getRequest();
-
         $routeName = $request->get('_route');
         if ($canonicalRoute = $request->attributes->get('_canonical_route')) {
             $routeName = $canonicalRoute;
         }
 
-        // Retrieve the original route
-        if (!preg_match("/^".KRGCmsExtension::KRG_ROUTE_SEO_PREFIX.".+/", $routeName)) {
-            // If access by the app route, retrieve Seo
+        if ($request->getPathInfo() === '/') {
             if (count($seos = $request->attributes->get('_seo_list')) > 0) {
                 $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
                 $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
