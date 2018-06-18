@@ -47,7 +47,7 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function getNodeTree($key)
     {
-        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), sha1($key)));
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -109,12 +109,15 @@ class MenuBuilder implements MenuBuilderInterface
     public function getActiveNodes($key)
     {
         if (is_array($key)) {
+            $activeNodes = [];
             foreach ($key as $_key) {
                 $activeNodes = $this->getActiveNodes($_key);
                 if (count($activeNodes) > 0) {
-                    return $activeNodes;
+                    break;
                 }
             }
+
+            return $activeNodes;
         }
 
         $nodes = $this->getNodeTree($key);
@@ -167,7 +170,7 @@ class MenuBuilder implements MenuBuilderInterface
             'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params'),
         ];
 
-        if ($requestRoute['name'] === 'krg_page_show' && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
+        if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show') && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
             return $nodeRoute['name'] === $_seo->getUid();
         }
 
