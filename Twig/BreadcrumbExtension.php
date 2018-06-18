@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Twig;
 
 use KRG\CmsBundle\Menu\MenuBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BreadcrumbExtension extends \Twig_Extension
 {
@@ -12,10 +13,14 @@ class BreadcrumbExtension extends \Twig_Extension
     /** @var array */
     private $templates;
 
-    public function __construct(MenuBuilderInterface $menuBuilder)
+    /** @var TranslatorInterface */
+    private $translator;
+
+    public function __construct(MenuBuilderInterface $menuBuilder, TranslatorInterface $translator)
     {
         $this->menuBuilder = $menuBuilder;
         $this->templates = [];
+        $this->translator = $translator;
     }
 
     /**
@@ -39,7 +44,7 @@ class BreadcrumbExtension extends \Twig_Extension
         if (!($first = reset($nodes)) || $first['url'] !== '/') {
             array_unshift($nodes, [
                 'route'  => null,
-                'name'   => 'Home',
+                'name'   => $this->translator->trans('Home'),
                 'url'    => '/',
                 'roles'  => [],
                 'active' => false,

@@ -105,3 +105,5 @@ or: Ou
 '<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
 
 unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
+
+Home: Accueil
