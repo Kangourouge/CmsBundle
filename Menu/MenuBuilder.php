@@ -106,13 +106,12 @@ class MenuBuilder implements MenuBuilderInterface
         return null;
     }
 
-    public function getActiveNodes($key)
+    public function getActiveNodes(string $key = null)
     {
-        if (is_array($key)) {
+        if ($key === null) {
             $activeNodes = [];
-            foreach ($key as $_key) {
-                $activeNodes = $this->getActiveNodes($_key);
-                if (count($activeNodes) > 0) {
+            foreach ($this->findRootMenus() as $menu) {
+                if (count($activeNodes = $this->getActiveNodes($menu->getKey())) > 0) {
                     break;
                 }
             }
@@ -125,15 +124,15 @@ class MenuBuilder implements MenuBuilderInterface
 
         if ($this->annotation) {
             array_push($activeNodes,
-                [
-                    'name'     => $this->annotation->getName(),
-                    'title'    => $this->annotation->getName(),
-                    'url'      => null,
-                    'route'    => null,
-                    'children' => [],
-                    'roles'    => [],
-                    'active'   => true,
-                ]);
+               [
+                   'name'     => $this->annotation->getName(),
+                   'title'    => $this->annotation->getName(),
+                   'url'      => null,
+                   'route'    => null,
+                   'children' => [],
+                   'roles'    => [],
+                   'active'   => true,
+               ]);
         }
 
         return $activeNodes;
@@ -245,5 +244,10 @@ class MenuBuilder implements MenuBuilderInterface
         array_splice($nodes, $position, null, [$item]);
 
         return $nodes;
+    }
+
+    public function findRootMenus()
+    {
+        return $this->entityManager->getRepository(MenuInterface::class)->findBy(['lvl' => 0]);
     }
 }

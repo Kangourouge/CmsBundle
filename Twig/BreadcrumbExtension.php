@@ -36,7 +36,7 @@ class BreadcrumbExtension extends \Twig_Extension
         return $this->templates[$theme];
     }
 
-    public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
+    public function render(\Twig_Environment $environment, string $key = null, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
     {
         $template = $this->getTemplate($environment, $theme);
         $nodes = $this->menuBuilder->getActiveNodes($key);
