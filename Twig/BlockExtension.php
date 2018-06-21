@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use KRG\CmsBundle\Entity\Block;
 use KRG\CmsBundle\Entity\BlockInterface;
 use KRG\CmsBundle\Entity\FilterInterface;
-use KRG\CmsBundle\Entity\PageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
@@ -157,11 +156,11 @@ class BlockExtension extends \Twig_Extension
         return $block->isEnabled() && $block->isWorking() && $this->isSafe($block);
     }
 
-    private function getFragments() {
+    private function getFragments()
+    {
         $fragments = [];
 
         foreach ($this->fileBlocks as $key => $config) {
-
             try {
                 $path = $this->locator->locate($this->nameParser->parse($config['template']));
             } catch (\InvalidArgumentException $exception) {
@@ -177,17 +176,11 @@ class BlockExtension extends \Twig_Extension
                 $block->setContent($content);
                 $fragments[$key] = $block;
             }
-
         }
 
         $blocks = $this->entityManager->getRepository(BlockInterface::class)->findAll();
         foreach($blocks as $block) {
             $fragments[$block->getKey()] = $block;
-        }
-
-        $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
-        foreach($pages as $page) {
-            $fragments[$page->getKey()] = $page;
         }
 
         return $fragments;
