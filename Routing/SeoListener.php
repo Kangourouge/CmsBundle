@@ -37,17 +37,6 @@ class SeoListener
             $routeName = $canonicalRoute;
         }
 
-        if ($request->getPathInfo() === '/') {
-            if (count($seos = $request->attributes->get('_seo_list')) > 0) {
-                $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
-                $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
-                $seo = $serializer->deserialize($seos[0], $seoClass, 'json');
-                $routeName = $seo->getUid();
-            }  else {
-                return null;
-            }
-        }
-
         /* @var $seo SeoInterface */
         $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneByUid($routeName);
         if ($seo === null) {

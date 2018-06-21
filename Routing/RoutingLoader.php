@@ -2,16 +2,24 @@
 
 namespace KRG\CmsBundle\Routing;
 
+use Doctrine\ORM\EntityManagerInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class RoutingLoader extends Loader
 {
     /** @var array */
     private $loaders;
 
-    public function __construct(LoaderResolverInterface $loaderResolver)
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(LoaderResolverInterface $loaderResolver, EntityManagerInterface $entityManager)
     {
         /** @var RoutingLoaderInterface $loader */
         $this->loaders = [];
@@ -20,6 +28,8 @@ class RoutingLoader extends Loader
                 $this->loaders[] = $loader;
             }
         }
+
+        $this->entityManager = $entityManager;
     }
 
     public function load($resource, $type = null)
@@ -27,35 +37,41 @@ class RoutingLoader extends Loader
         /** @var $appCollection RouteCollection */
         $appCollection = $this->import($resource);
 
-//        $tmpCollection = new RouteCollection();
         foreach ($this->loaders as $loader) {
             $appCollection->addCollection($loader->handle($appCollection));
         }
 
-        return $appCollection;
+        $highPriorityCollection = $this->getHighPriorityCollection($appCollection);
 
+        $collection = new RouteCollection();
+        $collection->addCollection($highPriorityCollection);
+        $collection->addCollection($this->substractCollection($highPriorityCollection, $appCollection));
 
-        //        return $appCollection;
-//
-//        $highPriorityCollection = $this->getHighPriorityCollection($tmpCollection);
-//
-//        $collection = new RouteCollection();
-//        $collection->addCollection($highPriorityCollection);
-//        $collection->addCollection($appCollection);
-//        $collection->addCollection($this->substractCollection($highPriorityCollection, $tmpCollection));
-//
-//        return $collection;
+        return $collection;
     }
 
     public function getHighPriorityCollection(RouteCollection $collection)
     {
         $highPriorityCollection = new RouteCollection();
 
-        foreach ($collection as $name => $route) {
-            $variables = $route->compile()->getVariables();
+        $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
+        $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
 
-            if (count($variables) === 0 && false === strstr($name, '_i18n_')) {
-                $highPriorityCollection->add($name, $route);
+        foreach ($collection as $name => $route) {
+            if ($route->hasDefault('_seo_list')) {
+                foreach ($route->getDefault('_seo_list') as $seo) {
+                    /** @var $seo SeoInterface */
+                    $seo = $serializer->deserialize($seo, $seoClass, 'json');
+                    if ($seoRoute = $collection->get($seo->getUid())) {
+                        $compiledSeoRoute = $seoRoute->compile();
+                        $compiledRoute = $route->compile();
+
+                        if ($compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix()) {
+                            $highPriorityCollection->add($seo->getUid(), $seoRoute);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
