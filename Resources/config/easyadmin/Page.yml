@@ -10,7 +10,7 @@ easy_admin:
                     - { property: 'seo.url', label: 'seo.url' }
                     - { property: 'enabled', label: 'page.enabled' }
                 actions:
-                    - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary' }
+                    - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary', menu_dropdown: true }
             form:
                 fields:
                     - { type: 'group', label: 'group.page' }
