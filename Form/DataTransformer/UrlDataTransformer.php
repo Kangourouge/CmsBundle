@@ -36,7 +36,9 @@ class UrlDataTransformer implements DataTransformerInterface
             $page = $this->entityManager->getRepository(PageInterface::class)->findOneBy(['seo' => $seo]);
             $filter = $this->entityManager->getRepository(FilterInterface::class)->findOneBy(['seo' => $seo]);
 
-            return ['block' => self::getBlockIdentifier($page ?? $filter)];
+            if ($page ?? $filter) {
+                return ['block' => self::getBlockIdentifier($page ?? $filter)];
+            }
         }
 
         return ['url' => $value['url'] ?? null];
