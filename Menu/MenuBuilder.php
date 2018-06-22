@@ -2,21 +2,13 @@
 
 namespace KRG\CmsBundle\Menu;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use KRG\CmsBundle\Annotation\Menu as Annotation;
-use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
-use KRG\CmsBundle\Util\Helper;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 class MenuBuilder implements MenuBuilderInterface
@@ -30,26 +22,27 @@ class MenuBuilder implements MenuBuilderInterface
     /** @var RouterInterface */
     protected $router;
 
-    /** @var AnnotationReader */
-    protected $annotationReader;
-
     /** @var array */
     protected $annotations;
 
-    /** @var HttpKernelInterface */
-    protected $httpKernel;
-
     /** @var FilesystemAdapter */
-    private $filesystemAdapter;
+    protected $filesystemAdapter;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, AnnotationReader $annotationReader, string $dataCacheDir)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, RouterInterface $router, string $dataCacheDir)
     {
         $this->entityManager = $entityManager;
-        $this->request = $requestStack->getMasterRequest();
+        $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
-        $this->annotationReader = $annotationReader;
-        $this->annotations = $this->getAnnotations();
+        $this->annotations = [];
         $this->filesystemAdapter = new FilesystemAdapter('menu', 0, $dataCacheDir);
+    }
+
+    public function getNodes($key)
+    {
+        $nodes = $this->getNodeTree($key);
+        $this->activeNodes($nodes);
+
+        return $nodes;
     }
 
     public function getNodeTree($key)
@@ -74,44 +67,6 @@ class MenuBuilder implements MenuBuilderInterface
         $this->filesystemAdapter->save($item);
 
         return $nodes;
-    }
-
-    public function getNodes($key)
-    {
-        $nodes = $this->getNodeTree($key);
-        $this->activeNodes($nodes);
-
-        return $nodes;
-    }
-
-    private function getAnnotations()
-    {
-        if ($this->request === null || !$this->request->get('_controller')) {
-            return null;
-        }
-
-        $annotations = [];
-        try {
-            $reflectionMethod = new \ReflectionMethod($this->request->get('_controller'));
-            foreach ($this->annotationReader->getMethodAnnotations($reflectionMethod) as $key => $annotation) {
-                if ($annotation instanceof Menu) {
-                    $propertyAccessor = PropertyAccess::createPropertyAccessor();
-                    $attributes = $this->request->attributes->all();
-                    $params = $annotation->getParams();
-                    foreach ($params as $key => &$value) {
-                        $value = $this->populate($propertyAccessor, $attributes, $value);
-                    }
-                    unset($value);
-
-                    $annotation->setParams($params);
-                    $annotation->setName($this->populate($propertyAccessor, $attributes, $annotation->getName()));
-                    $annotations[] = $annotation;
-                }
-            }
-        } catch (\ReflectionException $exception) {
-        }
-
-        return $annotations;
     }
 
     public function getActiveNodes(string $key = null)
@@ -235,18 +190,9 @@ class MenuBuilder implements MenuBuilderInterface
         return array_merge([$node], $this->_build($menus));
     }
 
-    private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value)
+    public function setAnnotations(array $annotations)
     {
-        if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
-            dump($attributes, $matches);
-            die;
-            foreach ($matches as $match) {
-                $_value = $propertyAccessor->getValue($attributes, sprintf('[%s].%s', $match[2], $match[3]));
-                $value = preg_replace(sprintf('`%s`', preg_quote($match[0])), $_value, $value);
-            }
-        }
-
-        return $value;
+        $this->annotations = $annotations;
     }
 
     protected function addItem($item, &$nodes, $position = 0)
@@ -256,7 +202,7 @@ class MenuBuilder implements MenuBuilderInterface
         return $nodes;
     }
 
-    public function findRootMenus()
+    protected function findRootMenus()
     {
         return $this->entityManager->getRepository(MenuInterface::class)->findBy(['lvl' => 0]);
     }

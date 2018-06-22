@@ -2,25 +2,25 @@
 
 namespace KRG\CmsBundle\Twig;
 
-use KRG\CmsBundle\Menu\MenuBuilderInterface;
+use KRG\CmsBundle\Breadcrumb\BreadcrumbBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class BreadcrumbExtension extends \Twig_Extension
 {
-    /** @var MenuBuilderInterface */
-    private $menuBuilder;
-
-    /** @var array */
-    private $templates;
+    /** @var BreadcrumbBuilderInterface */
+    protected $breadcrumbBuilder;
 
     /** @var TranslatorInterface */
-    private $translator;
+    protected $translator;
 
-    public function __construct(MenuBuilderInterface $menuBuilder, TranslatorInterface $translator)
+    /** @var array */
+    protected $templates;
+
+    public function __construct(BreadcrumbBuilderInterface $breadcrumbBuilder, TranslatorInterface $translator)
     {
-        $this->menuBuilder = $menuBuilder;
-        $this->templates = [];
+        $this->breadcrumbBuilder = $breadcrumbBuilder;
         $this->translator = $translator;
+        $this->templates = [];
     }
 
     /**
@@ -39,7 +39,7 @@ class BreadcrumbExtension extends \Twig_Extension
     public function render(\Twig_Environment $environment, string $key = null, $theme = 'KRGCmsBundle:Breadcrumb:bootstrap.html.twig')
     {
         $template = $this->getTemplate($environment, $theme);
-        $nodes = $this->menuBuilder->getActiveNodes($key);
+        $nodes = $this->breadcrumbBuilder->getNodes($key);
 
         if (!($first = reset($nodes)) || $first['url'] !== '/') {
             array_unshift($nodes, [
