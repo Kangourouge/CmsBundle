@@ -14,6 +14,9 @@ class Menu
     /** @var string */
     private $route;
 
+    /** @var string */
+    private $url;
+
     /** @var array */
     private $params;
 
@@ -21,6 +24,7 @@ class Menu
     {
         $this->name = $data['value'] ?? null;
         $this->route = $data['route'] ?? null;
+        $this->url = $data['url'] ?? null;
         $this->params = $data['params'] ?? [];
     }
 
@@ -42,6 +46,16 @@ class Menu
     public function setRoute(string $route)
     {
         $this->route = $route;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url)
+    {
+        $this->url = $url;
     }
 
     public function getParams()

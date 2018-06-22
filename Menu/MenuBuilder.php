@@ -6,13 +6,17 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use KRG\CmsBundle\Annotation\Menu as Annotation;
+use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
+use KRG\CmsBundle\Util\Helper;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 class MenuBuilder implements MenuBuilderInterface
@@ -29,8 +33,11 @@ class MenuBuilder implements MenuBuilderInterface
     /** @var AnnotationReader */
     protected $annotationReader;
 
-    /** @var Annotation */
-    protected $annotation;
+    /** @var array */
+    protected $annotations;
+
+    /** @var HttpKernelInterface */
+    protected $httpKernel;
 
     /** @var FilesystemAdapter */
     private $filesystemAdapter;
@@ -41,7 +48,7 @@ class MenuBuilder implements MenuBuilderInterface
         $this->request = $requestStack->getMasterRequest();
         $this->router = $router;
         $this->annotationReader = $annotationReader;
-        $this->annotation = $this->getAnnotation();
+        $this->annotations = $this->getAnnotations();
         $this->filesystemAdapter = new FilesystemAdapter('menu', 0, $dataCacheDir);
     }
 
@@ -49,7 +56,7 @@ class MenuBuilder implements MenuBuilderInterface
     {
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
         if ($item->isHit()) {
-            return $item->get();
+//            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
@@ -77,33 +84,34 @@ class MenuBuilder implements MenuBuilderInterface
         return $nodes;
     }
 
-    private function getAnnotation()
+    private function getAnnotations()
     {
         if ($this->request === null || !$this->request->get('_controller')) {
             return null;
         }
 
+        $annotations = [];
         try {
-            $annotation = $this->annotationReader->getMethodAnnotation(new \ReflectionMethod($this->request->get('_controller')),
-                Annotation::class);
-            if ($annotation) {
-                $propertyAccessor = PropertyAccess::createPropertyAccessor();
-                $attributes = $this->request->attributes->all();
-                $params = $annotation->getParams();
-                foreach ($params as $key => &$value) {
-                    $value = $this->populate($propertyAccessor, $attributes, $value);
+            $reflectionMethod = new \ReflectionMethod($this->request->get('_controller'));
+            foreach ($this->annotationReader->getMethodAnnotations($reflectionMethod) as $key => $annotation) {
+                if ($annotation instanceof Menu) {
+                    $propertyAccessor = PropertyAccess::createPropertyAccessor();
+                    $attributes = $this->request->attributes->all();
+                    $params = $annotation->getParams();
+                    foreach ($params as $key => &$value) {
+                        $value = $this->populate($propertyAccessor, $attributes, $value);
+                    }
+                    unset($value);
+
+                    $annotation->setParams($params);
+                    $annotation->setName($this->populate($propertyAccessor, $attributes, $annotation->getName()));
+                    $annotations[] = $annotation;
                 }
-                unset($value);
-
-                $annotation->setParams($params);
-                $annotation->setName($this->populate($propertyAccessor, $attributes, $annotation->getName()));
-
-                return $annotation;
             }
         } catch (\ReflectionException $exception) {
         }
 
-        return null;
+        return $annotations;
     }
 
     public function getActiveNodes(string $key = null)
@@ -122,12 +130,12 @@ class MenuBuilder implements MenuBuilderInterface
         $nodes = $this->getNodeTree($key);
         $activeNodes = $this->activeNodes($nodes);
 
-        if ($this->annotation) {
+        foreach ($this->annotations as $annotation) {
             array_push($activeNodes,
                [
-                   'name'     => $this->annotation->getName(),
-                   'title'    => $this->annotation->getName(),
-                   'url'      => null,
+                   'name'     => $annotation->getName(),
+                   'title'    => $annotation->getName(),
+                   'url'      => $annotation->getUrl(),
                    'route'    => null,
                    'children' => [],
                    'roles'    => [],
@@ -165,8 +173,8 @@ class MenuBuilder implements MenuBuilderInterface
 
         $nodeRoute = $node['route'];
         $requestRoute = [
-            'name'   => $this->annotation ? $this->annotation->getRoute() : $this->request->get('_route'),
-            'params' => $this->annotation ? $this->annotation->getParams() : $this->request->get('_route_params'),
+            'name'   => /* $this->annotation ? $this->annotation->getRoute() :*/ $this->request->get('_route'),
+            'params' => /* $this->annotation ? $this->annotation->getParams() :*/ $this->request->get('_route_params'),
         ];
 
         if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show') && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
@@ -230,6 +238,8 @@ class MenuBuilder implements MenuBuilderInterface
     private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value)
     {
         if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
+            dump($attributes, $matches);
+            die;
             foreach ($matches as $match) {
                 $_value = $propertyAccessor->getValue($attributes, sprintf('[%s].%s', $match[2], $match[3]));
                 $value = preg_replace(sprintf('`%s`', preg_quote($match[0])), $_value, $value);
