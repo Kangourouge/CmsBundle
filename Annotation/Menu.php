@@ -36,6 +36,8 @@ class Menu
     public function setName(string $name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getRoute()
@@ -46,6 +48,8 @@ class Menu
     public function setRoute(string $route)
     {
         $this->route = $route;
+
+        return $this;
     }
 
     public function getUrl()
@@ -53,9 +57,11 @@ class Menu
         return $this->url;
     }
 
-    public function setUrl(string $url)
+    public function setUrl(string $url = null)
     {
         $this->url = $url;
+
+        return $this;
     }
 
     public function getParams()
@@ -66,5 +72,7 @@ class Menu
     public function setParams(array $params)
     {
         $this->params = $params;
+
+        return $this;
     }
 }

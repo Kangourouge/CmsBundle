@@ -20,4 +20,5 @@ easy_admin:
                     - { type: 'group', label: 'group.configuration' }
                     - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: 'menu.url' }
                     - { type: 'group', label: 'group.status' }
+                    - { property: 'breadcrumbDisplay', label: 'menu.breadcrumbDisplay' }
                     - { property: 'enabled', label: 'menu.enabled' }

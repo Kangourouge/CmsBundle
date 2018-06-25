@@ -34,6 +34,19 @@ class Helper
             }
         }
 
-        return$availableProperties;
+        return $availableProperties;
+    }
+
+    static public function urlExists(string $url)
+    {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_HEADER, true);
+        curl_setopt($handle, CURLOPT_NOBODY, true);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($handle);
+        $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
+
+        return $code >= 200 && $code < 400;
     }
 }

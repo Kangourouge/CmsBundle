@@ -53,6 +53,7 @@ menu:
   url: Url
   parent: Parent
   enabled: Enabled
+  breadcrumbDisplay: Display on breadcrumb
 
 seo:
   url: Url

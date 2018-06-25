@@ -33,10 +33,6 @@ services:
         resource: '../../Menu/*'
         public: true
 
-    KRG\CmsBundle\Breadcrumb\:
-        resource: '../../Breadcrumb/*'
-        public: true
-
     KRG\CmsBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
 
@@ -70,13 +66,9 @@ services:
         tags: [kernel.event_subscriber]
         public: true
 
-    KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'
-    KRG\CmsBundle\Menu\BreadcrumbBuilderInterface: '@KRG\CmsBundle\Breadcrumb\BreadcrumbBuilder'
-
     KRG\CmsBundle\Toolbar\:
         resource: '../../Toolbar'
         tags: [{name: 'krg.easyadmin.toolbar', priority: 500}]
         public: true
 
-    KRG\CmsBundle\EventSubscriber\BreadcrumbListener:
-        tags: [{name: 'kernel.event_listener', event: 'kernel.controller', method: 'onKernelController', priority: -1}]
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'

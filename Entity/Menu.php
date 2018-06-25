@@ -93,6 +93,13 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     protected $compound;
 
     /**
+     * @ORM\Column(type="boolean", name="is_breadcrumb_display")
+     * @Gedmo\Versioned
+     * @var boolean
+     */
+    protected $breadcrumbDisplay;
+
+    /**
      * @ORM\Column(type="boolean", name="is_enabled")
      * @Gedmo\Versioned
      * @var boolean
@@ -103,6 +110,7 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     {
         $this->route = [];
         $this->enabled = false;
+        $this->breadcrumbDisplay = true;
         $this->children = new ArrayCollection();
         $this->position = 0;
         $this->roles = [];
@@ -266,6 +274,32 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     public function isCompound()
     {
         return $this->compound;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBreadcrumbDisplay($breadcrumbDisplay)
+    {
+        $this->breadcrumbDisplay = $breadcrumbDisplay;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBreadcrumbDisplay()
+    {
+        return $this->breadcrumbDisplay;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isBreadcrumbDisplay()
+    {
+        return $this->breadcrumbDisplay;
     }
 
     /**

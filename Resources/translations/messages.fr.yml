@@ -53,6 +53,7 @@ menu:
   url: Url
   parent: Parent
   enabled: Actif
+  breadcrumbDisplay: Afficher dans le fil d'ariane
 
 seo:
   url: Url
