@@ -195,6 +195,7 @@ class MenuBuilder implements MenuBuilderInterface
             'route'              => $menu->getRoute(),
             'name'               => $menu->getName(),
             'title'              => $menu->getTitle(),
+            'content'            => $menu->getContent(),
             'children'           => $this->_build($menu->getChildren()->toArray()),
             'roles'              => $menu->getRoles(),
             'active'             => false,
