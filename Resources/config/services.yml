@@ -66,9 +66,9 @@ services:
         tags: [kernel.event_subscriber]
         public: true
 
-    KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'
-
     KRG\CmsBundle\Toolbar\:
         resource: '../../Toolbar'
         tags: [{name: 'krg.easyadmin.toolbar', priority: 500}]
         public: true
+
+    KRG\CmsBundle\Menu\MenuBuilderInterface: '@KRG\CmsBundle\Menu\MenuBuilder'

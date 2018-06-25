@@ -8,19 +8,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class BreadcrumbExtension extends \Twig_Extension
 {
     /** @var MenuBuilderInterface */
-    private $menuBuilder;
-
-    /** @var array */
-    private $templates;
+    protected $menuBuilder;
 
     /** @var TranslatorInterface */
-    private $translator;
+    protected $translator;
+
+    /** @var array */
+    protected $templates;
 
     public function __construct(MenuBuilderInterface $menuBuilder, TranslatorInterface $translator)
     {
         $this->menuBuilder = $menuBuilder;
-        $this->templates = [];
         $this->translator = $translator;
+        $this->templates = [];
     }
 
     /**
@@ -49,6 +49,12 @@ class BreadcrumbExtension extends \Twig_Extension
                 'roles'  => [],
                 'active' => false,
             ]);
+        }
+
+        foreach ($nodes as $key => $node) {
+            if (isset($node['breadcrumb_display']) && false === $node['breadcrumb_display']) {
+                unset($nodes[$key]);
+            }
         }
 
         return $template->renderBlock('breadcrumb', [

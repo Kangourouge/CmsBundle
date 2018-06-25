@@ -62,6 +62,22 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
     public function getTitle();
 
     /**
+     * Set content
+     *
+     * @param string $content
+     *
+     * @return MenuInterface
+     */
+    public function setContent($content);
+
+    /**
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent();
+
+    /**
      * Get url
      *
      * @return string
@@ -121,7 +137,7 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
      *
      * @param $compound
      *
-     * @return BlockInterface
+     * @return MenuInterface
      */
     public function setCompound($compound);
 
@@ -140,11 +156,34 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
     public function isCompound();
 
     /**
+     * Set breadcrumbDisplay
+     *
+     * @param $breadcrumbDisplay
+     *
+     * @return MenuInterface
+     */
+    public function setBreadcrumbDisplay($breadcrumbDisplay);
+
+    /**
+     * Get breadcrumbDisplay
+     *
+     * @return boolean
+     */
+    public function getBreadcrumbDisplay();
+
+    /**
+     * Is breadcrumbDisplay
+     *
+     * @return boolean
+     */
+    public function isBreadcrumbDisplay();
+
+    /**
      * Set enabled
      *
      * @param $enabled
      *
-     * @return BlockInterface
+     * @return MenuInterface
      */
     public function setEnabled($enabled);
 

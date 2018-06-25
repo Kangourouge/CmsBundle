@@ -55,6 +55,13 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     protected $title;
 
     /**
+     * @Gedmo\Translatable()
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $content;
+
+    /**
      * @ORM\Column(type="json_array", nullable=true)
      * @Gedmo\Versioned
      * @Gedmo\Translatable
@@ -93,6 +100,13 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     protected $compound;
 
     /**
+     * @ORM\Column(type="boolean", name="is_breadcrumb_display")
+     * @Gedmo\Versioned
+     * @var boolean
+     */
+    protected $breadcrumbDisplay;
+
+    /**
      * @ORM\Column(type="boolean", name="is_enabled")
      * @Gedmo\Versioned
      * @var boolean
@@ -103,6 +117,7 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     {
         $this->route = [];
         $this->enabled = false;
+        $this->breadcrumbDisplay = true;
         $this->children = new ArrayCollection();
         $this->position = 0;
         $this->roles = [];
@@ -173,6 +188,24 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContent($content)
+    {
+        $this->content = htmlspecialchars_decode($content, ENT_QUOTES);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent()
+    {
+        return $this->content;
     }
 
     /**
@@ -266,6 +299,32 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     public function isCompound()
     {
         return $this->compound;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBreadcrumbDisplay($breadcrumbDisplay)
+    {
+        $this->breadcrumbDisplay = $breadcrumbDisplay;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBreadcrumbDisplay()
+    {
+        return $this->breadcrumbDisplay;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isBreadcrumbDisplay()
+    {
+        return $this->breadcrumbDisplay;
     }
 
     /**
