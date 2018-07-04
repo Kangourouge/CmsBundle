@@ -62,7 +62,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
         $cacheItem = $filesystemAdapter->getItem($cacheKey);
         if ($cacheItem->isHit()) {
-              return $cacheItem->get();
+            return $cacheItem->get();
         }
 
         $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
@@ -82,12 +82,16 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
 
             if (count($weights) > 0) {
                 asort($weights);
+                // Won't generate a route with parameters if passed parameters are empty
+                if (count($parameters) === 0 && current($weights) !== 0) {
+                    return null;
+                }
                 $seo = $seos[key($weights)];
                 $compiledRoute = $seo->getCompiledRoute();
             }
         }
 
-        // Store in cache
+        // Cache
         $cacheItem->set($compiledRoute);
         $filesystemAdapter->save($cacheItem);
 
