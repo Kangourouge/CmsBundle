@@ -2,14 +2,10 @@
 
 namespace KRG\CmsBundle\Routing;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use KRG\CmsBundle\Entity\SeoInterface;
-use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class SeoListener
 {

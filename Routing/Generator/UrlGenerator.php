@@ -73,9 +73,19 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
             $weights = [];
             foreach ($seos as $idx => &$seo) {
                 /* @var $seo SeoInterface */
-                $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get App class with metadatafactory
+                $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get class from metadata factory
                 if (($diff = $seo->diff($parameters)) >= 0) {
-                    $weights[$idx] = $diff;
+                    $weights[$idx] = $seo->diff($parameters);
+
+                    // Weight down Seos with none / other locale
+                    if (isset($parameters['_locale'])) {
+                        foreach ($weights as $_idx => $weight) {
+                            $_routeParams = $seos[$_idx]->getRouteParams();
+                            if (!isset($_routeParams['_locale']) || $_routeParams['_locale'] !== $parameters['_locale']) {
+                                $weights[$_idx]++;
+                            }
+                        }
+                    }
                 }
             }
             unset($seo);

@@ -5,8 +5,6 @@ namespace KRG\CmsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableEntity;
-use KRG\DoctrineExtensionBundle\Entity\Sortable\SortableInterface;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -235,6 +233,7 @@ class Seo implements SeoInterface, Translatable
     {
         $_parameters = array_filter($this->getRouteParams());
         foreach($parameters as $key => $value) {
+            // Parameter value does not match
             if (isset($_parameters[$key]) && $_parameters[$key] !== $value) {
                 return -1;
             }

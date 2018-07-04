@@ -2,34 +2,19 @@
 
 namespace KRG\CmsBundle\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Class SeoRepository
- * @package KRG\CmsBundle\Repository
- */
 class SeoRepository extends EntityRepository
 {
-    /**
-     * @param $route
-     * @return \Doctrine\ORM\QueryBuilder
-     */
     public function findByRouteNameQb($route)
     {
-        $qb = $this
-            ->createQuerybuilder('s')
-            ->where('s.route LIKE :route')
+        return $this
+            ->createQuerybuilder('seo')
+            ->where('seo.route LIKE :route')
             ->setParameter('route', sprintf('%%name=%s,', $route));
-
-        return $qb;
     }
 
-    /**
-     * @param $route
-     * @param $parameters
-     * @return ArrayCollection
-     */
     public function findByRouteNameAndParameters($route, $parameters)
     {
         $qb = $this->findByRouteNameQb($route);
@@ -47,20 +32,22 @@ class SeoRepository extends EntityRepository
         return $seos;
     }
 
-    /**
-     * @param $key
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
     public function findOneBySeoPageKey($key)
     {
         return $this
-            ->createQuerybuilder('s')
-            ->join('s.seoPage', 'sp')
-            ->where('s.enabled = 1')
-            ->andWhere('sp.key = :key')
+            ->createQuerybuilder('seo')
+            ->join('seo.seoPage', 'seo_page')
+            ->where('seo.enabled = 1')
+            ->andWhere('seo_page.key = :key')
             ->setParameter('key', $key)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findEnabledQb()
+    {
+        return $this
+            ->createQuerybuilder('seo')
+            ->where('seo.enabled = 1');
     }
 }

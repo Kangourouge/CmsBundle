@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Entity;
 
 use KRG\DoctrineExtensionBundle\Entity\Tree\NestedTreeInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
 {
@@ -128,7 +129,7 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
      *
      * @param array $roles
      *
-     * @return User
+     * @return UserInterface
      */
     public function setRoles(array $roles);
 

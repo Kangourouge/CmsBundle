@@ -11,6 +11,7 @@ services:
             $seoParameters: '%krg_cms.seo%'
             $uploadDir: '/uploads/cms'
             $pageConfig: '%krg_cms.page%'
+            $defaultLocale: '%locale%'
             $intlLocales: '%krg_cms.intl_locales%'
 
     KRG\CmsBundle\Twig\:

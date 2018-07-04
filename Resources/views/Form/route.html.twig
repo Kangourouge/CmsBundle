@@ -21,12 +21,12 @@
             var urlInput = document.getElementById('{{ form.vars.id }}_url');
 
             {% if form.parent.metaTitle %}
-                var propsWrapper = findAncestor(document.getElementById('{{ form.parent.metaTitle.vars.id }}'), 'field-group');
+                var propsWrapper = document.forms['{{ form.parent.vars.id }}'].querySelectorAll('.field-group')[3];
                 var divProps = null;
             {% endif %}
 
             {% if form.parent.url is defined %}
-                var redirectUrl = document.getElementById('{{ form.parent.url.vars.id }}');
+                var seoUrlInputs = document.querySelectorAll('input[id^={{ form.parent.url.vars.id }}]');
             {% endif %}
 
             selectInput.addEventListener('change', routeChange);
@@ -56,13 +56,12 @@
                     return;
                 }
 
-                var xmlhttp = new XMLHttpRequest();
-
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState === 4) {
-                        if (xmlhttp.status === 200) {
-                            var data = JSON.parse(xmlhttp.responseText);
-
+                fetch('{{ path('krg_cms_route_data') }}' + '?' + type + '=' + url, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                }).then(function(response) {
+                    if (response.status === 200) {
+                        response.json().then(function(data) {
                             if (hardBind) {
                                 bindParameters(data.parameters);
                                 bindSelect(data.route);
@@ -71,15 +70,12 @@
 
                             bindProperties(data.properties);
                             bindRouteText();
-                        } else if (xmlhttp.status === 500) {
-                            alert('{{ 'route.url_error'|trans }}.');
-                            bindRouteText();
-                        }
+                        });
+                    } else if (response.status === 500) {
+                        alert('{{ 'route.url_error'|trans }}.');
+                        bindRouteText();
                     }
-                };
-
-                xmlhttp.open("GET", "{{ path('krg_cms_route_data') }}" + "?"+ type +"=" + url, true);
-                xmlhttp.send();
+                });
             }
 
             function bindSelect(route) {
@@ -92,9 +88,9 @@
             }
 
             function bindRedirectUrl() {
-                if (redirectUrl !== undefined) {
-                    redirectUrl.value = selectInput.options[selectInput.selectedIndex].innerText;
-                }
+                seoUrlInputs.forEach(function(seoUrlInput) {
+                    seoUrlInput.value = selectInput.options[selectInput.selectedIndex].innerText;
+                });
             }
 
             function bindParameters(parameters) {
@@ -132,18 +128,12 @@
             }
 
             function addParam(name, value) {
-                var attrValue = typeof value === 'undefined' ? '' : '" value="' + value;
+                var attrValue = typeof value === 'undefined' ? '' : '" value="' + value !== null ? value : '';
 
                 paramsInput.innerHTML += paramsInput.dataset.prototype
                     .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
                     .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + attrValue);
-            }
-
-            function findAncestor(element, className) {
-                while ((element = element.parentElement) && !element.classList.contains(className));
-
-                return element;
             }
         }, false);
     </script>

@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Util;
 
 use Symfony\Component\Routing\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class Helper
 {

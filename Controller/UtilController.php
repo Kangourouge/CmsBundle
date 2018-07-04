@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Controller;
 
 use KRG\CmsBundle\Entity\PageInterface;
+use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Model\RouteInfo;
 use KRG\CmsBundle\Image\FileBase64Uploader;
 use KRG\CmsBundle\Util\Helper;
@@ -45,7 +46,20 @@ class UtilController extends AbstractController
         }
 
         if ($routeInfo->getRoute()) {
+            $seoRepository = $this->getDoctrine()->getRepository(SeoInterface::class);
+            if ($seo = $seoRepository->findOneBy(['uid' => $routeInfo->getRoute()])) {
+                $routeInfo
+                    ->setRoute($seo->getRouteName())
+                    ->setParameters($seo->getRouteParams());
+            }
+
+            /** @var $route \Symfony\Component\Routing\Route */
             if ($route = $routeCollection->get($routeInfo->getRoute())) {
+                if ($route->hasDefault('_canonical_route')) {
+                    $routeInfo->setRoute($route->getDefault('_canonical_route'));
+                    $route = $routeCollection->get($routeInfo->getRoute());
+                }
+
                 if ($route->hasDefault('_controller')) {
                     $routeInfo
                         ->setController($route->getDefault('_controller'))

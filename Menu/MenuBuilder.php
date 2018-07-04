@@ -242,7 +242,7 @@ class MenuBuilder implements MenuBuilderInterface
                     $url = null;
 
                     $params = $annotation->getParams();
-                    foreach ($params as $key => &$value) {
+                    foreach ($params as $_key => &$value) {
                         $value = $this->populate($propertyAccessor, $attributes, $value);
                     }
                     unset($value);

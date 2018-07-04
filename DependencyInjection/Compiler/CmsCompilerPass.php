@@ -2,8 +2,8 @@
 namespace KRG\CmsBundle\DependencyInjection\Compiler;
 
 use KRG\CmsBundle\Form\FilterRegistry;
-use KRG\CmsBundle\Routing\Generator\Dumper\PhpGeneratorDumper;
 use KRG\CmsBundle\Routing\Generator\UrlGenerator;
+use KRG\CmsBundle\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -16,7 +16,7 @@ class CmsCompilerPass implements CompilerPassInterface
         $this->populateFilterRegistry($container);
     }
 
-    public function populateFilterRegistry(ContainerBuilder $container)
+    protected function populateFilterRegistry(ContainerBuilder $container)
     {
         if (false === $container->hasDefinition(FilterRegistry::class)) {
             return;
@@ -36,7 +36,7 @@ class CmsCompilerPass implements CompilerPassInterface
         }
     }
 
-    public function setRouterOptions(ContainerBuilder $container, $id = 'router.default')
+    protected function setRouterOptions(ContainerBuilder $container, $id = 'router.default')
     {
         if (false === $container->hasDefinition($id)) {
             return;
@@ -48,7 +48,7 @@ class CmsCompilerPass implements CompilerPassInterface
             $options['generator_class'] = UrlGenerator::class;
             $options['generator_base_class'] = UrlGenerator::class;
             $options['generator_dumper_class'] = PhpGeneratorDumper::class;
-            // $options['generator_cache_class'] = null; // No cache for debug
+//             $options['generator_cache_class'] = null; // No cache for debug
             $router->setArgument(2, $options);
         }
     }

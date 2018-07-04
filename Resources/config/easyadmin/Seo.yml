@@ -17,7 +17,7 @@ easy_admin:
                     - { property: 'route', type: 'KRG\CmsBundle\Form\Type\RouteType' }
                     - { property: 'url', label: 'seo.url_redirect' }
                     - { type: 'group', label: 'group.metas' }
-                    - { property: 'metaTitle', label: 'seo.metaTitle' }
+                    - { property: 'metaTitle', label: 'seo.metaTitle', attr: {data-route-selector: 'true'} }
                     - { property: 'metaDescription', type: 'textarea', label: 'seo.metaDescription' }
                     - { type: 'group', label: 'group.content' }
                     -

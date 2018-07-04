@@ -40,9 +40,11 @@ class SeoType extends AbstractType
         ]);
 
         if ($options['metas']) {
-            $builder->add('metaTitle', TextType::class, [
+            $builder
+                ->add('metaTitle', TextType::class, [
                     'label' => 'seo.metaTitle',
-                ])->add('metaDescription', TextareaType::class, [
+                ])
+                ->add('metaDescription', TextareaType::class, [
                     'label' => 'seo.metaDescription',
                 ]);
         }

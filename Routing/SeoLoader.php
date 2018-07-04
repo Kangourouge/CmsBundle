@@ -2,38 +2,42 @@
 
 namespace KRG\CmsBundle\Routing;
 
+use Doctrine\ORM\Query;
 use KRG\CmsBundle\Entity\SeoInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class SeoLoader extends Loader implements RoutingLoaderInterface
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
     /** @var Serializer */
     private $serializer;
 
     /** @var string */
     private $dataCacheDir;
 
-    /** @var string */
-    private $seoClass;
+    /** @var Query */
+    private $query;
 
-    public function __construct(EntityManagerInterface $entityManager, string $dataCacheDir)
+    public function __construct(EntityManagerInterface $entityManager, string $dataCacheDir, string $defaultLocale, array $intlLocales)
     {
-        $this->entityManager = $entityManager;
         $normalizer = new PropertyNormalizer();
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
         $this->serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $this->dataCacheDir = $dataCacheDir;
+        $this->query = $entityManager->getRepository(SeoInterface::class)->findEnabledQb()->getQuery();
+
+        // If KRGIntlBundle is enabled, force default locale on Seos query for clean routes
+        if (count($intlLocales) > 0) {
+            $this->query->setHint(constant('Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE'), $defaultLocale);
+            $this->query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker');
+        }
     }
 
     public function load($resource, $type = null)
@@ -46,12 +50,9 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
 
     public function handle(RouteCollection $collection)
     {
-        $seoRepository = $this->entityManager->getRepository(SeoInterface::class);
-        $seos = $seoRepository->findBy(['enabled' => true]);
-
         $seoCollection = new RouteCollection();
         try {
-            foreach ($seos as $seo) {
+            foreach ($this->query->getResult() as $seo) {
                 /** @var Route $route */
                 /** @var Route $routeClone */
                 /** @var SeoInterface $seo */
