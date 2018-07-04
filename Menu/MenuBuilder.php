@@ -135,7 +135,7 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function isActive(array $node)
     {
-        if ($this->request === null || ($node['url'] === null && count($node['route']) === 0)) {
+        if (null === $this->request || (null === $node['url'] && count($node['route']) === 0)) {
             return false;
         }
 
@@ -145,7 +145,12 @@ class MenuBuilder implements MenuBuilderInterface
             'params' => count($this->getAnnotations()) > 0 ? $this->annotations[0]->getParams() : $this->request->get('_route_params'),
         ];
 
-        if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show') && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
+        if (null === $requestRoute['name']) {
+            return false;
+        }
+
+        if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show')
+            && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
             return $nodeRoute['name'] === $_seo->getUid();
         }
 
