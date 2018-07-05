@@ -82,7 +82,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
                         foreach ($weights as $_idx => $weight) {
                             $_routeParams = $seos[$_idx]->getRouteParams();
                             if (!isset($_routeParams['_locale']) || $_routeParams['_locale'] !== $parameters['_locale']) {
-                                $weights[$_idx]++;
+                                $weights[$_idx] += 100;
                             }
                         }
                     }
