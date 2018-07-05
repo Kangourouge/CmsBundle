@@ -60,21 +60,20 @@ class SeoLoader extends Loader implements RoutingLoaderInterface
                     continue;
                 }
 
-                $routeClone = clone $route;
-                $routeClone
-                    ->setPath($seo->getUrl())
-                    ->setDefaults(array_diff_key($routeClone->getDefaults(), ['_cache_dir' => null, '_seo_list' => null]));
+                $route->setDefaults(array_merge($route->getDefaults(), ['_cache_dir' => $this->dataCacheDir, '_seo_list' => []]));
 
+                $routeClone = clone $route;
+                $routeClone->setPath($seo->getUrl());
+
+                $serializedSeo = $this->serializer->serialize($seo, 'json');
                 if ($seo->getRouteName() === 'krg_page_show') {
-                    $routeClone->setDefault('_seo_id', $seo->getId());
+                    $routeClone->setDefault('_seo', $serializedSeo);
                 }
 
                 $seo->setCompiledRoute($routeClone->compile());
 
                 $_seos = $route->getDefault('_seo_list') ?: [];
-                $_seos[] = $this->serializer->serialize($seo, 'json');
-
-                $route->setDefault('_cache_dir', $this->dataCacheDir);
+                $_seos[] = $serializedSeo;
                 $route->setDefault('_seo_list', $_seos);
 
                 $seoCollection->add($seo->getUid(), $routeClone);

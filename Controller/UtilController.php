@@ -48,9 +48,7 @@ class UtilController extends AbstractController
         if ($routeInfo->getRoute()) {
             $seoRepository = $this->getDoctrine()->getRepository(SeoInterface::class);
             if ($seo = $seoRepository->findOneBy(['uid' => $routeInfo->getRoute()])) {
-                $routeInfo
-                    ->setRoute($seo->getRouteName())
-                    ->setParameters($seo->getRouteParams());
+                $routeInfo->setRoute($seo->getRouteName());
             }
 
             /** @var $route \Symfony\Component\Routing\Route */

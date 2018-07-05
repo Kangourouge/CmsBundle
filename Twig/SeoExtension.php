@@ -11,6 +11,9 @@ use KRG\CmsBundle\Finder\SeoFinder;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class SeoExtension extends \Twig_Extension
 {
@@ -32,11 +35,19 @@ class SeoExtension extends \Twig_Extension
     /** @var array */
     private $intlLocales;
 
+    /** @var Serializer */
+    private $serializer;
+
     public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, string $dataCacheDir, array $seoParameters, SeoFinder $seoFinder, array $intlLocales)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getMasterRequest();
         $this->filesystemAdapter = new FilesystemAdapter('seo', 0, $dataCacheDir);
+        $normalizer = new PropertyNormalizer();
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $this->serializer = new Serializer([$normalizer], [new JsonEncoder()]);
         $this->parameters = $seoParameters;
         $this->seoFinder = $seoFinder;
         $this->intlLocales = $intlLocales;
@@ -73,18 +84,17 @@ class SeoExtension extends \Twig_Extension
 
         /* @var $seo SeoInterface */
         $seo = $this->request->get('_seo');
+        if (is_string($seo)) {
+            $seo = $this->serializer->deserialize($seo, $this->entityManager->getClassMetadata(SeoInterface::class)->getName(), 'json');
+        }
+
         if ($seo === null) {
-            if ($id = $this->request->get('_seo_id')) {
-                $seo = $this->entityManager->getRepository(SeoInterface::class)->find($id);
-            }
-            if ($seo === null) {
-                return null;
-            }
+            return null;
         }
 
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
         if ($item->isHit()) {
-             return $item->get();
+            return $item->get();
         }
 
         if (count($this->intlLocales) > 0) {

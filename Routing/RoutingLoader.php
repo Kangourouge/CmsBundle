@@ -55,7 +55,7 @@ class RoutingLoader extends Loader
         $highPriorityCollection = new RouteCollection();
 
         $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
-        $seoClass = $this->entityManager->getMetadataFactory()->getMetadataFor(SeoInterface::class)->getName();
+        $seoClass = $this->entityManager->getClassMetadata(SeoInterface::class)->getName();
 
         foreach ($collection as $name => $route) {
             if ($route->hasDefault('_seo_list')) {

@@ -25,7 +25,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (isset($defaults['_seo_list'])) {
-            $compiledRoute = $this->resolve($defaults['_seo_list'], $name, $parameters, $defaults['_cache_dir']);
+            $compiledRoute = $this->resolve($defaults['_seo_list'], $name, $parameters, $requirements, $defaults);
             if ($compiledRoute !== null) {
                 $_parameters = [];
                 foreach ($parameters as $key => $value) {
@@ -54,9 +54,9 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         );
     }
 
-    private function resolve(array $seos, $name, array $parameters, $cacheDir)
+    private function resolve(array $seos, $name, array $parameters, array $requirements, array $defaults)
     {
-        $filesystemAdapter = new FilesystemAdapter('seo', 0, $cacheDir);
+        $filesystemAdapter = new FilesystemAdapter('seo', 0, $defaults['_cache_dir']);
 
         // Check if route can be resolved from cache
         $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
@@ -66,7 +66,6 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         }
 
         $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
-
         $compiledRoute = null;
         // Sort entries by number of matching parameters
         if (count($seos) > 0) {
@@ -76,19 +75,21 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
                 $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get class from metadata factory
                 if (($diff = $seo->diff($parameters)) >= 0) {
                     $weights[$idx] = $seo->diff($parameters);
-
-                    // Weight down Seos with none / other locale
-                    if (isset($parameters['_locale'])) {
-                        foreach ($weights as $_idx => $weight) {
-                            $_routeParams = $seos[$_idx]->getRouteParams();
-                            if (!isset($_routeParams['_locale']) || $_routeParams['_locale'] !== $parameters['_locale']) {
-                                $weights[$_idx] += 100;
-                            }
-                        }
-                    }
                 }
             }
             unset($seo);
+
+            // Weight down Seos with none / other locale
+            if (isset($defaults['_canonical_route']) && isset($requirements['_locale'])) {
+                $canonicalRoute = $this->routes->get($defaults['_canonical_route']);
+                foreach ($weights as $_idx => $weight) {
+                    $_routeParams = $seos[$_idx]->getRouteParams();
+                    if ((false === isset($_routeParams['_locale']) && $requirements['_locale'] !== $canonicalRoute->getDefault('_locale')) ||
+                        (isset($_routeParams['_locale']) && $_routeParams['_locale'] !== $requirements['_locale'])) {
+                        $weights[$_idx] += 100;
+                    }
+                }
+            }
 
             if (count($weights) > 0) {
                 asort($weights);

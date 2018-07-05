@@ -55,8 +55,6 @@ class EasyAdminSubscriber implements EventSubscriberInterface
 
     protected function implementsInterface($class, $interface)
     {
-        $classMetadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
-
-        return $classMetadata->getReflectionClass()->implementsInterface($interface);
+        return $this->entityManager->getClassMetadata($class)->getReflectionClass()->implementsInterface($interface);
     }
 }

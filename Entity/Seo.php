@@ -231,8 +231,8 @@ class Seo implements SeoInterface, Translatable
      */
     public function diff(array $parameters)
     {
-        $_parameters = array_filter($this->getRouteParams());
-        foreach($parameters as $key => $value) {
+        $_parameters = $this->getRouteParams();
+        foreach ($parameters as $key => $value) {
             // Parameter value does not match
             if (isset($_parameters[$key]) && $_parameters[$key] !== $value) {
                 return -1;
