@@ -20,7 +20,6 @@ class UtilController extends AbstractController
 {
     /**
      * @Route("/route_data", name="krg_cms_route_data")
-     * @Security("has_role('ROLE_ADMIN')"))
      */
     public function getRouteDataAction(Request $request)
     {
