@@ -96,6 +96,15 @@ EOF;
 
         return $this->doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
     }
+    
+    protected function getDefaultLocale(array $routeData)
+    {
+        if (isset($routeData['_canonical_route']) && $route = (self::$declaredRoutes[$routeData['_canonical_route']] ?? null)) {
+            return $route[1]['_locale'];
+        }
+
+        return null;
+    }
 EOF;
     }
 }

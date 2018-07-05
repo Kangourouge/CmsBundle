@@ -41,17 +41,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
             }
         }
 
-        return parent::doGenerate(
-            $variables,
-            $defaults,
-            $requirements,
-            $tokens,
-            $parameters,
-            $name,
-            $referenceType,
-            $hostTokens,
-            $requiredSchemes
-        );
+        return parent::doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
     }
 
     private function resolve(array $seos, $name, array $parameters, array $requirements, array $defaults)
@@ -69,27 +59,25 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         $compiledRoute = null;
         // Sort entries by number of matching parameters
         if (count($seos) > 0) {
+            $defaultLocale = $this->getDefaultLocale($defaults);
             $weights = [];
             foreach ($seos as $idx => &$seo) {
                 /* @var $seo SeoInterface */
                 $seo = $serializer->deserialize($seo, Seo::class, 'json'); // Get class from metadata factory
+
+                // Skip Seos with other locale than expected
+                $_routeParams = $seo->getRouteParams();
+                if (isset($requirements['_locale']) &&
+                    ((false === isset($_routeParams['_locale']) && $requirements['_locale'] !== $defaultLocale) ||
+                    (isset($_routeParams['_locale']) && $_routeParams['_locale'] !== $requirements['_locale']))) {
+                    continue;
+                }
+
                 if (($diff = $seo->diff($parameters)) >= 0) {
                     $weights[$idx] = $seo->diff($parameters);
                 }
             }
             unset($seo);
-
-            // Weight down Seos with none / other locale
-            if (isset($defaults['_canonical_route']) && isset($requirements['_locale'])) {
-                $canonicalRoute = $this->routes->get($defaults['_canonical_route']);
-                foreach ($weights as $_idx => $weight) {
-                    $_routeParams = $seos[$_idx]->getRouteParams();
-                    if ((false === isset($_routeParams['_locale']) && $requirements['_locale'] !== $canonicalRoute->getDefault('_locale')) ||
-                        (isset($_routeParams['_locale']) && $_routeParams['_locale'] !== $requirements['_locale'])) {
-                        $weights[$_idx] += 100;
-                    }
-                }
-            }
 
             if (count($weights) > 0) {
                 asort($weights);
@@ -98,6 +86,8 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
                     return null;
                 }
                 $seo = $seos[key($weights)];
+
+
                 $compiledRoute = $seo->getCompiledRoute();
             }
         }
@@ -107,5 +97,17 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         $filesystemAdapter->save($cacheItem);
 
         return $compiledRoute;
+    }
+
+    /**
+     * Get defaultLocale from canonical route because UrlGenerator is not a service
+     */
+    protected function getDefaultLocale(array $routeData)
+    {
+        if (isset($routeData['_canonical_route']) && $route = $this->routes->get($routeData['_canonical_route'])) {
+            return $route->getDefault('_locale');
+        }
+
+        return null;
     }
 }
