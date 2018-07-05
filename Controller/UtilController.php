@@ -33,8 +33,12 @@ class UtilController extends AbstractController
         $routeInfo->setRoute($routeName);
 
         if ($url) {
+            if (false === strstr($url, $request->getSchemeAndHttpHost())) {
+                throw new \Exception('Only local url allowed');
+            }
+
             try {
-                $data = $router->match(str_replace(['http://', $request->getHttpHost()], '', $url));
+                $data = $router->match(str_replace($request->getSchemeAndHttpHost(), '', $url));
             } catch (\Exception $e) {
                 throw new \Exception('No matching route');
             }
