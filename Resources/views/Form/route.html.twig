@@ -21,7 +21,7 @@
             var urlInput = document.getElementById('{{ form.vars.id }}_url');
 
             {% if form.parent.metaTitle %}
-                var propsWrapper = document.forms['{{ form.parent.vars.id }}'].querySelectorAll('.field-group')[3];
+                var propsWrapper = document.forms['{{ form.parent.vars.id }}'].querySelectorAll('.field-group')[2];
                 var divProps = null;
             {% endif %}
 
@@ -113,10 +113,24 @@
 
                 if (propsWrapper !== undefined) {
                     divProps = document.createElement('div');
+
+                    properties.forEach(function(value, key) {
+                        properties[key] = '<span>' + value + '</span>';
+                    });
+
                     divProps.id = 'props-wrapper';
                     divProps.innerHTML = '<strong>{{ 'route.available_vars'|trans }}</strong><br>' + properties.join(', ') + '<br>';
                     divProps.classList.add('box');
                     propsWrapper.prepend(divProps);
+                    divProps.querySelectorAll('span').forEach(function(span) {
+                       span.onclick = function() { document.execCommand('copy'); };
+                       span.addEventListener('copy', function(event) {
+                           event.preventDefault();
+                           if (event.clipboardData) {
+                               event.clipboardData.setData('text/plain', '\{\{ ' + span.textContent + ' \}\}' );
+                           }
+                       })
+                    });
                 }
             }
 
