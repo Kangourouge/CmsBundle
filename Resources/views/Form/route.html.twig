@@ -128,12 +128,12 @@
             }
 
             function addParam(name, value) {
-                var attrValue = typeof value === 'undefined' ? '' : '" value="' + value !== null ? value : '';
+                var attrValue = 'value="' + (value !== null ? value : '') + '"';
 
                 paramsInput.innerHTML += paramsInput.dataset.prototype
                     .replace(/\>__name__label__\</g, '>' + name.charAt(0).toUpperCase() + name.slice(1) + '<')
                     .replace(/_params___name__/g, '_params_' + name)
-                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']' + attrValue);
+                    .replace(/params\]\[__name__\]/g, 'params][' + name + ']" ' + attrValue);
             }
         }, false);
     </script>
