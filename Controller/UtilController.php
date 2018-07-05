@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/cms/util")
+ * @Route("/admin/cms/util")
  */
 class UtilController extends AbstractController
 {
