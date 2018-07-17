@@ -32,6 +32,11 @@ class UrlDataTransformer implements DataTransformerInterface
             return null;
         }
 
+        // Handle JSON value (translations)
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
         if (isset($value['url']) && $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBy(['url' => $value['url']])) {
             $page = $this->entityManager->getRepository(PageInterface::class)->findOneBy(['seo' => $seo]);
             $filter = $this->entityManager->getRepository(FilterInterface::class)->findOneBy(['seo' => $seo]);

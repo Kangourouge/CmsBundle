@@ -26,6 +26,7 @@ easy_admin:
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
+                            label: false
                             entry_options:
                                 fragment: false
                     - { type: 'group', label: 'group.status' }
