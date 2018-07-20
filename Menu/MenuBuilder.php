@@ -203,6 +203,7 @@ class MenuBuilder implements MenuBuilderInterface
             'content'            => $menu->getContent(),
             'children'           => $this->_build($menu->getChildren()->toArray()),
             'roles'              => $menu->getRoles(),
+            'lvl'                => $menu->getLvl(),
             'active'             => false,
             'breadcrumb_display' => $menu->isBreadcrumbDisplay(),
         ];
