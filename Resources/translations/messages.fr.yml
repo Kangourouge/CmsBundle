@@ -82,8 +82,9 @@ route:
 
 url:
   bind: Lier
-  block_choice_page: '%name% (page) — %url%'
-  block_choice_filter: '%name% (filtre) — %url%'
+  related_choice_page: '%name% (page) — %url%'
+  related_choice_filter: '%name% (filtre) — %url%'
+  related_choice_route: '%name% (itinéraire) — %url%'
 
 label.form.empty_value: 'null'
 

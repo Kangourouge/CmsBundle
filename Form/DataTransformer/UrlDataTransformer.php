@@ -11,6 +11,7 @@ use KRG\CmsBundle\Routing\UrlResolver;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 
 class UrlDataTransformer implements DataTransformerInterface
 {
@@ -20,10 +21,14 @@ class UrlDataTransformer implements DataTransformerInterface
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-    public function __construct(UrlResolver $urlResolver, EntityManagerInterface $entityManager)
+    /** @var RouterInterface */
+    protected $router;
+
+    public function __construct(UrlResolver $urlResolver, EntityManagerInterface $entityManager, RouterInterface $router)
     {
         $this->urlResolver = $urlResolver;
         $this->entityManager = $entityManager;
+        $this->router = $router;
     }
 
     public function transform($value)
@@ -37,12 +42,23 @@ class UrlDataTransformer implements DataTransformerInterface
             $value = json_decode($value, true);
         }
 
-        if (isset($value['url']) && $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBy(['url' => $value['url']])) {
-            $page = $this->entityManager->getRepository(PageInterface::class)->findOneBy(['seo' => $seo]);
-            $filter = $this->entityManager->getRepository(FilterInterface::class)->findOneBy(['seo' => $seo]);
+        if (isset($value['url'])) {
+            $seo = $this->entityManager->getRepository(SeoInterface::class)->findOneBy(['url' => $value['url']]);
 
-            if ($page ?? $filter) {
-                return ['block' => self::getBlockIdentifier($page ?? $filter)];
+            if ($seo) {
+                $page = $this->entityManager->getRepository(PageInterface::class)->findOneBy(['seo' => $seo]);
+                $filter = $this->entityManager->getRepository(FilterInterface::class)->findOneBy(['seo' => $seo]);
+
+                if ($page ?? $filter) {
+                    return ['related' => self::getRelatedIdentifier($page ?? $filter)];
+                }
+            } else {
+                try {
+                    $this->router->getRouteCollection()->get($value['name']);
+
+                    return ['related' => self::getTypeIdentifier('route', $value['name'])];
+                } catch (\Exception $exception) {
+                }
             }
         }
 
@@ -55,13 +71,21 @@ class UrlDataTransformer implements DataTransformerInterface
             return [];
         }
 
-        if (isset($value['block'])) {
-            list($className, $id) = explode('-', $value['block']);
 
-            $metadata = $this->entityManager->getClassMetadata($className);
-            if ($metadata->hasAssociation('seo')) {
-                $entity = $this->entityManager->getRepository($metadata->getName())->find($id);
-                $value['url'] = $entity->getSeo()->getUrl();
+        if (isset($value['related'])) {
+            list($type, $id) = explode('-', $value['related']);
+
+            if ($this->entityManager->getMetadataFactory()->hasMetadataFor($type)) {
+                $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($type);
+                if ($metadata->hasAssociation('seo')) {
+                    $entity = $this->entityManager->getRepository($metadata->getName())->find($id);
+                    $value['url'] = $entity->getSeo()->getUrl();
+                }
+            } elseif ($type === 'route') {
+                try {
+                    $value['url'] = $this->router->getRouteCollection()->get($id)->getPath();
+                } catch (\Exception $exception) {
+                }
             }
         }
 
@@ -81,8 +105,13 @@ class UrlDataTransformer implements DataTransformerInterface
         return $routeInfo;
     }
 
-    static public function getBlockIdentifier(BlockInterface $block)
+    static public function getRelatedIdentifier(BlockInterface $block)
     {
-        return sprintf('%s-%d', get_class($block), ($block)->getId());
+        return self::getTypeIdentifier(get_class($block), $block->getId());
+    }
+
+    static public function getTypeIdentifier($type, $name)
+    {
+        return $type.'-'.$name;
     }
 }

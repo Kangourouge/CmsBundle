@@ -1,3 +1,11 @@
+{% block krg_cms_url_row %}
+    {# if CMS alone #}
+    {{ form_widget(form) }}
+    {# if CMS + INLT #}
+    {# {{ form_label(form) }} #}
+    {# {{ form_widget(form) }} #}
+{% endblock %}
+
 {% block krg_cms_url_widget %}
     {{ form_row(form.url) }}
 
@@ -7,12 +15,12 @@
         </span>
     </div>
 
-    {{ form_row(form.block, {'attr': {'data-widget': 'select2'}}) }}
+    {{ form_row(form.related, {'attr': {'data-widget': 'select2'}}) }}
 
     <script type="text/javascript">
         (function () {
             var urlInput = document.getElementById('{{ form.url.vars.id }}');
-            var blockSelect = document.getElementById('{{ form.block.vars.id }}');
+            var blockSelect = document.getElementById('{{ form.related.vars.id }}');
 
             urlInput.addEventListener('keydown', function() {
                 if (null !== $(blockSelect).val()) {

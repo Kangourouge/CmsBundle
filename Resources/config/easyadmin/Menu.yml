@@ -18,7 +18,7 @@ easy_admin:
                     - { property: 'key', help: 'unique_key', label: 'menu.key'  }
                     - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
                     - { type: 'group', label: 'group.configuration' }
-                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: 'menu.url' }
+                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: false }
                     - { type: 'group', label: 'group.content' }
                     -
                         property: 'content'

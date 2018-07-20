@@ -7,10 +7,13 @@ use KRG\CmsBundle\Entity\FilterInterface;
 use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Routing\UrlResolver;
 use KRG\CmsBundle\Form\DataTransformer\UrlDataTransformer;
+use KRG\CmsBundle\Util\RouteHelper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class UrlType extends TextType
@@ -21,13 +24,17 @@ class UrlType extends TextType
     /** @var EntityManagerInterface */
     protected $entityManager;
 
+    /** @var RouterInterface */
+    protected $router;
+
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(UrlResolver $urlResolver, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(UrlResolver $urlResolver, EntityManagerInterface $entityManager, RouterInterface $router, TranslatorInterface $translator)
     {
         $this->urlResolver = $urlResolver;
         $this->entityManager = $entityManager;
+        $this->router = $router;
         $this->translator = $translator;
     }
 
@@ -37,13 +44,13 @@ class UrlType extends TextType
             ->add('url', TextType::class, [
                 'label' => 'Url',
             ])
-            ->add('block', ChoiceType::class, [
+            ->add('related', ChoiceType::class, [
                 'label'       => 'url.bind',
                 'placeholder' => '',
                 'choices'     => $this->getChoices(),
             ]);
 
-        $builder->addModelTransformer(new UrlDataTransformer($this->urlResolver, $this->entityManager));
+        $builder->addModelTransformer(new UrlDataTransformer($this->urlResolver, $this->entityManager, $this->router));
     }
 
     /**
@@ -53,22 +60,32 @@ class UrlType extends TextType
     {
         $pages = $this->entityManager->getRepository(PageInterface::class)->findAll();
         $filters = $this->entityManager->getRepository(FilterInterface::class)->findWithSeo();
+        $routes = RouteHelper::getRouteNames($this->router->getRouteCollection(), null, function($route) {
+            return count($route->compile()->getVariables()) === 0; // Route without vars
+        });
 
         $pageChoices = [];
         /* @var $page PageInterface */
         foreach ($pages as $page) {
-            $name = $this->getChoice($page->getName(), $page->getSeo()->getUrl(), 'url.block_choice_page');
-            $pageChoices[$name] = UrlDataTransformer::getBlockIdentifier($page);
+            $name = $this->getChoice($page->getName(), $page->getSeo()->getUrl(), 'url.related_choice_page');
+            $pageChoices[$name] = UrlDataTransformer::getRelatedIdentifier($page);
         }
 
         /* @var $page FilterInterface */
         $filterChoices = [];
         foreach ($filters as $filter) {
-            $name = $this->getChoice($filter->getName(), $filter->getSeo()->getUrl(), 'url.block_choice_filter');
-            $filterChoices[$name] = UrlDataTransformer::getBlockIdentifier($filter);
+            $name = $this->getChoice($filter->getName(), $filter->getSeo()->getUrl(), 'url.related_choice_filter');
+            $filterChoices[$name] = UrlDataTransformer::getRelatedIdentifier($filter);
         }
 
-        return array_merge($pageChoices, $filterChoices);
+        /* @var $route Route */
+        $routeChoices = [];
+        foreach ($routes as $url => $route) {
+            $name = $this->getChoice($route, $url, 'url.related_choice_route');
+            $routeChoices[$name] = UrlDataTransformer::getTypeIdentifier('route', $route);
+        }
+
+        return array_merge($pageChoices, $filterChoices, $routeChoices);
     }
 
     protected function getChoice(string $name, string $url, string $transDomain, string $locale = null)
