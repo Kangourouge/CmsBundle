@@ -57,6 +57,10 @@ services:
         tags: [doctrine.event_subscriber]
         public: true
 
+    KRG\CmsBundle\Entity\Manager\:
+        resource: '../../Entity/Manager/*'
+        public: true
+
     KRG\CmsBundle\Entity\Validator\:
         resource: '../../Entity/Validator/*'
         tags: [validator.constraint_validator]
