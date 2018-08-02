@@ -2,7 +2,6 @@
 
 namespace KRG\CmsBundle\Entity\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use KRG\CmsBundle\DependencyInjection\KRGCmsExtension;
 use KRG\CmsBundle\Entity\SeoInterface;
@@ -11,14 +10,6 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class EasyAdminSubscriber implements EventSubscriberInterface
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public static function getSubscribedEvents()
     {
         return [
@@ -35,7 +26,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     {
         $entity = $event->getArgument('entity');
 
-        if ($this->implementsInterface($entity['class'], SeoInterface::class)) {
+        if ($this->implementsInterface($event->getArgument('em'), $entity['class'], SeoInterface::class)) {
             $queryBuilder = $event->getArgument('query_builder');
 
             $excludedUidContains = [
@@ -53,8 +44,8 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    protected function implementsInterface($class, $interface)
+    protected function implementsInterface($entityManager, $class, $interface)
     {
-        return $this->entityManager->getClassMetadata($class)->getReflectionClass()->implementsInterface($interface);
+        return $entityManager->getClassMetadata($class)->getReflectionClass()->implementsInterface($interface);
     }
 }
