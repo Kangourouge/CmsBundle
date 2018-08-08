@@ -1,0 +1,7 @@
+admin_menu:
+  block: Block
+  filter: Filter
+  page: Page
+  menu: Menu
+  seo: Seo
+  media: Media
