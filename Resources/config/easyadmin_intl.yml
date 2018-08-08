@@ -2,6 +2,7 @@ imports:
     - { resource: easyadmin_intl/ }
 
 easy_admin:
+    translation_domain: 'admin'
     design:
         menu:
             -
