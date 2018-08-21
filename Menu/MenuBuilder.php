@@ -56,9 +56,12 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function getNodeTree($key)
     {
-        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
-        if ($item->isHit()) {
-            return $item->get();
+        if ($this->request) {
+            $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
+
+            if ($item->isHit()) {
+                return $item->get();
+            }
         }
 
         /* @var $repository NestedTreeRepository */
@@ -72,8 +75,11 @@ class MenuBuilder implements MenuBuilderInterface
 
         /* Build nodes hierarchy */
         $nodes = $this->build($menu);
-        $item->set($nodes);
-        $this->filesystemAdapter->save($item);
+
+        if (isset($item)) {
+            $item->set($nodes);
+            $this->filesystemAdapter->save($item);
+        }
 
         return $nodes;
     }
