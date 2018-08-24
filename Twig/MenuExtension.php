@@ -36,14 +36,14 @@ class MenuExtension extends \Twig_Extension
         return $this->templates[$theme];
     }
 
-    public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Menu:bootstrap.html.twig', $brand = null)
+    public function render(\Twig_Environment $environment, $key, $theme = 'KRGCmsBundle:Menu:bootstrap.html.twig', array $context = [])
     {
         $template = $this->getTemplate($environment, $theme);
 
         return $template->renderBlock('menu', [
-            'id'    => uniqid('krg_menu_'),
-            'brand' => $brand,
-            'nodes' => $this->menuBuilder->getNodes($key)
+            'id'      => uniqid('krg_menu_'),
+            'nodes'   => $this->menuBuilder->getNodes($key),
+            'context' => $context, // Render extra vars
         ]);
     }
 
