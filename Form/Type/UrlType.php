@@ -85,9 +85,6 @@ class UrlType extends TextType
             $routeChoices[$name] = UrlDataTransformer::getTypeIdentifier('route', $route);
         }
 
-        dump($pageChoices, $filterChoices, $routeChoices);
-        die;
-
         return array_merge($pageChoices, $filterChoices, $routeChoices);
     }
 
