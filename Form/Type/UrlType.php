@@ -85,17 +85,20 @@ class UrlType extends TextType
             $routeChoices[$name] = UrlDataTransformer::getTypeIdentifier('route', $route);
         }
 
+        dump($pageChoices, $filterChoices, $routeChoices);
+        die;
+
         return array_merge($pageChoices, $filterChoices, $routeChoices);
     }
 
-    protected function getChoice(string $name, string $url, string $transDomain, string $locale = null)
+    protected function getChoice(string $name, string $url, $id, string $locale = null)
     {
         $params = ['%name%' => $name, '%url%' => $url];
         if ($locale) {
             $params['%locale%'] = $locale;
         }
 
-        return $this->translator->transChoice($transDomain, null, $params);
+        return $this->translator->transChoice($id, null, $params, 'admin');
     }
 
     public function configureOptions(OptionsResolver $resolver)
