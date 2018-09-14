@@ -28,5 +28,14 @@ easy_admin:
                         type_options:
                             entry_type: 'KRG\CmsBundle\Form\Type\UrlType'
                             label: false
+                    - { type: 'group', label: 'group.content' }
+                    -
+                      property: 'content'
+                      type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                      type_options:
+                        entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
+                        label: false
+                        entry_options:
+                          height: 300
                     - { type: 'group', label: 'group.status' }
                     - { property: 'enabled', label: 'menu.enabled' }
