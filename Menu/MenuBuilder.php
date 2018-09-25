@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Menu;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Gedmo\Exception\RuntimeException;
 use Gedmo\Translatable\Entity\Translation;
 use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\MenuInterface;
@@ -202,9 +203,13 @@ class MenuBuilder implements MenuBuilderInterface
             }
         }
 
-        // Search translated menu
-        $translatableRepository = $this->entityManager->getRepository(Translation::class);
-        $menuTranslations = $translatableRepository->findTranslations($menu);
+        $menuTranslations = null;
+        try {
+            // Search translated menu
+            $translatableRepository = $this->entityManager->getRepository(Translation::class);
+            $menuTranslations = $translatableRepository->findTranslations($menu);
+        } catch (RuntimeException $exception) {
+        }
 
         $node = [
             'url'                => $url,
