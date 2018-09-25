@@ -25,19 +25,16 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         if (isset($defaults['_seo_list'])) {
-            $compiledRoute = $this->resolve($defaults['_seo_list'], $name, $parameters, $requirements, $defaults);
-            if ($compiledRoute !== null) {
-                $_parameters = [];
-                foreach ($parameters as $key => $value) {
-                    if (in_array($key, $compiledRoute['pathVariables'])) {
-                        $_parameters[$key] = $value;
-                    }
+            $resolved = $this->resolve($defaults['_seo_list'], $name, $parameters, $requirements, $defaults);
+
+            if (isset($resolved['compiledRoute'])) {
+                foreach ($resolved['definedRouteVariables'] as $paramName) {
+                    unset($parameters[$paramName]);
                 }
 
-                $parameters = $_parameters;
-                $variables = $compiledRoute['variables'];
-                $tokens = $compiledRoute['tokens'];
-                $hostTokens = $compiledRoute['hostTokens'];
+                $variables = $resolved['compiledRoute']['variables'];
+                $tokens = $resolved['compiledRoute']['tokens'];
+                $hostTokens = $resolved['compiledRoute']['hostTokens'];
             }
         }
 
@@ -57,6 +54,8 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
 
         $serializer = new Serializer([new PropertyNormalizer()], [new JsonEncoder()]);
         $compiledRoute = null;
+        $definedRouteVariables = [];
+
         // Sort entries by number of matching parameters
         if (count($seos) > 0) {
             $defaultLocale = $this->getDefaultLocale($defaults);
@@ -87,13 +86,22 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
                 }
                 $seo = $seos[key($weights)];
 
-
                 $compiledRoute = $seo->getCompiledRoute();
+
+                foreach ($seo->getRouteParams() as $paramName => $param) {
+                    if (null !== $param) {
+                        $definedRouteVariables[] = $paramName;
+                    }
+                }
             }
         }
 
-        // Cache
-        $cacheItem->set($compiledRoute);
+        $resolved = [
+            'compiledRoute'         => $compiledRoute,
+            'definedRouteVariables' => $definedRouteVariables,
+        ];
+
+        $cacheItem->set($resolved);
         $filesystemAdapter->save($cacheItem);
 
         return $compiledRoute;
