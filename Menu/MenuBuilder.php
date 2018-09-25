@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Menu;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Gedmo\Translatable\Entity\Translation;
 use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
@@ -74,7 +75,7 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         /* Build nodes hierarchy */
-        $nodes = $this->build($menu);
+        $nodes = $this->build($menu, $this->request->getLocale());
 
         if (isset($item)) {
             $item->set($nodes);
@@ -174,12 +175,12 @@ class MenuBuilder implements MenuBuilderInterface
         return true;
     }
 
-    public function build(MenuInterface $menu)
+    public function build(MenuInterface $menu, string $locale)
     {
-        return $this->_build($menu->getChildren()->toArray());
+        return $this->_build($menu->getChildren()->toArray(), $locale);
     }
 
-    protected function _build(array $menus)
+    protected function _build(array $menus, string $locale)
     {
         if (count($menus) === 0) {
             return [];
@@ -189,7 +190,7 @@ class MenuBuilder implements MenuBuilderInterface
         $menu = array_shift($menus);
 
         if (!$menu->isEnabled()) {
-            return $this->_build($menus);
+            return $this->_build($menus, $locale);
         }
 
         $url = $menu->getUrl();
@@ -197,24 +198,28 @@ class MenuBuilder implements MenuBuilderInterface
             try {
                 $url = $this->router->generate($menu->getRouteName(), $menu->getRouteParams());
             } catch (\Exception $exception) {
-                return $this->_build($menus);
+                return $this->_build($menus, $locale);
             }
         }
+
+        // Search translated menu
+        $translatableRepository = $this->entityManager->getRepository(Translation::class);
+        $menuTranslations = $translatableRepository->findTranslations($menu);
 
         $node = [
             'url'                => $url,
             'route'              => $menu->getRoute(),
-            'name'               => $menu->getName(),
-            'title'              => $menu->getTitle(),
-            'content'            => $menu->getContent(),
-            'children'           => $this->_build($menu->getChildren()->toArray()),
+            'name'               => $menuTranslations[$locale]['name'] ?? $menu->getName(),
+            'title'              => $menuTranslations[$locale]['title'] ?? $menu->getTitle(),
+            'content'            => $menuTranslations[$locale]['content'] ?? $menu->getContent(),
+            'children'           => $this->_build($menu->getChildren()->toArray(), $locale),
             'roles'              => $menu->getRoles(),
             'lvl'                => $menu->getLvl(),
             'active'             => false,
             'breadcrumb_display' => $menu->isBreadcrumbDisplay(),
         ];
 
-        return array_merge([$node], $this->_build($menus));
+        return array_merge([$node], $this->_build($menus, $locale));
     }
 
     protected function addItem($item, &$nodes, $position = 0)

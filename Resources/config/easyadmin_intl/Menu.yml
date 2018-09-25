@@ -16,6 +16,7 @@ easy_admin:
                     - { type: 'group', label: 'group.menu' }
                     -
                         property: 'name'
+                        label: 'menu.name'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
