@@ -43,9 +43,8 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
 
     private function resolve(array $seos, $name, array $parameters, array $requirements, array $defaults)
     {
-        $filesystemAdapter = new FilesystemAdapter('seo', 0, $defaults['_cache_dir']);
-
         // Check if route can be resolved from cache
+        $filesystemAdapter = new FilesystemAdapter('seo', 0, $defaults['_cache_dir']);
         $cacheKey = sha1(sprintf('%s_%s', $name, json_encode($parameters)));
         $cacheItem = $filesystemAdapter->getItem($cacheKey);
         if ($cacheItem->isHit()) {
@@ -84,10 +83,9 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
                 if (count($parameters) === 0 && current($weights) !== 0) {
                     return null;
                 }
+
                 $seo = $seos[key($weights)];
-
                 $compiledRoute = $seo->getCompiledRoute();
-
                 foreach ($seo->getRouteParams() as $paramName => $param) {
                     if (null !== $param) {
                         $definedRouteVariables[] = $paramName;
@@ -104,7 +102,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
         $cacheItem->set($resolved);
         $filesystemAdapter->save($cacheItem);
 
-        return $compiledRoute;
+        return $resolved;
     }
 
     /**
