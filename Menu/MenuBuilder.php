@@ -38,14 +38,24 @@ class MenuBuilder implements MenuBuilderInterface
     /** @var FilesystemAdapter */
     protected $filesystemAdapter;
 
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager, RouterInterface $router, AnnotationReader $annotationReader, string $dataCacheDir)
-    {
+    /** @var string */
+    protected $defaultLocale;
+
+    public function __construct(
+        RequestStack $requestStack,
+        EntityManagerInterface $entityManager,
+        RouterInterface $router,
+        AnnotationReader $annotationReader,
+        string $dataCacheDir,
+        string $defaultLocale
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->annotationReader = $annotationReader;
         $this->annotations = [];
         $this->filesystemAdapter = new FilesystemAdapter('menu', 0, $dataCacheDir);
+        $this->defaultLocale = $defaultLocale;
     }
 
     public function getNodes($key)
@@ -58,12 +68,11 @@ class MenuBuilder implements MenuBuilderInterface
 
     public function getNodeTree($key)
     {
-        if ($this->request) {
-            $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $key));
+        $locale = $this->request ? $this->request->getLocale() : $this->defaultLocale;
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $locale, $key));
 
-            if ($item->isHit()) {
-                return $item->get();
-            }
+        if ($item->isHit()) {
+            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
@@ -76,7 +85,7 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         /* Build nodes hierarchy */
-        $nodes = $this->build($menu, $this->request->getLocale());
+        $nodes = $this->build($menu, $locale);
 
         if (isset($item)) {
             $item->set($nodes);
@@ -101,7 +110,7 @@ class MenuBuilder implements MenuBuilderInterface
 
         $nodes = $this->getNodeTree($key);
         $activeNodes = $this->activeNodes($nodes);
-        foreach ($this->getAnnotations() as $annotation) {
+        foreach ((array)$this->getAnnotations() as $annotation) {
             $exists = array_filter($activeNodes, function($node) use ($annotation) {
                 return $node['url'] === $annotation->getUrl();
             });
