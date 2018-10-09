@@ -1,15 +1,5 @@
-{% trans_default_domain 'admin' %}
-
-{% block krg_cms_url_row %}
-    {# if CMS alone #}
-    {{ form_widget(form) }}
-    {# if CMS + INLT #}
-    {# {{ form_label(form) }} #}
-    {# {{ form_widget(form) }} #}
-{% endblock %}
-
 {% block krg_cms_url_widget %}
-    {{ form_row(form.url) }}
+    {{ form_widget(form.url) }}
 
     <div class="krg-separator">
         <span class="krg-separator-text">
@@ -17,7 +7,7 @@
         </span>
     </div>
 
-    {{ form_row(form.related, {'attr': {'data-widget': 'select2'}}) }}
+    {{ form_widget(form.related, {'attr': {'data-widget': 'select2'}}) }}
 
     <script type="text/javascript">
         (function () {

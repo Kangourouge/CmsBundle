@@ -38,10 +38,12 @@ services:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
 
     KRG\CmsBundle\Routing\SeoLoader:
-        tags: [routing.loader]
+        tags:
+            - {name: 'routing.loader', priority: 100}
 
     KRG\CmsBundle\Routing\RoutingLoader:
-        tags: [routing.loader]
+        tags:
+            - 'routing.loader'
 
     KRG\CmsBundle\Form\FilterRegistry:
         public: true

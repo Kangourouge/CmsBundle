@@ -3,7 +3,6 @@ easy_admin:
         Filter:
             class: 'KRG\CmsBundle\Entity\FilterInterface'
             list:
-                title: '<i class="fa fa-filter"></i> Filters'
                 fields:
                     - { property: 'name', label: 'filter.name' }
                     - { property: 'seo', label: 'Seo', type: 'boolean' }

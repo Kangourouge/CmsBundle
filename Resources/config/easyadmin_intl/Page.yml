@@ -3,7 +3,6 @@ easy_admin:
         Page:
             class: 'KRG\CmsBundle\Entity\PageInterface'
             list:
-                title: '<i class="fa fa-file"></i> Page'
                 fields:
                     - { property: 'name', label: 'page.name' }
                     - { property: 'seo.metaTitle', label: 'seo.title' }

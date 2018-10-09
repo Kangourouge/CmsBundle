@@ -62,6 +62,23 @@ interface MenuInterface extends NestedTreeInterface, SeoRouteInterface
      */
     public function getTitle();
 
+
+    /**
+     * Get icon
+     *
+     * @return string
+     */
+    public function getIcon();
+
+    /**
+     * Set icon
+     *
+     * @param string $icon
+     *
+     * @return MenuInterface
+     */
+    public function setIcon($icon);
+
     /**
      * Set content
      *

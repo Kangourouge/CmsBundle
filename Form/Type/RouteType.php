@@ -3,6 +3,7 @@
 namespace KRG\CmsBundle\Form\Type;
 
 use KRG\CmsBundle\Util\RouteHelper;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
@@ -25,9 +26,14 @@ class RouteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('url', TextType::class, [
+                'attr' => ['placeholder' => 'route.paste_here'],
+                'label' => false,
+                'mapped' => false
+            ])
             ->add('name', ChoiceType::class, [
                 'label'       => 'seo.route',
-                'placeholder' => '',
+                'placeholder' => 'Select a route',
                 'choices'     => RouteHelper::getRouteNames($this->routes),
             ])
             ->add('params', CollectionType::class, [

@@ -4,7 +4,6 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\MenuInterface'
             list:
                 max_results: 100
-                title: '<i class="fa fa-bars"></i> Menu'
                 fields:
                     - { property: 'name', label: 'menu.name' }
                     - { property: 'url', label: 'menu.url' }
@@ -16,12 +15,12 @@ easy_admin:
                     - { type: 'group', label: 'group.menu' }
                     -
                         property: 'name'
-                        label: 'menu.name'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
                     - { property: 'key', help: 'unique_key', label: 'menu.key'  }
                     - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
+                    - 'icon'
                     - { type: 'group', label: 'group.configuration' }
                     -
                         property: 'route'
@@ -29,14 +28,5 @@ easy_admin:
                         type_options:
                             entry_type: 'KRG\CmsBundle\Form\Type\UrlType'
                             label: false
-                    - { type: 'group', label: 'group.content' }
-                    -
-                      property: 'content'
-                      type: 'KRG\IntlBundle\Form\Type\TranslationType'
-                      type_options:
-                        entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
-                        label: false
-                        entry_options:
-                          height: 300
                     - { type: 'group', label: 'group.status' }
                     - { property: 'enabled', label: 'menu.enabled' }

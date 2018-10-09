@@ -1,28 +1,16 @@
-{% trans_default_domain 'admin' %}
-
-{% block krg_cms_route_row %}
-    <div class="form-group field-text">
-        <div class="col-sm-2 control-label required">
-            <label for="{{ form.vars.id }}_url">{{ 'Url'|trans }}</label><br>
-        </div>
-
-        <div class="col-sm-10">
-            <input type="text" id="{{ form.vars.id }}_url" class="form-control" placeholder="{{ 'route.paste_here'|trans }}" value="{{ app.request.get('url') }}" />
-        </div>
-    </div>
-
+{% block krg_cms_route_widget %}
+    {{ form_widget(form.url) }}
     <hr>
-
-    {{ form_row(form.name) }}
+    {{ form_widget(form.name) }}
     {{ form_widget(form.params, {'attr': {'style': 'border-left: 3px solid #ccc; margin-left: 16.666667%'}}) }}
 
     <script type="text/javascript">
         window.addEventListener('load', function() {
             var selectInput = document.getElementById('{{ form.name.vars.id }}');
             var paramsInput = document.getElementById('{{ form.params.vars.id }}');
-            var urlInput = document.getElementById('{{ form.vars.id }}_url');
+            var urlInput = document.getElementById('{{ form.url.vars.id }}');
 
-            {% if form.parent.metaTitle %}
+            {% if form.parent.metaTitle is defined %}
                 var propsWrapper = document.forms['{{ form.parent.vars.id }}'].querySelectorAll('.field-group')[2];
                 var divProps = null;
             {% endif %}

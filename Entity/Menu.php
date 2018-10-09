@@ -55,9 +55,15 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     protected $title;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $icon;
+
+    /**
      * @Gedmo\Translatable()
      * @Gedmo\Versioned
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="html", nullable=true)
      */
     protected $content;
 
@@ -188,6 +194,24 @@ class Menu implements MenuInterface, SortableInterface, Translatable
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
     }
 
     /**

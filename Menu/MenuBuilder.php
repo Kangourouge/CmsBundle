@@ -223,6 +223,7 @@ class MenuBuilder implements MenuBuilderInterface
         $node = [
             'url'                => $url,
             'route'              => $menu->getRoute(),
+            'icon'               => $menu->getIcon(),
             'name'               => $menuTranslations[$locale]['name'] ?? $menu->getName(),
             'title'              => $menuTranslations[$locale]['title'] ?? $menu->getTitle(),
             'content'            => $menuTranslations[$locale]['content'] ?? $menu->getContent(),

@@ -33,35 +33,11 @@ class SeoType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('url', null, [
-            'label'       => 'seo.url',
-            'constraints' => $options['required_url'] ? new NotNull() : null,
-            'required'    => $options['required_url'],
-        ]);
-
-        if ($options['metas']) {
-            $builder
-                ->add('metaTitle', TextType::class, [
-                    'label' => 'seo.metaTitle',
-                ])
-                ->add('metaDescription', TextareaType::class, [
-                    'label' => 'seo.metaDescription',
-                ]);
-        }
-
-        if ($options['pre_content']) {
-            $builder->add('preContent', ContentType::class, [
-                'label'  => 'seo.preContent',
-                'height' => 200,
-            ]);
-        }
-
-        if ($options['post_content']) {
-            $builder->add('postContent', ContentType::class, [
-                'label'  => 'seo.postContent',
-                'height' => 200,
-            ]);
-        }
+        $builder
+            ->add('metaTitle')
+            ->add('metaDescription')
+            ->add('preContent')
+            ->add('postContent');
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
         $builder->addEventListener(FormEvents::POST_SET_DATA, [$this, 'onPostSetData']);
@@ -106,12 +82,7 @@ class SeoType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class'   => SeoInterface::class,
-            'required_url' => true,
-            'pre_content'  => false,
-            'post_content' => false,
-            'title'        => false,
-            'metas'        => true,
+            'data_class'   => SeoInterface::class
         ]);
     }
 

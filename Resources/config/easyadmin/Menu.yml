@@ -4,29 +4,22 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\MenuInterface'
             list:
                 max_results: 100
-                title: '<i class="fa fa-bars"></i> Menu'
                 fields:
-                    - { property: 'name', label: 'menu.name' }
-                    - { property: 'url', label: 'menu.url' }
-                    - { property: 'parent', label: 'menu.parent' }
-                    - { property: 'enabled', label: 'menu.enabled' }
+                    - 'name'
+                    - 'url'
+                    - 'parent'
+                    - 'enabled'
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { type: 'group', label: 'group.menu' }
-                    - { property: 'name', label: 'menu.name' }
+                    - { type: 'group', label: 'menu' }
+                    - 'name'
                     - { property: 'key', help: 'unique_key', label: 'menu.key'  }
-                    - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
-                    - { type: 'group', label: 'group.configuration' }
-                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: false }
-                    - { type: 'group', label: 'group.content' }
-                    -
-                        property: 'content'
-                        label: false
-                        type: 'KRG\CmsBundle\Form\Type\ContentType'
-                        type_options:
-                            fragment: true
-                            height: 150
-                    - { type: 'group', label: 'group.status' }
-                    - { property: 'breadcrumbDisplay', label: 'menu.breadcrumbDisplay' }
-                    - { property: 'enabled', label: 'menu.enabled' }
+                    - 'parent'
+                    - 'icon'
+                    - { type: 'group', label: 'configuration' }
+                    - 'route'
+                    - { type: 'group', label: 'content' }
+                    - 'content'
+                    - 'breadcrumbDisplay'
+                    - 'enabled'

@@ -4,8 +4,6 @@ easy_admin:
             roles: ['ROLE_SEO']
             class: 'KRG\CmsBundle\Entity\SeoInterface'
             list:
-                title: '<i class="fa fa-sitemap"></i> Seo'
-                dql_filter:
                 fields:
                     - { property: 'url', label: 'seo.url' }
                     - { property: 'routeName', label: 'seo.route' }

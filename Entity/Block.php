@@ -21,7 +21,7 @@ class Block extends AbstractBlock implements BlockInterface, BlockContentInterfa
     /**
      * @Gedmo\Translatable()
      * @Gedmo\Versioned
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="html", nullable=true)
      */
     protected $content;
 

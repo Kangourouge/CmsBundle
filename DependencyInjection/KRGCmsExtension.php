@@ -82,7 +82,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
             'form_themes' => [
                 'KRGCmsBundle:Form:route.html.twig',
                 'KRGCmsBundle:Form:filter.html.twig',
-                'KRGCmsBundle:Form:content.html.twig',
+                'KRGCmsBundle:Form:html.html.twig',
                 'KRGCmsBundle:Form:seo.html.twig',
                 'KRGCmsBundle:Form:url.html.twig',
             ]

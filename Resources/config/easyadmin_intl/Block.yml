@@ -3,7 +3,6 @@ easy_admin:
         Block:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
-                title: '<i class="fa fa-cubes"></i> Block'
                 fields:
                     - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50', label: 'block.thumbnail' }
                     - { property: 'key', label: 'block.key' }
