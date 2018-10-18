@@ -50,4 +50,15 @@ class SeoRepository extends EntityRepository
             ->createQuerybuilder('seo')
             ->where('seo.enabled = 1');
     }
+
+    public function findAllActivesUrls()
+    {
+        $results = $this
+            ->findEnabledQb()
+            ->select('seo.url')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_column($results, 'url');
+    }
 }
