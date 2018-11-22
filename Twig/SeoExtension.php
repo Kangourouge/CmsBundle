@@ -92,7 +92,7 @@ class SeoExtension extends \Twig_Extension
             return null;
         }
 
-        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), $seo->getUid()));
+        $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $this->request->getLocale(), md5($this->request->getPathInfo())));
         if ($item->isHit()) {
             return $item->get();
         }

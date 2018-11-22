@@ -259,6 +259,7 @@ class MenuBuilder implements MenuBuilderInterface
             return $this->annotations;
         }
 
+        $seoUrls = $this->entityManager->getRepository(SeoInterface::class)->findAllActivesUrls();
         $annotations = [];
         try {
             $reflectionMethod = new \ReflectionMethod($this->request->get('_controller'));
@@ -278,7 +279,7 @@ class MenuBuilder implements MenuBuilderInterface
                     if ($annotation->getUrl()) {
                         $populatedUrl = strtolower($this->populate($propertyAccessor, $attributes, $annotation->getUrl()));
                         $path = filter_var($populatedUrl, FILTER_VALIDATE_URL) ? $populatedUrl : $this->request->getSchemeAndHttpHost().$populatedUrl;
-                        if (Helper::urlExists($path)) {
+                        if (in_array($populatedUrl, $seoUrls) || Helper::urlExists($path)) {
                             $url = $populatedUrl;
                         }
                     }
