@@ -34,6 +34,10 @@ class SeoType extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder
+            ->add('url', null, [
+                'constraints' => $options['required_url'] ? new NotNull() : null,
+                'required'    => $options['required_url'],
+            ])
             ->add('metaTitle')
             ->add('metaDescription')
             ->add('preContent')
@@ -82,7 +86,8 @@ class SeoType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class'   => SeoInterface::class
+            'data_class'   => SeoInterface::class,
+            'required_url' => true,
         ]);
     }
 
