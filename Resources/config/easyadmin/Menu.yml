@@ -12,14 +12,18 @@ easy_admin:
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { type: 'group', label: 'menu' }
+                    - { type: 'group', label: 'Menu' }
                     - 'name'
-                    - { property: 'key', help: 'unique_key', label: 'menu.key'  }
+                    - { property: 'key', help: 'unique_key' }
                     - 'parent'
                     - 'icon'
-                    - { type: 'group', label: 'configuration' }
-                    - 'route'
-                    - { type: 'group', label: 'content' }
-                    - 'content'
                     - 'breadcrumbDisplay'
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType' }
+                    - { type: 'group', label: 'Content' }
+                    -
+                        property: 'content'
+                        type_options:
+                            fragment: true
+                    - { type: 'group', label: 'Status' }
                     - 'enabled'

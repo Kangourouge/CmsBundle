@@ -1,9 +1,8 @@
 {% block krg_cms_route_widget %}
-    {{ form_widget(form.url) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.name) }}
+    {{ form_widget(form.params, {'attr': {'style': 'border-left: 3px solid #ccc; margin-left: 16.666667%; margin-top: 10px'}}) }}
     <hr>
-    {{ form_widget(form.name) }}
-    {{ form_widget(form.params, {'attr': {'style': 'border-left: 3px solid #ccc; margin-left: 16.666667%'}}) }}
-
     <script type="text/javascript">
         window.addEventListener('load', function() {
             var selectInput = document.getElementById('{{ form.name.vars.id }}');
@@ -62,7 +61,7 @@
                             bindRouteText();
                         });
                     } else if (response.status === 500) {
-                        alert('{{ 'route.url_error'|trans }}.');
+                        alert('{{ 'routing.url_error'|trans({}, 'admin') }}.');
                         bindRouteText();
                     }
                 });
@@ -109,7 +108,7 @@
                     });
 
                     divProps.id = 'props-wrapper';
-                    divProps.innerHTML = '<strong>{{ 'route.available_vars'|trans }}</strong><br>' + properties.join(', ') + '<br>';
+                    divProps.innerHTML = '<strong>{{ 'routing.available_vars'|trans({}, 'admin') }}</strong><br>' + properties.join(', ') + '<br>';
                     divProps.classList.add('box');
                     propsWrapper.prepend(divProps);
                     divProps.querySelectorAll('span').forEach(function(span) {
@@ -127,8 +126,8 @@
             function bindRouteText() {
                 urlInput.value = '';
                 urlInput.setAttribute('placeholder', selectInput.value ?
-                    '{{ 'route.match'|trans }}: ' + selectInput.value + ' ({{ 'route.click_change'|trans }})'
-                    : '{{ 'route.paste_here'|trans }}');
+                    '{{ 'routing.match'|trans({}, 'admin') }}: ' + selectInput.value + ' ({{ 'routing.click_change'|trans({}, 'admin')  }})'
+                    : '{{ 'routing.paste_here'|trans({}, 'admin')  }}');
             }
 
             function addParam(name, value) {

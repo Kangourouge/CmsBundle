@@ -5,28 +5,27 @@ easy_admin:
             list:
                 max_results: 100
                 fields:
-                    - { property: 'name', label: 'menu.name' }
-                    - { property: 'url', label: 'menu.url' }
-                    - { property: 'parent', label: 'menu.parent' }
-                    - { property: 'enabled', label: 'menu.enabled' }
+                    - 'name'
+                    - 'url'
+                    - 'parent'
+                    - 'enabled'
                 sort: ['position', 'ASC']
             form:
                 fields:
-                    - { type: 'group', label: 'group.menu' }
-                    -
-                        property: 'name'
+                    - { type: 'group', label: 'Menu' }
+                    -   property: 'name'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
-                    - { property: 'key', help: 'unique_key', label: 'menu.key'  }
-                    - { property: 'parent', label: 'menu.parent', type_options: {'placeholder': ''} }
+                    - { property: 'key', help: 'unique_key' }
+                    - 'parent'
                     - 'icon'
-                    - { type: 'group', label: 'group.configuration' }
-                    -
-                        property: 'route'
+                    - 'breadcrumbDisplay'
+                    - { type: 'group', label: 'Configuration' }
+                    -   property: 'route'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'KRG\CmsBundle\Form\Type\UrlType'
                             label: false
-                    - { type: 'group', label: 'group.status' }
-                    - { property: 'enabled', label: 'menu.enabled' }
+                    - { type: 'group', label: 'Status' }
+                    - 'enabled'

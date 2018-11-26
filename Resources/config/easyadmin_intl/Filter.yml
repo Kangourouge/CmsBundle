@@ -4,22 +4,22 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\FilterInterface'
             list:
                 fields:
-                    - { property: 'name', label: 'filter.name' }
-                    - { property: 'seo', label: 'Seo', type: 'boolean' }
-                    - { property: 'working', type: 'boolean', label: 'filter.working' }
-                    - { property: 'enabled', label: 'filter.enabled' }
+                    - 'name'
+                    - { property: 'seo', type: 'boolean' }
+                    - { property: 'working', type: 'boolean' }
+                    - 'enabled'
             form:
                 fields:
-                    - { type: 'group', label: 'group.filter' }
-                    - { property: 'name', label: 'filter.name' }
-                    - { type: 'group', label: 'group.configuration' }
+                    - { type: 'group', label: 'Filter' }
+                    - 'name'
+                    - { type: 'group', label: 'Configuration' }
                     -
                         property: 'seo'
                         type: 'KRG\CmsBundle\Form\Type\SeoType'
                         label: false
                         type_options:
                             required_url: false
-                    - { type: 'group', label: 'group.form' }
+                    - { type: 'group', label: 'Form' }
                     - { property: 'form', type: 'KRG\CmsBundle\Form\Type\FilterType' }
-                    - { type: 'group', label: 'group.status' }
-                    - { property: 'enabled', label: 'filter.enabled' }
+                    - { type: 'group', label: 'Status' }
+                    - 'enabled'

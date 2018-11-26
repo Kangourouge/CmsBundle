@@ -4,20 +4,17 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
                 fields:
-                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50', label: 'block.thumbnail' }
-                    - { property: 'key', label: 'block.key' }
-                    - { property: 'name', label: 'block.name' }
-                    - { property: 'enabled', label: 'block.enabled' }
+                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50' }
+                    - 'name'
+                    - 'key'
+                    - 'enabled'
             form:
                 fields:
-                    - { type: 'group', label: 'group.block' }
-                    -
-                        property: 'thumbnail'
-                        type: 'KRG\CmsBundle\Form\Type\Base64FileType'
-                        label: 'block.thumbnail'
-                    - { property: 'name', label: 'block.name' }
-                    - { property: 'key', label: 'block.key', type_options: { required: false }, help: 'unique_key' }
-                    - { type: 'group', label: 'group.content' }
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: 'thumbnail', type: 'KRG\CmsBundle\Form\Type\Base64FileType' }
+                    - 'name'
+                    - { property: 'key', type_options: { required: false }, help: 'unique_key' }
+                    - { type: 'group', label: 'Content' }
                     -
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
@@ -26,5 +23,5 @@ easy_admin:
                             label: false
                             entry_options:
                                 height: 300
-                    - { type: 'group', label: 'group.status' }
-                    - { property: 'enabled', label: 'block.enabled' }
+                    - { type: 'group', label: 'Status' }
+                    - 'enabled'

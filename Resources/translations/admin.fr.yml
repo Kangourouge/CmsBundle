@@ -1,111 +1,61 @@
-admin_menu:
-  block: Bloc
-  filter: Filtre
-  page: Page
-  menu: Menu
-  seo: Seo
-  media: Média
+Media: 'Média'
+Name: 'Nom'
+name: 'Nom'
+Enabled: 'Actif'
+Icon: 'Icône'
+Content: 'Contenu'
+Key: 'Clé'
+Status: 'Statut'
+Block: 'Bloc'
+Filter: 'Filtre'
+Thumbnail: 'Miniature'
+Working: 'Fonctionne'
+Url redirect: 'Url de redirection'
+Route: 'Itinéraire'
 
-action:
-  new: Créer
-  edit: Éditer
-  delete: Supprimer
-  search: Rechercher
-  save: Sauvegarder les modifications
-  list: Revenir à la liste
-  show: Voir
+metaTitle: 'Titre (meta)'
+metaDescription: 'Description (meta)'
 
-group:
-  content: Contenu
-  configuration: Configuration
-  status: État
-  metas: Metas
-  form: Formulaire
-  filter: Filtre
-  page: Page
-  menu: Menu
-  block: Bloc
+Breadcrumb display: 'Afficher dans le fil d''ariane'
+unique_key: 'Identifiant unique, laisser le champ vide pour le générer automatiquement'
+Select a route: 'Sélectionnez un itinéraire'
+Pre content: 'Pre contenu'
+Post content: 'Post contenu'
+Route name: 'Itinéraire'
 
-page:
-  name: Nom
-  enabled: Active
-
-block:
-  thumbnail: Miniature
-  key: Clé
-  name: Nom
-  enabled: Actif
-  content: Contenu
-
-filter:
-  key: Clé
-  name: Nom
-  working: Fonctionnel
-  enabled: Actif
-  configuration: Configuration
-  form: Formulaire
-  status: État
-  helper: Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.
-
-menu:
-  name: Nom
-  key: Clé
-  url: Url
-  parent: Parent
-  enabled: Actif
-  breadcrumbDisplay: Afficher dans le fil d'ariane
-
-seo:
-  url: Url
-  url_redirect: 'Url de redirection'
-  configuration: Configuration
-  route: Itinéraire
-  metas: Metas
-  title: 'Titre (h1)'
-  metaTitle: 'Titre (meta)'
-  metaDescription: 'Description (meta)'
-  title: Titre
-  enabled: Actif
-  params: Paramètres
-  content: Contenu
-  preContent: Contenu (haut)
-  postContent: Contenu (bas)
-  status: État
-  external_edit: La configuration de l'url et des metas dans un contexte multilingue s'effectue depuis le formulaire Seo.
-
-route:
-  url_error: 'Cette url n''est pas liée à un itinéraire'
+routing:
+  url_error: 'Aucun itinéraire lié à cette url'
   available_vars: 'Propriétés utilisables — {{ variable }}'
   click_change: 'Cliquer ici pour mettre à jour'
-  match: Itinéraire
+  match: 'Itinéraire'
   paste_here: 'Générez une configuration en collant une url ici...'
 
+Seo:
+  meta title: 'Meta title'
+  url: 'Url'
+
+Meta title: 'Titre (meta)'
+Meta description: 'Description (meta)'
+
+seo_external_edit: 'La configuration de l''url et des metas dans un contexte multilingue s''effectue depuis le formulaire Seo.'
+filter_helper: 'Pour créer un filtre vous devez choisir un type de formulaire puis le remplir sans le soumettre et sauvegarder.'
+
+Edit HTML: 'Éditer HTML'
+Update: 'Mettre à jour'
+Cancel: 'Annuler'
+Render: 'Rendu'
+Desktop: 'Défaut'
+Tablet: 'Tablette'
+
 url:
-  bind: Lier
+  bind: 'Lier'
   related_choice_page: '%name% (page) — %url%'
   related_choice_filter: '%name% (filtre) — %url%'
   related_choice_route: '%name% (itinéraire) — %url%'
 
+or: 'ou'
+
 label.form.empty_value: 'null'
 
-'Edit HTML': 'Editer HTML'
-'Previous versions': 'Versions précédentes'
-'Toggle navigation': 'Toggle navigation'
-
-Update: Mettre à jour
-Cancel: Annuler
-Render: Actualiser le rendu
-Source: Afficher la source
-or: Ou
-
-'Header / footer': 'Header / footer'
-
-'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Bloc'
-'<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filtres'
-'<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
-'<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
-'<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
-
-unique_key: Identifiant unique, laisser le champ vide pour le générer automatiquement
-
-Home: Accueil
+Previous versions: 'Versions précédentes'
+Toggle navigation: 'Toggle navigation'

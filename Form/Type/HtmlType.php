@@ -60,7 +60,7 @@ class HtmlType extends AbstractType
         $resolver
             ->setDefaults([
                 'responsive' => [
-                    ['label' => 'Destkop', 'width' => '100%'],
+                    ['label' => 'Desktop', 'width' => '100%'],
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],

@@ -5,20 +5,21 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\SeoInterface'
             list:
                 fields:
-                    - { property: 'url', label: 'seo.url' }
-                    - { property: 'routeName', label: 'seo.route' }
-                    - { property: 'metaTitle', label: 'seo.metaTitle' }
-                    - { property: 'enabled', label: 'seo.enabled' }
+                    - 'url'
+                    - 'routeName'
+                    - 'metaTitle'
+                    - 'enabled'
             form:
                 fields:
-                    - { type: 'group', label: 'group.configuration' }
-                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\RouteType' }
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: 'route', label: false }
                     -
                         property: 'url'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
+                        label: 'Url redirect'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextType'
-                    - { type: 'group', label: 'group.metas' }
+                    - { type: 'group', label: 'Metas' }
                     -
                         property: 'metaTitle'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
@@ -29,18 +30,16 @@ easy_admin:
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextareaType'
-                    - { type: 'group', label: 'group.content' }
+                    - { type: 'group', label: 'Content' }
                     -
                         property: 'preContent'
-                        label: 'seo.preContent'
                         type: 'KRG\CmsBundle\Form\Type\ContentType'
                         type_options:
                             height: 200
                     -
                         property: 'postContent'
-                        label: 'seo.postContent'
                         type: 'KRG\CmsBundle\Form\Type\ContentType'
                         type_options:
                             height: 200
-                    - { type: 'group', label: 'group.status' }
-                    - { property: 'enabled', label: 'seo.enabled' }
+                    - { type: 'group', label: 'Status' }
+                    - 'enabled'

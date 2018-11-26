@@ -11,13 +11,14 @@ easy_admin:
                     - 'enabled'
             form:
                 fields:
-                    - { type: 'group', label: 'configuration' }
-                    - 'route'
-                    - 'url'
-                    - { type: 'group', label: 'metas' }
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: 'route', label: false }
+                    - { property: 'url', label: 'Url redirect' }
+                    - { type: 'group', label: 'Metas' }
                     - { property: 'metaTitle', attr: {data-route-selector: 'true'} }
                     - 'metaDescription'
-                    - { type: 'group', label: 'content' }
+                    - { type: 'group', label: 'Content' }
                     - 'preContent'
                     - 'postContent'
+                    - { type: 'group', label: 'Status' }
                     - 'enabled'

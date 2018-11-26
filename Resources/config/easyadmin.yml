@@ -1,18 +1,17 @@
 imports:
-  - { resource: easyadmin/ }
+    - { resource: easyadmin/ }
 
 easy_admin:
-  translation_domain: 'admin'
-  design:
-    menu:
-      -
-        label: 'CMS'
-        priority: 100
-        roles: ['ROLE_CMS']
-        children:
-          - { entity: 'Menu', icon: 'reorder' }
-          - { entity: 'Page', icon: 'file' }
-          - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
-          - { entity: 'Block', icon: 'cubes' }
-          - { entity: 'Filter', icon: 'filter' }
-          - { route: 'krg_cms_admin_media', icon: 'folder-open', label: 'media' }
+    translation_domain: 'admin'
+    design:
+        menu:
+            -   label: 'CMS'
+                priority: 100
+                roles: ['ROLE_CMS']
+                children:
+                    - { entity: 'Menu', icon: 'reorder' }
+                    - { entity: 'Page', icon: 'file' }
+                    - { entity: 'Seo', icon: 'sitemap', roles: ['ROLE_SEO'] }
+                    - { entity: 'Block', icon: 'cubes' }
+                    - { entity: 'Filter', icon: 'filter' }
+                    - { route: 'krg_cms_admin_media', icon: 'folder-open', label: 'Media' }

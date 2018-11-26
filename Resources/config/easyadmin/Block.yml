@@ -4,17 +4,17 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
                 fields:
-                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50', label: 'block.thumbnail' }
+                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50' }
                     - 'name'
                     - 'key'
                     - 'enabled'
             form:
                 fields:
-                    -
-                        property: 'thumbnail'
-                        type: 'KRG\CmsBundle\Form\Type\Base64FileType'
+                    - { type: 'group', label: 'Configuration' }
+                    - { property: 'thumbnail', type: 'KRG\CmsBundle\Form\Type\Base64FileType' }
                     - 'name'
                     - { property: 'key', type_options: { required: false }, help: 'unique_key' }
+                    - { type: 'group', label: 'Content' }
                     - 'content'
+                    - { type: 'group', label: 'Status' }
                     - 'enabled'
-

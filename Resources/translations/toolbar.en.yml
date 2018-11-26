@@ -1,22 +1,22 @@
 seo:
-  create: Create SEO
-  edit: Edit SEO
+  create: 'Create SEO'
+  edit: 'Edit SEO'
   meta:
-    title: Title (meta)
-    description: Description (meta)
-  preContent: Content (top)
-  postContent: Content (bottom)
-  title: Title (h1)
+    title: 'Title (meta)'
+    description: 'Description (meta)'
+  preContent: 'Content (top)'
+  postContent: 'Content (bottom)'
+  title: 'Title (h1)'
 
 filter:
-  edit: Editer filter
-  name: Name
-  key: Key
-  type: Form
-  data: Data
-  filter: Filter
+  edit: 'Edit filter'
+  name: 'Name'
+  key: 'Key'
+  type: 'Form'
+  data: 'Data'
+  filter: 'Filter'
 
 page:
-  page: Page
-  edit: Edit page
-  name: Name
+  page: 'Page'
+  edit: 'Edit page'
+  name: 'Name'

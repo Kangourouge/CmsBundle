@@ -37,15 +37,11 @@ class ContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $builder->addModelTransformer(new ContentTransformer($this->templating, $this->fileUploader, $this->urlResolver));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        parent::buildView($view, $form, $options);
-
         $view->vars['responsive'] = $options['responsive'];
         $view->vars['height'] = $options['height'];
         $view->vars['extra_hide_elements'] = $this->pageConfig['extra_hide_elements'] ?? [];
@@ -55,12 +51,10 @@ class ContentType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
         $resolver
             ->setDefaults([
                 'responsive' => [
-                    ['label' => 'Destkop', 'width' => '100%'],
+                    ['label' => 'Desktop', 'width' => '100%'],
                     ['label' => 'Tablet', 'width' => '1024px', 'height' => '1366px'],
                     ['label' => 'Mobile', 'width' => '375px', 'height' => '667px'],
                 ],

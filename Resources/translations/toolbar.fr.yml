@@ -1,22 +1,22 @@
 seo:
-  create: Créer SEO
-  edit: Éditer SEO
+  create: 'Créer SEO'
+  edit: 'Éditer SEO'
   meta:
-    title: Titre (meta)
-    description: Description (meta)
-  preContent: Contenu (haut)
-  postContent: Contenu (bas)
-  title: Titre (h1)
+    title: 'Titre (meta)'
+    description: 'Description (meta)'
+  preContent: 'Contenu (haut)'
+  postContent: 'Contenu (bas)'
+  title: 'Titre (h1)'
 
 filter:
-  edit: Éditer le filtre
-  name: Nom
-  key: Clé
-  type: Formulaire
-  data: Données
-  filter: Filtre
+  edit: 'Éditer le filtre'
+  name: 'Nom'
+  key: 'Clé'
+  type: 'Formulaire'
+  data: 'Données'
+  filter: 'Filtre'
 
 page:
-  page: Page
-  edit: Éditer la page
-  name: Nom
+  page: 'Page'
+  edit: 'Éditer la page'
+  name: 'Nom'

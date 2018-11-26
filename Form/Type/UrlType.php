@@ -8,6 +8,7 @@ use KRG\CmsBundle\Entity\PageInterface;
 use KRG\CmsBundle\Routing\UrlResolver;
 use KRG\CmsBundle\Form\DataTransformer\UrlDataTransformer;
 use KRG\CmsBundle\Util\RouteHelper;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class UrlType extends TextType
+class UrlType extends AbstractType
 {
     /** @var UrlResolver */
     protected $urlResolver;
@@ -41,11 +42,8 @@ class UrlType extends TextType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('url', TextType::class, [
-                'label' => 'Url',
-            ])
+            ->add('url', TextType::class)
             ->add('related', ChoiceType::class, [
-                'label'       => 'url.bind',
                 'placeholder' => '',
                 'choices'     => $this->getChoices(),
             ]);
@@ -105,6 +103,11 @@ class UrlType extends TextType
         $resolver->setDefaults([
             'compound' => true
         ]);
+    }
+
+    public function getParent()
+    {
+        return TextType::class;
     }
 
     public function getBlockPrefix()

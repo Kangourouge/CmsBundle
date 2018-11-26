@@ -1,83 +1,9 @@
-admin_menu:
-  block: Block
-  filter: Filter
-  page: Page
-  menu: Menu
-  seo: Seo
-  media: Media
 
-group:
-  content: Content
-  configuration: Configuration
-  status: Status
-  metas: Metas
-  form: Form
-  filter: Filter
-  page: Page
-  menu: Menu
-  block: Block
-
-action:
-  new: Create
-  edit: Edit
-  delete: Delete
-  search: Search
-  save: Save
-  list: Back to list
-  show: View
-
-page:
-  name: Name
-  enabled: Enabled
-
-block:
-  thumbnail: Thumbnail
-  key: Key
-  name: Name
-  enabled: Enabled
-  content: Content
-
-filter:
-  key: Key
-  name: Name
-  working: Working
-  enabled: Enabled
-  configuration: Configuration
-  form: Form
-  status: Status
-  helper: To create a filter you must choose a form type, fill it without submitting and save.
-
-menu:
-  name: Name
-  key: Key
-  url: Url
-  parent: Parent
-  enabled: Enabled
-  breadcrumbDisplay: Display on breadcrumb
-
-seo:
-  url: Url
-  url_redirect: 'Redirect url'
-  configuration: Configuration
-  route: Route
-  metas: Metas
-  title: 'Title (h1)'
-  metaTitle: 'Title (meta)'
-  metaDescription: 'Description (meta)'
-  title: Title
-  enabled: Enabled
-  params: Parameters
-  content: Content
-  preContent: Content (top)
-  postContent: Content (bottom)
-  status: Status
-  external_edit: Url and metas configuration on multilingual context must be done through Seo form.
-
-route:
+routing:
   url_error: 'This url doesn''t have any related route. Please paste another one'
   available_vars: 'Available properties — {{ variable }}'
   click_change: 'Click here to change'
-  match: Route
+  match: 'Route'
   paste_here: 'Paste your URL here'
 
 url:
@@ -88,24 +14,10 @@ url:
 
 label.form.empty_value: 'null'
 
-'Edit HTML': 'Edit HTML'
-'Previous versions': 'Previous versions'
-'Toggle navigation': 'Toggle navigation'
+Seo:
+  meta title: 'Meta title'
+  url: 'Url'
 
-Update: Update
-Cancel: Cancel
-Render: Render
-Source: Source
-or: Or
-
-'Header / footer': 'Header / footer'
-
-'<i class="fa fa-cubes"></i> Block': '<i class="fa fa-cubes"></i> Block'
-'<i class="fa fa-filter"></i> Filters': '<i class="fa fa-filter"></i> Filters'
-'<i class="fa fa-bars"></i> Menu': '<i class="fa fa-bars"></i> Menu'
-'<i class="fa fa-file"></i> Page': '<i class="fa fa-file"></i> Page'
-'<i class="fa fa-sitemap"></i> Seo': '<i class="fa fa-sitemap"></i> Seo'
-
-unique_key: Unique identifier, leave this field empty to auto generate it
-
-Home: Home
+seo_external_edit: 'Url and metas configuration on multilingual context must be done through Seo form.'
+filter_helper: 'To create a filter you must choose a form type, fill it without submitting and save.'
+unique_key: 'Unique identifier, leave this field empty to auto generate it'

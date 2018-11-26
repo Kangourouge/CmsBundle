@@ -58,13 +58,13 @@ class Seo implements SeoInterface, Translatable
 
     /**
      * @Gedmo\Translatable()
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="html", nullable=true)
      */
     protected $preContent;
 
     /**
      * @Gedmo\Translatable()
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="html", nullable=true)
      */
     protected $postContent;
 

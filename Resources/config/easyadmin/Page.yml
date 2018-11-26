@@ -9,12 +9,14 @@ easy_admin:
                     - 'seo.url'
                     - 'enabled'
                 actions:
-                    - { name: 'clone', icon: 'clone', css_class: 'btn btn-secondary', menu_dropdown: true }
+                    - { name: 'Clone', icon: 'clone', css_class: 'btn btn-secondary', menu_dropdown: true }
             form:
                 fields:
                     - { type: 'group', label: 'Page'}
                     - 'name'
-                    - 'content'
-                    - { type: 'group', label: 'SEO'}
+                    - { type: 'group', label: 'Seo'}
                     - 'seo'
+                    - { type: 'group', label: 'Content'}
+                    - 'content'
+                    - { type: 'group', label: 'Status' }
                     - 'enabled'

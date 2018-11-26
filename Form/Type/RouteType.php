@@ -27,17 +27,16 @@ class RouteType extends AbstractType
     {
         $builder
             ->add('url', TextType::class, [
-                'attr' => ['placeholder' => 'route.paste_here'],
-                'label' => false,
-                'mapped' => false
+                'attr'     => ['placeholder' => 'route.paste_here'],
+                'mapped'   => false,
+                'required' => false,
             ])
             ->add('name', ChoiceType::class, [
-                'label'       => 'seo.route',
+                'label'       => 'Route',
                 'placeholder' => 'Select a route',
                 'choices'     => RouteHelper::getRouteNames($this->routes),
             ])
             ->add('params', CollectionType::class, [
-                'label'        => 'seo.params',
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'required'     => false

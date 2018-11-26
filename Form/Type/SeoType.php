@@ -39,9 +39,13 @@ class SeoType extends AbstractType
                 'required'    => $options['required_url'],
             ])
             ->add('metaTitle')
-            ->add('metaDescription')
-            ->add('preContent')
-            ->add('postContent');
+            ->add('metaDescription');
+
+        if ($options['affix']) {
+            $builder
+                ->add('preContent')
+                ->add('postContent');
+        }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
         $builder->addEventListener(FormEvents::POST_SET_DATA, [$this, 'onPostSetData']);
@@ -83,11 +87,10 @@ class SeoType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'data_class'   => SeoInterface::class,
             'required_url' => true,
+            'affix'        => false,
         ]);
     }
 

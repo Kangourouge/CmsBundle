@@ -3,10 +3,10 @@
         <section id="{{ form.vars.id }}_content" class="cms-content-tools" style="height: {{ height }}px">
             <header>
                 <div class="pull-left">
-                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans }}</button>
-                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">{{ 'Cancel'|trans }}</button>
+                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans({}, 'admin') }}</button>
+                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">{{ 'Cancel'|trans({}, 'admin') }}</button>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="{{ 'Render'|trans }}">{{ 'Source'|trans }}</button>
+                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="{{ 'Render'|trans({}, 'admin') }}">{{ 'Source'|trans({}, 'admin') }}</button>
                     {% endif %}
                 </div>
 
@@ -14,7 +14,7 @@
                     {% if not form.vars.fragment %}
                         <div class="pull-left" style="margin-right: 30px;">
                             <div class="checkbox">
-                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>{{ 'Header / footer'|trans }}</label>
+                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>{{ 'Header / footer'|trans({}, 'admin') }}</label>
                             </div>
                         </div>
                     {% endif %}
@@ -24,7 +24,7 @@
                             <div id="{{ form.vars.id }}_display_toggle" class="btn-group btn-group-toggle" data-toggle="buttons">
                                 {% for responsive in form.vars.responsive %}
                                     <label class="btn btn-secondary{% if loop.first %} active{% endif %}">
-                                        <input type="radio" autocomplete="off" value="{{ responsive.width }}*{{ responsive.height is defined ? responsive.height : '100%' }}" checked> {{ responsive.label }}
+                                        <input type="radio" autocomplete="off" value="{{ responsive.width }}*{{ responsive.height is defined ? responsive.height : '100%' }}" checked> {{ responsive.label|trans({}, 'admin') }}
                                     </label>
                                 {% endfor %}
                             </div>
@@ -43,7 +43,7 @@
 
         <div class="btn-group" role="group" style="margin: 20px 0 5px">
             <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info">
-                {{ 'Edit HTML'|trans }} <span class="fa fa-code"></span>
+                {{ 'Edit HTML'|trans({}, 'admin') }} <span class="fa fa-code"></span>
             </button>
         </div>
 
