@@ -16,8 +16,8 @@
   "require"     : {
     "php"                                   : "7.*",
     "symfony/framework-bundle"              : "~3.0",
-    "kangourouge/doctrine-extension-bundle" : "1.*",
-    "kangourouge/easyadmin-extension-bundle": "^1.1.3",
+    "kangourouge/doctrine-extension-bundle" : "*",
+    "kangourouge/easyadmin-extension-bundle": "*",
     "doctrine/orm"                          : "~2.3",
     "kangourouge/intl-bundle"               : "*"
   },
