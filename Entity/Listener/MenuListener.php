@@ -42,8 +42,18 @@ class MenuListener implements EventSubscriber
 
     public function prePersist(LifecycleEventArgs $event)
     {
-        if ($event->getEntity() instanceof MenuInterface) {
-            $this->prePersistOrUpdate($event->getEntity());
+        $menu = $event->getEntity();
+
+        if ($menu instanceof MenuInterface) {
+            $this->prePersistOrUpdate($menu);
+
+            $position = 0;
+            foreach ($menu->getParent()->getChildren() as $siblingMenu) {
+                $position = max($position, $siblingMenu->getPosition());
+            }
+            if ($position > 0) {
+                $menu->setPosition($position + 1);
+            }
         }
     }
 
