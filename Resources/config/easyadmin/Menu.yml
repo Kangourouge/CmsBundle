@@ -5,7 +5,7 @@ easy_admin:
             list:
                 max_results: 100
                 fields:
-                    - 'name'
+                    - 'nameAndDeepness'
                     - 'url'
                     - 'parent'
                     - 'enabled'

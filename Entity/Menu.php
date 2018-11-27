@@ -160,6 +160,16 @@ class Menu implements MenuInterface, SortableInterface, Translatable
         return $this->name;
     }
 
+    public function getNameAndDeepness()
+    {
+        return sprintf('%s%s', $this->getDeepnessCharacter(), ' '.$this->getName());
+    }
+
+    protected function getDeepnessCharacter()
+    {
+        return str_repeat('─', $this->getLvl());
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -47,13 +47,12 @@ class MenuListener implements EventSubscriber
         if ($menu instanceof MenuInterface) {
             $this->prePersistOrUpdate($menu);
 
-            $position = 0;
+            $position = $menu->getParent()->getPosition();
             foreach ($menu->getParent()->getChildren() as $siblingMenu) {
                 $position = max($position, $siblingMenu->getPosition());
             }
-            if ($position > 0) {
-                $menu->setPosition($position + 1);
-            }
+            
+            $menu->setPosition($position + 1);
         }
     }
 
