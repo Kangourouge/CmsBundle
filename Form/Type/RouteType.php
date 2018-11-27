@@ -18,9 +18,13 @@ class RouteType extends AbstractType
     /** @var RouteCollection */
     private $routes;
 
+    /** @var string */
+    private $regexp;
+
     public function __construct(RouterInterface $router, $regexp = null)
     {
         $this->routes = $router->getRouteCollection();
+        $this->regexp = $regexp;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -34,7 +38,8 @@ class RouteType extends AbstractType
             ->add('name', ChoiceType::class, [
                 'label'       => 'Route',
                 'placeholder' => 'Select a route',
-                'choices'     => RouteHelper::getRouteNames($this->routes),
+                'attr'        => ['data-widget' => 'select2'],
+                'choices'     => RouteHelper::getRouteNames($this->routes, $this->regexp),
             ])
             ->add('params', CollectionType::class, [
                 'allow_add'    => true,

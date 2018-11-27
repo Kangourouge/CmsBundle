@@ -16,11 +16,11 @@ services:
 
     KRG\CmsBundle\Twig\:
         resource: '../../Twig/*'
-        tags: [twig.extension]
+        tags: ['twig.extension']
 
     KRG\CmsBundle\Form\Type\:
         resource: '../../Form/Type/*'
-        tags: [form.type]
+        tags: ['form.type']
 
     KRG\CmsBundle\Image\:
         resource: '../../Image/*'
@@ -34,6 +34,11 @@ services:
         resource: '../../Menu/*'
         public: true
 
+    KRG\CmsBundle\Widget\:
+        resource: '../../Widget/*'
+        tags: ['krg.easyadmin.widget']
+        public: true
+
     KRG\CmsBundle\Routing\SeoListener:
         tags: [{ name: kernel.event_listener, event: kernel.request }]
 
@@ -42,8 +47,7 @@ services:
             - {name: 'routing.loader', priority: 100}
 
     KRG\CmsBundle\Routing\RoutingLoader:
-        tags:
-            - 'routing.loader'
+        tags: ['routing.loader']
 
     KRG\CmsBundle\Form\FilterRegistry:
         public: true
@@ -54,7 +58,7 @@ services:
 
     KRG\CmsBundle\Entity\Listener\:
         resource: '../../Entity/Listener/*'
-        tags: [doctrine.event_subscriber]
+        tags: ['doctrine.event_subscriber']
         public: true
 
     KRG\CmsBundle\Entity\Manager\:
@@ -63,12 +67,12 @@ services:
 
     KRG\CmsBundle\Entity\Validator\:
         resource: '../../Entity/Validator/*'
-        tags: [validator.constraint_validator]
+        tags: ['validator.constraint_validator']
         public: true
 
     KRG\CmsBundle\Entity\Subscriber\:
         resource: '../../Entity/Subscriber/*'
-        tags: [kernel.event_subscriber]
+        tags: ['kernel.event_subscriber']
         public: true
 
     KRG\CmsBundle\Toolbar\:

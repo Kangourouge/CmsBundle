@@ -19,10 +19,10 @@ easy_admin:
                     - 'icon'
                     - 'breadcrumbDisplay'
                     - { type: 'group', label: 'Configuration' }
-                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType' }
-                    - { type: 'group', label: 'Content' }
-                    -
-                        property: 'content'
+                    - { property: 'route', type: 'KRG\CmsBundle\Form\Type\UrlType', label: false }
+                    - { type: 'group', label: 'Content', collapsible: true }
+                    -   property: 'content'
+                        label: false
                         type_options:
                             fragment: true
                     - { type: 'group', label: 'Status' }

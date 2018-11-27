@@ -1,5 +1,5 @@
 {% block krg_cms_url_widget %}
-    {{ form_widget(form.url) }}
+    {{ form_row(form.related, {'attr': {'data-widget': 'select2'}}) }}
 
     <div class="krg-separator">
         <span class="krg-separator-text">
@@ -7,7 +7,7 @@
         </span>
     </div>
 
-    {{ form_widget(form.related, {'attr': {'data-widget': 'select2'}}) }}
+    {{ form_row(form.url) }}
 
     <script type="text/javascript">
         (function () {

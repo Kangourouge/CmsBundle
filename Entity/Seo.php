@@ -145,6 +145,10 @@ class Seo implements SeoInterface, Translatable
      */
     public function setUrl($url)
     {
+        if (strlen($url) > 0 && $url[0] !== '/') {
+            $url = '/'.$url;
+        }
+
         $this->url = $url;
 
         return $this;

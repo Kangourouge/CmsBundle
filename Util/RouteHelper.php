@@ -15,6 +15,11 @@ class RouteHelper
         'profiler',
         '_twig',
         '_guess_token',
+        'file_manager',
+        'krg_cms_',
+        'krg_page_snippets',
+        'krg_page_show',
+        'krg_page_edit',
         KRGCmsExtension::KRG_ROUTE_SEO_PREFIX
     ];
 

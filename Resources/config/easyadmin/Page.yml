@@ -15,8 +15,8 @@ easy_admin:
                     - { type: 'group', label: 'Page'}
                     - 'name'
                     - { type: 'group', label: 'Seo'}
-                    - 'seo'
+                    - { property: 'seo', type_options: { required: true } }
                     - { type: 'group', label: 'Content'}
-                    - 'content'
+                    - { property: 'content', label: false }
                     - { type: 'group', label: 'Status' }
                     - 'enabled'

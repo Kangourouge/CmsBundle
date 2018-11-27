@@ -15,6 +15,6 @@ easy_admin:
                     - 'name'
                     - { property: 'key', type_options: { required: false }, help: 'unique_key' }
                     - { type: 'group', label: 'Content' }
-                    - 'content'
+                    - { property: 'content', label: false }
                     - { type: 'group', label: 'Status' }
                     - 'enabled'

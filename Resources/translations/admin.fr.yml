@@ -12,6 +12,7 @@ Thumbnail: 'Miniature'
 Working: 'Fonctionne'
 Url redirect: 'Url de redirection'
 Route: 'Itinéraire'
+Related: 'Lier'
 
 metaTitle: 'Titre (meta)'
 metaDescription: 'Description (meta)'
@@ -31,7 +32,7 @@ routing:
   paste_here: 'Générez une configuration en collant une url ici...'
 
 Seo:
-  meta title: 'Meta title'
+  meta title: 'Titre'
   url: 'Url'
 
 Meta title: 'Titre (meta)'
