@@ -8,6 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Gedmo\Translatable\Entity\Translation;
+use KRG\CmsBundle\Entity\Menu;
 use KRG\CmsBundle\Entity\MenuInterface;
 use KRG\CmsBundle\Entity\SeoInterface;
 use KRG\CmsBundle\Util\Str;
@@ -47,12 +48,13 @@ class MenuListener implements EventSubscriber
         if ($menu instanceof MenuInterface) {
             $this->prePersistOrUpdate($menu);
 
-            $position = $menu->getParent()->getPosition();
-            foreach ($menu->getParent()->getChildren() as $siblingMenu) {
-                $position = max($position, $siblingMenu->getPosition());
+            if ($menu->getParent()) {
+                $position = $menu->getParent()->getPosition();
+                foreach ($menu->getParent()->getChildren() as $siblingMenu) {
+                    $position = max($position, $siblingMenu->getPosition());
+                }
+                $menu->setPosition($position + 1);
             }
-            
-            $menu->setPosition($position + 1);
         }
     }
 
