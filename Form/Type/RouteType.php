@@ -38,7 +38,6 @@ class RouteType extends AbstractType
             ->add('name', ChoiceType::class, [
                 'label'       => 'Route',
                 'placeholder' => 'Select a route',
-                'attr'        => ['data-widget' => 'select2'],
                 'choices'     => RouteHelper::getRouteNames($this->routes, $this->regexp),
             ])
             ->add('params', CollectionType::class, [
