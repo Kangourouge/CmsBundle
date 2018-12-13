@@ -31,7 +31,7 @@ class RouteType extends AbstractType
     {
         $builder
             ->add('url', TextType::class, [
-                'attr'     => ['placeholder' => 'route.paste_here'],
+                'attr'     => ['placeholder' => 'routing.paste_here'],
                 'mapped'   => false,
                 'required' => false,
             ])
