@@ -7,6 +7,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,9 +23,13 @@ class RouteType extends AbstractType
     /** @var string */
     private $regexp;
 
-    public function __construct(RouterInterface $router, $regexp = null)
+    /** @var Request */
+    private $request;
+
+    public function __construct(RouterInterface $router, RequestStack $requestStack, $regexp = null)
     {
         $this->routes = $router->getRouteCollection();
+        $this->request = $requestStack->getMasterRequest();
         $this->regexp = $regexp;
     }
 
@@ -31,6 +37,7 @@ class RouteType extends AbstractType
     {
         $builder
             ->add('url', TextType::class, [
+                'data'     => $this->request->get('url'),
                 'attr'     => ['placeholder' => 'routing.paste_here'],
                 'mapped'   => false,
                 'required' => false,
