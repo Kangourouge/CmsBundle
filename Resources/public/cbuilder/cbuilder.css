@@ -66,7 +66,7 @@
     position: absolute;
     z-index: 20;
     top: 15px;
-    left: 15px;
+    left: 0 !important;
     display: none;
     width: 30px;
     color: rgba(200, 200, 200, .8);
