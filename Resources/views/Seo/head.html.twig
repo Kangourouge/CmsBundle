@@ -1,18 +1,18 @@
 {% spaceless %}
     {% if title is defined and title|length > 0 %}
-        <title>{{ title }}</title>
+        <title>{{ title|raw }}</title>
     {% endif %}
 
     {% for meta, value in metas %}
         {% if value|length > 0 %}
-            <meta name="{{ meta }}" content="{{ value }}"/>
+            <meta name="{{ meta }}" content="{{ value|raw }}"/>
         {% endif %}
     {% endfor %}
 
     {% if ogs is defined %}
         {% for og, value in ogs %}
             {% if value|length > 0 %}
-                <meta property="og:{{ og }}" content="{{ value }}" />
+                <meta property="og:{{ og }}" content="{{ value|raw }}" />
             {% endif %}
         {% endfor %}
     {% endif %}
