@@ -66,9 +66,10 @@ class RoutingLoader extends Loader
                         $compiledSeoRoute = $seoRoute->compile();
                         $compiledRoute = $route->compile();
 
-                        if ($compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix()) {
+                        if ($compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix()
+                            || count($compiledSeoRoute->getVariables()) === 0
+                        ) {
                             $highPriorityCollection->add($seo->getUid(), $seoRoute);
-                            break;
                         }
                     }
                 }
