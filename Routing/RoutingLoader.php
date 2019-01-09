@@ -36,7 +36,6 @@ class RoutingLoader extends Loader
     {
         /** @var $appCollection RouteCollection */
         $appCollection = $this->import($resource);
-
         foreach ($this->loaders as $loader) {
             $appCollection->addCollection($loader->handle($appCollection));
         }
@@ -66,8 +65,9 @@ class RoutingLoader extends Loader
                         $compiledSeoRoute = $seoRoute->compile();
                         $compiledRoute = $route->compile();
 
-                        if ($compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix()
-                            || count($compiledSeoRoute->getVariables()) === 0
+                        if (count($compiledSeoRoute->getVariables()) === 0
+                            || (strlen($compiledRoute->getStaticPrefix()) > 0
+                            && $compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix())
                         ) {
                             $highPriorityCollection->add($seo->getUid(), $seoRoute);
                         }
