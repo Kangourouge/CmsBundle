@@ -19,7 +19,8 @@
     "kangourouge/doctrine-extension-bundle" : "*",
     "kangourouge/easyadmin-extension-bundle": "*",
     "doctrine/orm"                          : "~2.3",
-    "kangourouge/intl-bundle"               : "*"
+    "kangourouge/intl-bundle"               : "*",
+    "artgris/filemanager-bundle"            : "^1.2"
   },
   "autoload"    : {
     "psr-0": {
