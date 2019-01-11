@@ -2,6 +2,7 @@
 
 namespace KRG\CmsBundle\Controller;
 
+use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ class PageController extends AbstractController
 {
     /**
      * @Route("/cms/page/show/{key}", name="show")
+     * @Menu("{page.name}", route="krg_page_show", params={"slug" = "{page.key}"})
      */
     public function showAction(Request $request, PageInterface $page)
     {
