@@ -5,10 +5,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use EMC\FileinputBundle\Entity\FileInterface;
 use KRG\CmsBundle\Form\DataTransformer\Base64DataTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Base64FileType extends AbstractType
@@ -23,25 +21,23 @@ class Base64FileType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $builder->addModelTransformer(new Base64DataTransformer($this->entityManager));
-    }
-
-    public function getParent()
-    {
-        return HiddenType::class;
-    }
-
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'data_class' => FileInterface::class,
+        ]);
+    }
 
-        $resolver->setDefault('data_class', FileInterface::class);
+    public function getParent()
+    {
+        return TextType::class;
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'krg_cms_base64_file';
     }
 }

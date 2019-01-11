@@ -85,6 +85,7 @@ class KRGCmsExtension extends Extension implements PrependExtensionInterface
                 'KRGCmsBundle:Form:html.html.twig',
                 'KRGCmsBundle:Form:seo.html.twig',
                 'KRGCmsBundle:Form:url.html.twig',
+                'KRGCmsBundle:Form:base64file.html.twig',
             ]
         ]);
     }
