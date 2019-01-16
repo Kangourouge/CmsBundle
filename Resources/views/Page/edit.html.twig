@@ -32,11 +32,8 @@
             if ($element) {
                 $element.contentbuilder({
                     snippetFile: "{{ path('krg_page_snippets') }}",
-                    sourceEditor: false,
                     toolbar: 'left',
-                    buttons: [
-                        "bold", "italic", "underline", "strikethrough", "color", "removeFormat", "align", "list", "createLink", "unlink"
-                    ],
+                    buttons: ["bold", "italic", "formatting", "textsettings", "color", "font", "formatPara", "align", "list", "table", "image", "createLink", "unlink", "icon", "tags", "removeFormat", "html"],
                 });
             }
         }
