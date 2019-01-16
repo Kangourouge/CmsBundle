@@ -294,7 +294,7 @@
 
 #rte-toolbar.rte-side {
     top: calc((100% - 600px) / 2);
-    left: 20px;
+    left: 45px;
     width: 50px;
 }
 
