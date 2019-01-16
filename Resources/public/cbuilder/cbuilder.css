@@ -249,7 +249,7 @@
 
 #rte-toolbar {
     position: fixed;
-    z-index: 1001;
+    z-index: 9999;
     top: 20px;
     left: calc((100% - 724px) / 2);
     display: none;
