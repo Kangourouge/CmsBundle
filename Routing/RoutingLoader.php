@@ -40,7 +40,7 @@ class RoutingLoader extends Loader
             $appCollection->addCollection($loader->handle($appCollection));
         }
 
-        $highPriorityCollection = $this->getHighPriorityCollection($appCollection);
+        $highPriorityCollection = $this->getHighPriorityRouteCollection($appCollection);
 
         $collection = new RouteCollection();
         $collection->addCollection($highPriorityCollection);
@@ -49,7 +49,7 @@ class RoutingLoader extends Loader
         return $collection;
     }
 
-    public function getHighPriorityCollection(RouteCollection $collection)
+    public function getHighPriorityRouteCollection(RouteCollection $collection)
     {
         $highPriorityCollection = new RouteCollection();
 
@@ -61,13 +61,16 @@ class RoutingLoader extends Loader
                 foreach ($route->getDefault('_seo_list') as $seo) {
                     /** @var $seo SeoInterface */
                     $seo = $serializer->deserialize($seo, $seoClass, 'json');
+
                     if ($seoRoute = $collection->get($seo->getUid())) {
                         $compiledSeoRoute = $seoRoute->compile();
                         $compiledRoute = $route->compile();
+                        $pathContainsOnlyVars = !(bool)str_replace(array_merge($compiledSeoRoute->getVariables(), ['{', '}', '/']), '', $seoRoute->getPath());
 
                         if (count($compiledSeoRoute->getVariables()) === 0
                             || (strlen($compiledRoute->getStaticPrefix()) > 0
-                            && $compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix())
+                            && $compiledRoute->getStaticPrefix() === $compiledSeoRoute->getStaticPrefix()
+                            || false === $pathContainsOnlyVars)
                         ) {
                             $highPriorityCollection->add($seo->getUid(), $seoRoute);
                         }
