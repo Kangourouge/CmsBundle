@@ -64,11 +64,10 @@
 .row-tool {
     font-size: 15px;
     position: absolute;
-    z-index: 20;
-    top: 15px;
+    z-index: 2000;
+    top: -34px;
     left: 0 !important;
     display: none;
-    width: 30px;
     color: rgba(200, 200, 200, .8);
 }
 
@@ -80,8 +79,9 @@
     text-align: center;
     color: #fff;
     border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background: rgb(175, 206, 1);
+    border-bottom-left-radius: 5px;
+    background: #273162;
+    float: left;
 }
 
 .row-html {
@@ -91,7 +91,8 @@
     cursor: pointer;
     text-align: center;
     color: #fff;
-    background: rgb(0, 172, 214);
+    background: #F0AD4E;
+    float: left;
 }
 
 .row-html.row-module {
@@ -106,6 +107,7 @@
     text-align: center;
     color: #fff;
     background: rgb(77, 77, 77);
+    float: left;
 }
 
 .row-remove {
@@ -116,9 +118,10 @@
     cursor: pointer;
     text-align: center;
     color: #fff;
+    border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    background: rgb(247, 99, 46);
+    background: #DF3A4A;
+    float: left;
 }
 
 .row-handle *,
@@ -250,7 +253,7 @@
 #rte-toolbar {
     position: fixed;
     z-index: 9999;
-    top: 20px;
+    top: 40px;
     left: calc((100% - 724px) / 2);
     display: none;
     box-sizing: border-box;
@@ -293,7 +296,7 @@
 }
 
 #rte-toolbar.rte-side {
-    top: calc((100% - 600px) / 2);
+    top: calc((100% - 500px) / 2);
     left: 45px;
     width: 50px;
 }

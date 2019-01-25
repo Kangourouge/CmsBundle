@@ -33,7 +33,7 @@
         function start() {
             if ($element) {
                 $element.contentbuilder({
-                    snippetFile: "{{ path('krg_page_snippets') }}",
+                    snippetFile: "{{ path('krg_page_snippets', {'useThumbnail': false}) }}",
                     toolbar: 'left',
                     buttons: ["bold", "italic", "formatting", "textsettings", "color", "font", "formatPara", "align", "list", "table", "image", "createLink", "unlink", "icon", "tags", "removeFormat", "html"],
                 });

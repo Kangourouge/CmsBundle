@@ -40,6 +40,8 @@ class PageController extends AbstractController
      */
     public function snippetsAction(Request $request)
     {
-        return $this->render('@KRGCms/Page/snippets.html.twig');
+        return $this->render('@KRGCms/Page/snippets.html.twig', [
+            'useThumbnail' => $request->get('useThumbnail') ?? true,
+        ]);
     }
 }
