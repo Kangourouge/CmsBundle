@@ -16,7 +16,6 @@ class PageController extends AbstractController
 {
     /**
      * @Route("/cms/page/show/{key}", name="show")
-     * @Menu("{page.name}", route="krg_page_show", params={"slug" = "{page.key}"})
      */
     public function showAction(Request $request, PageInterface $page)
     {

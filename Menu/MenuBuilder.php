@@ -168,7 +168,7 @@ class MenuBuilder implements MenuBuilderInterface
 
         if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show')
             && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
-            return $nodeRoute['name'] === $_seo->getUid();
+            return $node['url'] === $_seo->getUrl();
         }
 
         if ($nodeRoute['name'] !== $requestRoute['name']) {
