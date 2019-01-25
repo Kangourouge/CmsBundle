@@ -2,7 +2,6 @@
 
 namespace KRG\CmsBundle\Controller;
 
-use KRG\CmsBundle\Annotation\Menu;
 use KRG\CmsBundle\Entity\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
