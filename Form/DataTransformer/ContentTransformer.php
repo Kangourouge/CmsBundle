@@ -58,6 +58,7 @@ class ContentTransformer implements DataTransformerInterface
                 return null;
             }
 
+            // /!\ Calling SeoLoader throught urlResolver reset submitted Seo entity data
             if (preg_match_all('|href="(.*)"|U', $value, $matches, PREG_SET_ORDER)) {
                 foreach($matches as $match) {
                     $href = $match[1];

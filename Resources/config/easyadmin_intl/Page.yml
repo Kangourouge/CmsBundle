@@ -14,11 +14,6 @@ easy_admin:
                 fields:
                     - { type: 'group', label: 'Page'}
                     - 'name'
-                    - { type: 'group', label: 'Seo'}
-                        -   property: 'seo'
-                            type: 'KRG\CmsBundle\Form\Type\SeoType'
-                            label: false
-                    - { type: 'group', label: 'Content'}
                     -
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
@@ -27,6 +22,9 @@ easy_admin:
                             label: false
                             entry_options:
                                 fragment: false
-
+                    - { type: 'group', label: 'Seo'}
+                    -   property: 'seo' # MUST BE AFTER CONTENT
+                        type: 'KRG\CmsBundle\Form\Type\SeoType'
+                        label: false
                     - { type: 'group', label: 'Status' }
                     - 'enabled'

@@ -14,9 +14,8 @@ easy_admin:
                 fields:
                     - { type: 'group', label: 'Page'}
                     - 'name'
-                    - { type: 'group', label: 'Seo'}
-                    - { property: 'seo', type_options: { required: true } }
-                    - { type: 'group', label: 'Content'}
                     - { property: 'content', label: false }
+                    - { type: 'group', label: 'Seo'}
+                    - { property: 'seo', type_options: { required: true } } # MUST BE AFTER CONTENT
                     - { type: 'group', label: 'Status' }
                     - 'enabled'
