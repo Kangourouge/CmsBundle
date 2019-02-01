@@ -186,10 +186,14 @@
     box-shadow: none;
 }
 
-iframe.html_content_iframe a, button[type=submit], input[type=submit] {
+iframe.html_content_iframe a,
+iframe.html_content_iframe button[type=submit],
+iframe.html_content_iframe input[type=submit] {
     pointer-events: none;
 }
 
-iframe.html_content_iframe #divCb a, #divCb button[type=submit], #divCb input[type=submit] {
+#divCb a,
+#divCb button[type=submit],
+#divCb input[type=submit] {
     pointer-events: initial;
 }
