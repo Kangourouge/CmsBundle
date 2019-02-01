@@ -12,6 +12,16 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/krgcms/cbuilder/cbuilder.css') }}">
     <link rel="stylesheet" href="{{ asset('bundles/krgcms/easyadmin/style.css') }}">
+
+    <style>
+        a, button[type=submit], input[type=submit] {
+            pointer-events: none;
+        }
+
+        #divCb a, #divCb button[type=submit], #divCb input[type=submit] {
+            pointer-events: initial;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}

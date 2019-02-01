@@ -34,7 +34,7 @@
             </header>
 
             <div style="display: contents">
-                <iframe id="{{ form.vars.id }}_iframe" width="100%" height="100%" frameborder="0"></iframe>
+                <iframe id="{{ form.vars.id }}_iframe" class="html_content_iframe" width="100%" height="100%" frameborder="0"></iframe>
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                      <div id="{{ form.vars.id }}_source" class="cms-content-source" style="display: none; overflow-y: scroll; height: 100%"></div>
                 {% endif %}
@@ -42,8 +42,9 @@
         </section>
 
         <div class="btn-group" role="group" style="margin: 20px 0 5px">
-            <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info">
-                {{ 'Edit HTML'|trans({}, 'admin') }} <span class="fa fa-code"></span>
+            <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info" disabled="disabled">
+                <i id="{{ form.vars.id }}_btn_edit_icon" class="fa fa-spinner fa-pulse"></i>
+                {{ 'Edit HTML'|trans({}, 'admin') }}
             </button>
         </div>
 
@@ -64,6 +65,11 @@
                 var extraHideArray = [{% for extra in extra_hide_elements %}'{{ extra }}'{% if not loop.last %},{% endif %}{% endfor %}];
 
                 var source = null;
+
+                iframe.addEventListener('load', function() {
+                    document.getElementById('{{ form.vars.id }}_btn_edit_icon').className = 'fa fa-code';
+                    btnEdit.removeAttribute('disabled');
+                });
 
                 load();
 
@@ -172,9 +178,9 @@
                         toggleSource();
                         refreshSource();
                     } else {
-                        iframe.contentWindow.start();
                         toggleSource();
                         persistSource();
+                        iframe.contentWindow.start();
                     }
                 });
 
