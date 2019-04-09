@@ -310,11 +310,15 @@ class MenuBuilder implements MenuBuilderInterface
 
     private function populate(PropertyAccessor $propertyAccessor, array $attributes, $value)
     {
-        if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
-                $_value = $propertyAccessor->getValue($attributes, sprintf('[%s].%s', $match[2], $match[3]));
-                $value = preg_replace(sprintf('`%s`', preg_quote($match[0])), $_value, $value);
+        try {
+            if (preg_match_all('`\{(([^\.]+)\.([^\}]+))\}`', $value, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $match) {
+                    $_value = $propertyAccessor->getValue($attributes, sprintf('[%s].%s', $match[2], $match[3]));
+                    $value = preg_replace(sprintf('`%s`', preg_quote($match[0])), $_value, $value);
+                }
             }
+        } catch (\RuntimeException $exception) {
+            return '';
         }
 
         return $value;
