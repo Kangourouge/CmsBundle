@@ -300,7 +300,7 @@ class MenuBuilder implements MenuBuilderInterface
                     $annotations[] = $annotation;
                 }
             }
-        } catch (\ReflectionException $exception) {
+        } catch (\Exception $exception) {
         }
 
         $this->annotations = $annotations;
