@@ -1,6 +1,6 @@
 {% spaceless %}
     {% if title is defined and title|length > 0 %}
-        <title>{{ title }}</title>
+        <title>{{ title|raw }}</title>
     {% endif %}
 
     {% for meta, value in metas %}
