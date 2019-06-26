@@ -166,9 +166,9 @@ class MenuBuilder implements MenuBuilderInterface
             return false;
         }
 
-        if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show')
-            && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
-            return $node['url'] === $_seo->getUrl();
+        $_seo = $this->request->get('_seo');
+        if ($_seo instanceof SeoInterface) {
+            return $nodeRoute['name'] === $_seo->getUid();
         }
 
         if ($nodeRoute['name'] !== $requestRoute['name']) {
