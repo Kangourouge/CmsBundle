@@ -157,10 +157,21 @@ class MenuBuilder implements MenuBuilderInterface
         }
 
         $nodeRoute = $node['route'];
+
         $requestRoute = [
-            'name'   => count($this->getAnnotations()) > 0 ? $this->annotations[0]->getRoute() : $this->request->get('_route'),
-            'params' => count($this->getAnnotations()) > 0 ? $this->annotations[0]->getParams() : $this->request->get('_route_params'),
+            'name'   => $this->request->get('_route'),
+            'params' => $this->request->get('_route_params'),
         ];
+
+        $annotations = $this->getAnnotations();
+        if (count($annotations) > 0) {
+            if ($routeName = $this->annotations[0]->getRoute()) {
+                $requestRoute['name'] = $routeName;
+            }
+            if ($routeParams = $this->annotations[0]->getParams()) {
+                $requestRoute['params'] = $routeParams;
+            }
+        }
 
         if (null === $requestRoute['name']) {
             return false;
@@ -170,6 +181,7 @@ class MenuBuilder implements MenuBuilderInterface
         if ($_seo instanceof SeoInterface) {
             return $nodeRoute['name'] === $_seo->getUid();
         }
+
 
         if ($nodeRoute['name'] !== $requestRoute['name']) {
             return false;
