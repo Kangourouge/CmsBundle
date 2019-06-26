@@ -72,7 +72,7 @@ class MenuBuilder implements MenuBuilderInterface
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $locale, $key));
 
         if ($item->isHit()) {
-            return $item->get();
+            //            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
@@ -166,8 +166,8 @@ class MenuBuilder implements MenuBuilderInterface
             return false;
         }
 
-        if (($requestRoute['name'] === 'krg_page_show' || $requestRoute['name'] === 'krg_cms_filter_show')
-            && ($_seo = $this->request->get('_seo')) instanceof SeoInterface) {
+        $_seo = $this->request->get('_seo');
+        if ($_seo instanceof SeoInterface) {
             return $nodeRoute['name'] === $_seo->getUid();
         }
 
