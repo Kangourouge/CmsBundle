@@ -119,7 +119,7 @@ class Menu implements MenuInterface, SortableInterface, Translatable
         $this->enabled = false;
         $this->breadcrumbDisplay = true;
         $this->children = new ArrayCollection();
-        $this->position = 0;
+        $this->position = -1; // at the end of the list
         $this->roles = [];
     }
 
