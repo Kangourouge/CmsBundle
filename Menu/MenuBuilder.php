@@ -72,7 +72,7 @@ class MenuBuilder implements MenuBuilderInterface
         $item = $this->filesystemAdapter->getItem(sprintf('%s_%s', $locale, $key));
 
         if ($item->isHit()) {
-            //            return $item->get();
+            return $item->get();
         }
 
         /* @var $repository NestedTreeRepository */
