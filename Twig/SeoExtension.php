@@ -127,6 +127,7 @@ class SeoExtension extends \Twig_Extension
 
         $data['metas'] = [
             'description' => $this->fetchVars($seo->getMetaDescription(), $params, $twig),
+            'robots'      => $seo->getMetaRobots(),
         ];
 
         if (strlen($data['title']) && isset($this->parameters['title']['suffix']) && strlen($this->parameters['title']['suffix']) > 0) {

@@ -17,6 +17,9 @@ easy_admin:
                     - { type: 'group', label: 'Metas' }
                     - { property: 'metaTitle', attr: {data-route-selector: 'true'} }
                     - 'metaDescription'
+                    - { type: 'group', label: 'Robots' }
+                    - 'noIndex'
+                    - 'noFollow'
                     - { type: 'group', label: 'Content', collapsible: true }
                     - 'preContent'
                     - 'postContent'

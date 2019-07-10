@@ -14,6 +14,8 @@ Url redirect: 'Url de redirection'
 Route: 'Itinéraire'
 Related: 'Lier'
 Name and deepness: 'Nom'
+noIndex: 'No index'
+noFollow: 'No follow'
 
 metaTitle: 'Titre (meta)'
 metaDescription: 'Description (meta)'
