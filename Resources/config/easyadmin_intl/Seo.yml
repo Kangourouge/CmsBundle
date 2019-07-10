@@ -31,6 +31,9 @@ easy_admin:
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
                             entry_type: 'Symfony\Component\Form\Extension\Core\Type\TextareaType'
+                    - { type: 'group', label: 'group.robots' }
+                    - { property: 'noIndex', label: 'seo.noIndex' }
+                    - { property: 'noFollow', label: 'seo.noFollow' }
                     - { type: 'group', label: 'group.content' }
                     -
                         property: 'preContent'

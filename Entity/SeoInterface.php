@@ -14,6 +14,53 @@ interface SeoInterface extends SeoRouteInterface
     public function getId();
 
     /**
+     * Set no index
+     *
+     * @param $noIndex
+     *
+     * @return SeoInterface
+     */
+    public function setNoIndex($noIndex);
+
+    /**
+     * Get no index
+     *
+     * @return boolean
+     */
+    public function getNoIndex();
+
+    /**
+     * Is no index
+     *
+     * @return boolean
+     */
+    public function isNoIndex();
+
+    /**
+     * Set no follow
+     *
+     * @param $noFollow
+     *
+     * @return SeoInterface
+     */
+    public function setNoFollow($noFollow);
+
+    /**
+     * Get no follow
+     *
+     * @return boolean
+     */
+    public function getNoFollow();
+
+    /**
+     * Is no follow
+     *
+     * @return boolean
+     */
+    public function isNoFollow();
+
+
+    /**
      * Set enabled
      *
      * @param $enabled
@@ -99,6 +146,20 @@ interface SeoInterface extends SeoRouteInterface
      * @return string
      */
     public function getMetaDescription();
+
+    /**
+     * Has meta robots
+     *
+     * @return boolean
+     */
+    public function hasMetaRobots();
+
+    /**
+     * Aggregate meta robots
+     *
+     * @return string
+     */
+    public function getMetaRobots();
 
     /**
      * Get preContent

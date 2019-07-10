@@ -3,6 +3,10 @@
         <title>{{ title|raw }}</title>
     {% endif %}
 
+    {% if title is defined and title|length > 0 %}
+        <title>{{ title|raw }}</title>
+    {% endif %}
+
     {% for meta, value in metas %}
         {% if value|length > 0 %}
             <meta name="{{ meta }}" content="{{ value|raw }}"/>

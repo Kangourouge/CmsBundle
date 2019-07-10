@@ -16,6 +16,7 @@ group:
   page: Page
   menu: Menu
   block: Block
+  robots: Robots
 
 action:
   new: Create
@@ -64,7 +65,8 @@ seo:
   title: 'Title (h1)'
   metaTitle: 'Title (meta)'
   metaDescription: 'Description (meta)'
-  title: Title
+  noIndex: 'No index'
+  noFollow: 'No follow'
   enabled: Enabled
   params: Parameters
   content: Content

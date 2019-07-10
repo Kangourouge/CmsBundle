@@ -69,6 +69,16 @@ class Seo implements SeoInterface, Translatable
     protected $postContent;
 
     /**
+     * @ORM\Column(type="boolean", name="no_index", options={"default": false})
+     */
+    protected $noIndex;
+
+    /**
+     * @ORM\Column(type="boolean", name="no_follow", options={"default": false})
+     */
+    protected $noFollow;
+
+    /**
      * @ORM\Column(type="boolean", name="is_enabled", options={"default":false})
      * @Gedmo\Versioned
      */
@@ -82,6 +92,8 @@ class Seo implements SeoInterface, Translatable
     public function __construct()
     {
         $this->enabled = false;
+        $this->noIndex = false;
+        $this->noFollow = false;
         $this->route = [];
     }
 
@@ -96,6 +108,84 @@ class Seo implements SeoInterface, Translatable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNoIndex()
+    {
+        return $this->noIndex;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNoIndex($noIndex)
+    {
+        $this->noIndex = $noIndex;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isNoIndex()
+    {
+        return $this->noIndex;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNoFollow()
+    {
+        return $this->noFollow;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNoFollow($noFollow)
+    {
+        $this->noFollow = $noFollow;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isNoFollow()
+    {
+        return $this->noFollow;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMetaRobots()
+    {
+        return strlen($this->getMetaRobots()) > 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMetaRobots()
+    {
+        if ($this->isNoIndex() && $this->isNoFollow()) {
+            return 'noindex, nofollow';
+        }
+        if ($this->isNoIndex()) {
+            return 'noindex';
+        }
+        if ($this->isNoFollow()) {
+            return 'nofollow';
+        }
+
+        return '';
     }
 
     /**

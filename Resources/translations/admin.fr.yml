@@ -25,6 +25,7 @@ group:
   page: Page
   menu: Menu
   block: Bloc
+  robots: Robots
 
 page:
   name: Nom
@@ -64,7 +65,8 @@ seo:
   title: 'Titre (h1)'
   metaTitle: 'Titre (meta)'
   metaDescription: 'Description (meta)'
-  title: Titre
+  noIndex: 'No index'
+  noFollow: 'No follow'
   enabled: Actif
   params: Paramètres
   content: Contenu

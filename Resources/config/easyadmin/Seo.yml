@@ -19,6 +19,9 @@ easy_admin:
                     - { type: 'group', label: 'group.metas' }
                     - { property: 'metaTitle', label: 'seo.metaTitle', attr: {data-route-selector: 'true'} }
                     - { property: 'metaDescription', type: 'textarea', label: 'seo.metaDescription' }
+                    - { type: 'group', label: 'group.robots' }
+                    - { property: 'noIndex', label: 'seo.noIndex' }
+                    - { property: 'noFollow', label: 'seo.noFollow' }
                     - { type: 'group', label: 'group.content' }
                     -
                         property: 'preContent'

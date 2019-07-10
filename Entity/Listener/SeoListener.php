@@ -42,5 +42,6 @@ class SeoListener implements EventSubscriber
     public function postFlush(PostFlushEventArgs $event)
     {
         $this->eventDispatcher->dispatch('cache:clear:routing');
+        $this->eventDispatcher->dispatch('cache:clear:krg:data');
     }
 }
