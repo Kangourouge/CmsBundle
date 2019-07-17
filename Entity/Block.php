@@ -40,6 +40,6 @@ class Block extends AbstractBlock implements BlockInterface, BlockContentInterfa
      */
     public function getContent()
     {
-        return $this->content;
+        return (string)$this->content;
     }
 }
