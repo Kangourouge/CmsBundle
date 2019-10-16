@@ -35,13 +35,11 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/admin/cms/page/snippets.html", name="snippets")
+     * @Route("/admin/cms/page/content.js", name="content_js")
      * @Security("has_role('ROLE_ADMIN')"))
      */
-    public function snippetsAction(Request $request)
+    public function contentJSAction(Request $request)
     {
-        return $this->render('@KRGCms/Page/snippets.html.twig', [
-            'useThumbnail' => $request->get('useThumbnail') ?? true,
-        ]);
+        return $this->render('@KRGCms/Page/content.js.twig');
     }
 }

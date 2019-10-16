@@ -4,7 +4,6 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
                 fields:
-                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50' }
                     - 'name'
                     - 'key'
                     - 'enabled'

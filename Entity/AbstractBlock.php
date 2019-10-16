@@ -35,7 +35,7 @@ abstract class AbstractBlock implements BlockInterface
     protected $working;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EMC\FileinputBundle\Entity\FileInterface", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="EMC\FileinputBundle\Entity\FileInterface", cascade={"all"}, fetch="EAGER")
      * @ORM\JoinColumn(name="thumbnail_id", referencedColumnName="id", nullable=true)
      * @var FileInterface
      */

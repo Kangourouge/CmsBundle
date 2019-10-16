@@ -36,12 +36,12 @@ easy_admin:
                     - { type: 'group', label: 'Content' }
                     -
                         property: 'preContent'
-                        type: 'KRG\CmsBundle\Form\Type\ContentType'
+                        type: 'KRG\CmsBundle\Form\Type\HtmlType'
                         type_options:
                             height: 200
                     -
                         property: 'postContent'
-                        type: 'KRG\CmsBundle\Form\Type\ContentType'
+                        type: 'KRG\CmsBundle\Form\Type\HtmlType'
                         type_options:
                             height: 200
                     - { type: 'group', label: 'Status' }

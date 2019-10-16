@@ -120,6 +120,7 @@
 /* iframe content */
 
 .cms-content-live-edit {
+    margin-top: 20px;
     padding-bottom: 50px;
 }
 
@@ -197,3 +198,32 @@ iframe.html_content_iframe input[type=submit] {
 #divCb input[type=submit] {
     pointer-events: initial;
 }
+
+/** V3 */
+
+#selSnippetCat {
+    display: none;
+}
+
+.is-design-list {
+    border-top-width: 0 !important;
+}
+
+#divSnippetHandle {
+    border-radius: 10px 0 0 10px;
+    width: 40px;
+    left: -40px;
+}
+
+.is-design-list > div {
+    margin: 5px 0 0;
+    border-radius: 3px;
+    outline: none;
+    box-shadow: none;
+}
+
+.cell-add-more,
+.cell-icon {
+    display: none !important;
+}
+

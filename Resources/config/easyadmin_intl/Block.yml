@@ -4,7 +4,7 @@ easy_admin:
             class: 'KRG\CmsBundle\Entity\BlockInterface'
             list:
                 fields:
-                    - { property: 'Thumbnail', type: 'image', base_path: '/', css_class: 'w-50' }
+                    - 'thumbnail'
                     - 'name'
                     - 'key'
                     - 'enabled'
@@ -19,7 +19,7 @@ easy_admin:
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
-                            entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
+                            entry_type: 'KRG\CmsBundle\Form\Type\HtmlType'
                             label: false
                             entry_options:
                                 height: 300

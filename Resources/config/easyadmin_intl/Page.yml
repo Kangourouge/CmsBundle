@@ -18,7 +18,7 @@ easy_admin:
                         property: 'content'
                         type: 'KRG\IntlBundle\Form\Type\TranslationType'
                         type_options:
-                            entry_type: 'KRG\CmsBundle\Form\Type\ContentType'
+                            entry_type: 'KRG\CmsBundle\Form\Type\HtmlType'
                             label: false
                             entry_options:
                                 fragment: false

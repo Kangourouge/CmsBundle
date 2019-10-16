@@ -9,6 +9,7 @@ use KRG\CmsBundle\Entity\FilterInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Templating\EngineInterface;
 
 class BlockExtension extends \Twig_Extension
@@ -196,7 +197,8 @@ class BlockExtension extends \Twig_Extension
             $thumbnail = $block->getThumbnail() ?: null;
             $snippets[] = [
                 'html'      => $this->renderBlock($environment, $block),
-                'thumbnail' => $this->fileBlocks[$name]['thumbnail'] ?? $thumbnail,
+                'thumbnail' => $thumbnail ? '../'.$thumbnail->getPath() : 'http://fakeimg.pl/250x80/344050/fff/?text='.$name,
+                'category'  => 1,
                 'label'     => $this->fileBlocks[$name]['label'] ?? $name
             ];
         }

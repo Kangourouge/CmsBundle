@@ -1,12 +1,14 @@
+{% trans_default_domain 'admin' %}
+
 {% block html_widget %}
     <div class="form-control krg-cms-form-control">
         <section id="{{ form.vars.id }}_content" class="cms-content-tools" style="height: {{ height }}px">
             <header>
                 <div class="pull-left">
-                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans({}, 'admin') }}</button>
-                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">{{ 'Cancel'|trans({}, 'admin') }}</button>
+                    <button id="{{ form.vars.id }}_btn_update" class="btn btn-primary">{{ 'Update'|trans }}</button>
+                    <button id="{{ form.vars.id }}_btn_cancel" class="btn btn-danger">{{ 'Cancel'|trans }}</button>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="{{ 'Render'|trans({}, 'admin') }}">{{ 'Source'|trans({}, 'admin') }}</button>
+                    <button id="{{ form.vars.id }}_btn_source" class="btn btn-warning" data-alttext="{{ 'Render'|trans }}">{{ 'Source'|trans }}</button>
                     {% endif %}
                 </div>
 
@@ -14,7 +16,7 @@
                     {% if not form.vars.fragment %}
                         <div class="pull-left" style="margin-right: 30px;">
                             <div class="checkbox">
-                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>{{ 'Header / footer'|trans({}, 'admin') }}</label>
+                                <label><input id="{{ form.vars.id }}_fragment_toggle" type="checkbox" checked>{{ 'Header / footer'|trans }}</label>
                             </div>
                         </div>
                     {% endif %}
@@ -24,7 +26,7 @@
                             <div id="{{ form.vars.id }}_display_toggle" class="btn-group btn-group-toggle" data-toggle="buttons">
                                 {% for responsive in form.vars.responsive %}
                                     <label class="btn btn-secondary{% if loop.first %} active{% endif %}">
-                                        <input type="radio" autocomplete="off" value="{{ responsive.width }}*{{ responsive.height is defined ? responsive.height : '100%' }}" checked> {{ responsive.label|trans({}, 'admin') }}
+                                        <input type="radio" autocomplete="off" value="{{ responsive.width }}*{{ responsive.height is defined ? responsive.height : '100%' }}" checked> {{ responsive.label|trans }}
                                     </label>
                                 {% endfor %}
                             </div>
@@ -44,7 +46,7 @@
         <div class="btn-group" role="group" style="margin: 20px 0 5px">
             <button id="{{ form.vars.id }}_btn_edit" class="btn btn-info" disabled="disabled">
                 <i id="{{ form.vars.id }}_btn_edit_icon" class="fa fa-spinner fa-pulse"></i>
-                {{ 'Edit HTML'|trans({}, 'admin') }}
+                {{ 'Edit HTML'|trans }}
             </button>
         </div>
 
@@ -63,7 +65,6 @@
                 var btnSave = document.getElementById('{{ form.vars.id }}_btn_update');
                 var btnCancel = document.getElementById('{{ form.vars.id }}_btn_cancel');
                 var extraHideArray = [{% for extra in extra_hide_elements %}'{{ extra }}'{% if not loop.last %},{% endif %}{% endfor %}];
-
                 var source = null;
 
                 iframe.addEventListener('load', function() {
@@ -125,6 +126,8 @@
                 }
 
                 function save() {
+                    iframe.contentWindow.stop();
+
                     var element = iframe.contentWindow.document.getElementById('krg_cms_page_wrapper');
                     var thumbnailBlock = document.getElementById('block_thumbnail');
 
@@ -134,7 +137,6 @@
 
                     var html = iframe.contentWindow.document.documentElement.outerHTML;
                     textarea.value = btoa(unescape(encodeURIComponent(html)));
-
                 }
 
                 function toolbarTogglerHeaderFooter() {
@@ -174,6 +176,7 @@
 
                     if (display === 'none') {
                         iframe.contentWindow.stop();
+
                         initAce();
                         toggleSource();
                         refreshSource();
