@@ -6,6 +6,7 @@ use KRG\CmsBundle\Entity\PageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -40,6 +41,9 @@ class PageController extends AbstractController
      */
     public function contentJSAction(Request $request)
     {
-        return $this->render('@KRGCms/Page/content.js.twig');
+        $response = new Response($this->renderView('@KRGCms/Page/content.js.twig'));
+        $response->headers->set('Content-Type','text/javascript');
+
+        return $response;
     }
 }
